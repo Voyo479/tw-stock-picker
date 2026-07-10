@@ -46,6 +46,18 @@ MIN_APPEARANCE_FOR_CORE2 = 2   # 核心2最低上榜次數門檻
 TRADING_DAYS_BUFFER = 30       # trading_days 清單保留的緩衝天數（要大於20才能正確判斷滾動刪除）
 REFERENCE_CODES = ["2330", "2454"]  # 用來判斷是否為新交易日的基準股
 
+HEAT_BREADTH_TOP_N = 50   # 熱度指標：全市場成交金額前幾檔納入統計
+# 熱度燈號門檻(由高到低比對，avg >= 門檻值 即屬於該級距)
+HEAT_THRESHOLDS = [(44, 5), (32, 4), (20, 3), (8, 2), (0, 1)]
+CORE1_HEAT_LABELS = {
+    5: "短線市場極度強勢", 4: "短線市場樂觀", 3: "短線市場震盪",
+    2: "短線市場走弱", 1: "短線極度弱勢",
+}
+CORE2_HEAT_LABELS = {
+    5: "中期市場極度強勢", 4: "中期市場樂觀", 3: "中期市場震盪",
+    2: "中期市場走弱", 1: "中期極度弱勢",
+}
+
 
 # ---------- 小工具 ----------
 def parse_float(value):
@@ -502,6 +514,67 @@ def prune_pool(pool):
         # 順便把history內、不在目前trading_days緩衝範圍內的舊紀錄清掉
         stock["history"] = {d: s for d, s in stock["history"].items() if d in day_index}
 
+    # 熱度指標的每日檔數紀錄，也只保留在trading_days緩衝範圍內的
+    if "market_breadth" in pool:
+        pool["market_breadth"] = {d: c for d, c in pool["market_breadth"].items() if d in day_index}
+
+
+# ---------- 熱度指標：全市場前50大成交金額中的上漲檔數 ----------
+def compute_market_breadth_count(combined_rows):
+    """
+    全市場(上市+上櫃合併)依成交金額排序取前HEAT_BREADTH_TOP_N檔，
+    計算其中「漲跌 >= 0（含平盤與上漲）」的檔數。
+    這個定義跟系統其他地方(候選清單篩選規則)保持一致：平盤或上漲都算。
+    這是獨立於候選清單/核心1/核心2選股邏輯之外的市場廣度指標。
+    """
+    valid = [r for r in combined_rows if r.get("trade_value") and r["trade_value"] > 0]
+    valid.sort(key=lambda x: x["trade_value"], reverse=True)
+    top_n = valid[:HEAT_BREADTH_TOP_N]
+    up_count = sum(1 for r in top_n if r["change"] >= 0)
+    return up_count
+
+
+def update_market_breadth(pool, today, count):
+    pool.setdefault("market_breadth", {})
+    pool["market_breadth"][today] = count
+
+
+def compute_heat_level(avg):
+    for lower, level in HEAT_THRESHOLDS:
+        if avg >= lower:
+            return level
+    return 1
+
+
+def compute_heat_index(pool, days, labels):
+    """
+    取近N個交易日的「上漲檔數」平均值，對照燈號等級。
+    資料不滿N日時，用現有天數計算(動態平均)；完全沒有資料則回傳None。
+    """
+    trading_days = pool.get("trading_days", [])
+    window = trading_days[-days:]
+    breadth = pool.get("market_breadth", {})
+    values = [breadth[d] for d in window if d in breadth]
+
+    if not values:
+        return None
+
+    avg = sum(values) / len(values)
+    level = compute_heat_level(avg)
+
+    return {
+        "average": round(avg, 1),
+        "level": level,
+        "label": labels[level],
+        "sample_days": len(values),
+        "top_n": HEAT_BREADTH_TOP_N,
+        "range": {
+            "start": window[0] if window else None,
+            "end": window[-1] if window else None,
+            "days": len(window),
+        },
+    }
+
 
 # ---------- 核心1：近5日累積分數 ----------
 def compute_core1(pool):
@@ -661,6 +734,11 @@ def main():
     print(f"今日候選清單（上市+上櫃合併，成交金額前{TOP_N}+漲跌>=0）共 {len(candidates)} 檔")
 
     update_pool_with_today(pool, today, candidates)
+
+    breadth_count = compute_market_breadth_count(combined_rows)
+    update_market_breadth(pool, today, breadth_count)
+    print(f"熱度指標：全市場成交金額前{HEAT_BREADTH_TOP_N}大中，今日上漲 {breadth_count} 檔")
+
     prune_pool(pool)
 
     core1_list, core1_range = compute_core1(pool)
@@ -680,12 +758,19 @@ def main():
     enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
     enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
 
+    core1_heat = compute_heat_index(pool, CORE1_DAYS, CORE1_HEAT_LABELS)
+    core2_heat = compute_heat_index(pool, CORE2_DAYS, CORE2_HEAT_LABELS)
+    if core1_heat:
+        print(f"核心1熱度：平均{core1_heat['average']}檔／{HEAT_BREADTH_TOP_N} → {core1_heat['label']}")
+    if core2_heat:
+        print(f"核心2熱度：平均{core2_heat['average']}檔／{HEAT_BREADTH_TOP_N} → {core2_heat['label']}")
+
     save_pool(pool)
 
     result = {
         "update_date": today,
-        "core1": {"range": core1_range, "list": core1_list},
-        "core2": {"range": core2_range, "list": core2_list},
+        "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat},
+        "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat},
     }
     save_result(result)
 
