@@ -26,6 +26,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(BASE_DIR)  # scripts/ 的上一層 = repo 根目錄
 POOL_PATH = os.path.join(REPO_ROOT, "data", "stock_pool.json")
 RESULT_PATH = os.path.join(REPO_ROOT, "docs", "result.json")
+THEME_MAPPING_PATH = os.path.join(REPO_ROOT, "data", "theme_mapping.json")
 
 STOCK_DAY_ALL_URL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 
@@ -93,6 +94,22 @@ def save_result(result):
     os.makedirs(os.path.dirname(RESULT_PATH), exist_ok=True)
     with open(RESULT_PATH, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
+
+
+def load_theme_mapping():
+    """
+    讀取「股票代號 -> 題材標籤」對照表(data/theme_mapping.json)。
+    這份表需要人工維護，找不到檔案或找不到該股代號都回傳空清單，不影響其他功能。
+    格式範例: {"2330": ["半導體", "AI伺服器供應鏈"], "2454": ["IC設計", "AI概念"]}
+    """
+    if not os.path.exists(THEME_MAPPING_PATH):
+        return {}
+    try:
+        with open(THEME_MAPPING_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"讀取 theme_mapping.json 失敗，將略過題材標記：{e}")
+        return {}
 
 
 # ---------- 抓取資料 ----------
@@ -217,10 +234,14 @@ def update_pool_with_today(pool, today, candidates):
             "history": {},
             "last_seen": None,
             "last_classification": None,
+            "last_close": None,
+            "last_pct_change": None,
         })
         stock["name"] = c["name"]
         stock["history"][today] = c["score"]
         stock["last_seen"] = today
+        stock["last_close"] = c["close"]
+        stock["last_pct_change"] = c["pct_change"]
 
 
 def prune_pool(pool):
@@ -325,6 +346,16 @@ def compute_core2(pool, core1_codes):
     return top, range_info
 
 
+# ---------- 補充欄位：現價 / 今日漲幅 / 題材標籤 ----------
+def enrich_with_extra_fields(entries, pool, theme_mapping):
+    for e in entries:
+        stock = pool["stocks"].get(e["code"], {})
+        e["price"] = stock.get("last_close")
+        e["pct_change"] = stock.get("last_pct_change")
+        e["themes"] = theme_mapping.get(e["code"], [])
+    return entries
+
+
 # ---------- 升降標記 ----------
 def compute_marks_and_update_classification(pool, core1_list, core2_list):
     marks = {}
@@ -384,6 +415,10 @@ def main():
         c["mark"] = marks.get(c["code"])
     for c in core2_list:
         c["mark"] = marks.get(c["code"])
+
+    theme_mapping = load_theme_mapping()
+    enrich_with_extra_fields(core1_list, pool, theme_mapping)
+    enrich_with_extra_fields(core2_list, pool, theme_mapping)
 
     save_pool(pool)
 
