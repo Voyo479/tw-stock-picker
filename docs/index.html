@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股動能雷達</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0E14;
+    --panel: #12161F;
+    --panel-alt: #161B26;
+    --border: #232838;
+    --text: #E8EAED;
+    --text-muted: #8B93A7;
+    --text-faint: #545B6E;
+    --red: #E8483F;
+    --red-dim: rgba(232, 72, 63, 0.12);
+    --green: #33C481;
+    --green-dim: rgba(51, 196, 129, 0.12);
+    --gold: #E3B341;
+    --gold-dim: rgba(227, 179, 65, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(227, 179, 65, 0.06), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(51, 196, 129, 0.04), transparent);
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h1 {
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  h1 span {
+    color: var(--gold);
+  }
+
+  .status-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 0 var(--green-dim);
+    animation: pulse 2.4s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(51, 196, 129, 0.5); }
+    70%  { box-shadow: 0 0 0 8px rgba(51, 196, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(51, 196, 129, 0); }
+  }
+
+  /* ---------- Panels ---------- */
+  .boards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 760px) {
+    .boards { grid-template-columns: 1fr; }
+  }
+
+  .board {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .board-head {
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel-alt);
+  }
+
+  .board-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .board.core1 .board-eyebrow { color: var(--red); }
+  .board.core2 .board-eyebrow { color: var(--green); }
+
+  .board-title {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 4px 0 6px;
+  }
+
+  .board-desc {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .board-range {
+    margin-top: 8px;
+    font-size: 11.5px;
+    color: var(--text-faint);
+  }
+
+  .rows { padding: 6px 0; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 28px 56px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(6px);
+    animation: flip-in 0.45s ease forwards;
+  }
+
+  .row:last-child { border-bottom: none; }
+
+  @keyframes flip-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .row { animation: none; opacity: 1; transform: none; }
+    .live-dot { animation: none; }
+  }
+
+  .rank {
+    font-size: 12px;
+    color: var(--text-faint);
+    font-weight: 500;
+  }
+
+  .code {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .name-cell { min-width: 0; }
+
+  .stock-name {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sub-metric {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .score-cell {
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .score {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .board.core1 .score { color: var(--red); }
+  .board.core2 .score { color: var(--green); }
+
+  .mark {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .mark.red_up {
+    color: var(--red);
+    background: var(--red-dim);
+  }
+
+  .mark.green_down {
+    color: var(--green);
+    background: var(--green-dim);
+  }
+
+  .empty-state, .loading-state, .error-state {
+    padding: 40px 18px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-faint);
+    line-height: 1.8;
+  }
+
+  footer strong { color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <h1>台股動能<span>雷達</span></h1>
+    <div class="status-line">
+      <span class="live-dot"></span>
+      <span id="update-time">讀取中...</span>
+    </div>
+  </header>
+
+  <div class="boards">
+
+    <div class="board core1">
+      <div class="board-head">
+        <div class="board-eyebrow">Core 1 · 現在最強</div>
+        <div class="board-title">近5日強度榜</div>
+        <div class="board-desc">依成交金額前30大、漲跌≥0之候選股，以「漲幅名次＋成交金額名次」排名制計分，近5個交易日累積分數最高的15檔。</div>
+        <div class="board-range" id="core1-range">計算範圍：讀取中...</div>
+      </div>
+      <div class="rows" id="core1-rows">
+        <div class="loading-state">讀取資料中...</div>
+      </div>
+    </div>
+
+    <div class="board core2">
+      <div class="board-head">
+        <div class="board-eyebrow">Core 2 · 潛力起漲</div>
+        <div class="board-title">近20日趨勢榜</div>
+        <div class="board-desc">近20日內上榜≥2次，且「上榜頻率」與「上榜強度」斜率皆為正的候選股，已排除核心1名單，取前15檔。</div>
+        <div class="board-range" id="core2-range">計算範圍：讀取中...</div>
+      </div>
+      <div class="rows" id="core2-rows">
+        <div class="loading-state">讀取資料中...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div><strong>紅色▲</strong>：上次歸類為核心2、本次升上核心1　　<strong>綠色▼</strong>：上次歸類為核心1、本次降至核心2</div>
+    <div>資料來源：台灣證券交易所 OpenAPI（僅上市股票）。本頁為資料統計工具，呈現內容僅供研究參考，不構成投資建議，任何交易決策請自行評估風險。</div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  const fmtSlope = (n) => (typeof n === 'number' ? n.toFixed(2) : '--');
+  const fmtRange = (range) => {
+    if (!range || !range.start) return '尚無足夠資料';
+    return `計算範圍：${range.start} ～ ${range.end}（共 ${range.days} 個交易日）`;
+  };
+  const markLabel = (mark) => {
+    if (mark === 'red_up') return '<span class="mark red_up">▲ 核心2升上</span>';
+    if (mark === 'green_down') return '<span class="mark green_down">▼ 核心1降至</span>';
+    return '';
+  };
+  const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+
+  function renderCore1(list) {
+    const container = document.getElementById('core1-rows');
+    if (!list || list.length === 0) {
+      container.innerHTML = '<div class="empty-state">今日暫無符合條件的個股</div>';
+      return;
+    }
+    container.innerHTML = list.map((item, i) => `
+      <div class="row" style="animation-delay:${i * 40}ms">
+        <div class="rank mono">${String(i + 1).padStart(2, '0')}</div>
+        <div class="code mono">${escapeHtml(item.code)}</div>
+        <div class="name-cell">
+          <div class="stock-name">${escapeHtml(item.name)}</div>
+        </div>
+        <div class="score-cell">
+          ${markLabel(item.mark)}
+          <span class="score mono">${item.score}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderCore2(list) {
+    const container = document.getElementById('core2-rows');
+    if (!list || list.length === 0) {
+      container.innerHTML = '<div class="empty-state">今日暫無符合「頻率、強度雙斜率皆向上」條件的個股</div>';
+      return;
+    }
+    container.innerHTML = list.map((item, i) => `
+      <div class="row" style="animation-delay:${i * 40}ms">
+        <div class="rank mono">${String(i + 1).padStart(2, '0')}</div>
+        <div class="code mono">${escapeHtml(item.code)}</div>
+        <div class="name-cell">
+          <div class="stock-name">${escapeHtml(item.name)}</div>
+          <div class="sub-metric mono">頻率斜率 ${fmtSlope(item.freq_slope)} · 強度斜率 ${fmtSlope(item.strength_slope)}</div>
+        </div>
+        <div class="score-cell">
+          ${markLabel(item.mark)}
+          <span class="score mono">${item.combined_score}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  fetch('./result.json', { cache: 'no-store' })
+    .then((res) => {
+      if (!res.ok) throw new Error('result.json 尚未產生');
+      return res.json();
+    })
+    .then((data) => {
+      document.getElementById('update-time').textContent = `更新於 ${data.update_date}`;
+      document.getElementById('core1-range').textContent = fmtRange(data.core1 && data.core1.range);
+      document.getElementById('core2-range').textContent = fmtRange(data.core2 && data.core2.range);
+      renderCore1(data.core1 && data.core1.list);
+      renderCore2(data.core2 && data.core2.list);
+    })
+    .catch((err) => {
+      document.getElementById('update-time').textContent = '尚無資料';
+      ['core1-rows', 'core2-rows'].forEach((id) => {
+        document.getElementById(id).innerHTML =
+          '<div class="error-state">尚未產生資料。請確認 GitHub Actions 排程是否已成功執行過一次。</div>';
+      });
+      ['core1-range', 'core2-range'].forEach((id) => {
+        document.getElementById(id).textContent = '';
+      });
+    });
+})();
+</script>
+
+</body>
+</html>
