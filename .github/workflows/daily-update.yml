@@ -34,9 +34,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/stock_pool.json data/industry_mapping.json docs/result.json
+          for f in data/stock_pool.json data/industry_mapping.json docs/result.json; do
+            if [ -f "$f" ]; then
+              git add "$f"
+            else
+              echo "提醒：$f 這次沒有產生，略過"
+            fi
+          done
           if git diff --cached --quiet; then
-            echo "今天沒有新資料變動（可能是假日），不需要commit"
+            echo "今天沒有新資料變動（可能是假日，或本次無新檔案），不需要commit"
           else
             git commit -m "自動更新選股資料 $(date -u +'%Y-%m-%d')"
             git push
