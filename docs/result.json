@@ -14,6 +14,7 @@
         "mark": null,
         "price": 435.5,
         "pct_change": 9.974747474747476,
+        "market": "上市",
         "themes": [
           "半導體業"
         ]
@@ -25,6 +26,7 @@
         "mark": null,
         "price": 1215.0,
         "pct_change": 9.95475113122172,
+        "market": "上市",
         "themes": [
           "電子零組件業"
         ]
@@ -36,6 +38,7 @@
         "mark": null,
         "price": 677.0,
         "pct_change": 8.32,
+        "market": "上市",
         "themes": [
           "半導體業"
         ]
@@ -47,6 +50,7 @@
         "mark": null,
         "price": 176.5,
         "pct_change": 4.747774480712167,
+        "market": "上市",
         "themes": [
           "半導體業"
         ]
@@ -58,6 +62,7 @@
         "mark": null,
         "price": 900.0,
         "pct_change": 1.0101010101010102,
+        "market": "上市",
         "themes": [
           "電子零組件業"
         ]
@@ -69,6 +74,7 @@
         "mark": null,
         "price": 875.0,
         "pct_change": 1.3904982618771726,
+        "market": "上市",
         "themes": [
           "電子零組件業",
           "AI伺服器供應鏈"
@@ -81,6 +87,7 @@
         "mark": null,
         "price": 1005.0,
         "pct_change": 5.456453305351522,
+        "market": "上市",
         "themes": [
           "電子零組件業"
         ]
@@ -92,6 +99,7 @@
         "mark": null,
         "price": 31.45,
         "pct_change": 6.429780033840947,
+        "market": "上市",
         "themes": [
           "光電業"
         ]
@@ -103,6 +111,7 @@
         "mark": null,
         "price": 588.0,
         "pct_change": 4.070796460176991,
+        "market": "上市",
         "themes": [
           "電子零組件業"
         ]
@@ -114,6 +123,7 @@
         "mark": null,
         "price": 69.8,
         "pct_change": 5.438066465256798,
+        "market": "上市",
         "themes": [
           "電腦及週邊設備業"
         ]
@@ -125,6 +135,7 @@
         "mark": null,
         "price": 117.0,
         "pct_change": 9.859154929577464,
+        "market": "上市",
         "themes": [
           "半導體業"
         ]
@@ -136,6 +147,7 @@
         "mark": null,
         "price": 65.3,
         "pct_change": 0.15337423312883436,
+        "market": "上市",
         "themes": [
           "光電業"
         ]
@@ -147,6 +159,7 @@
         "mark": null,
         "price": 143.5,
         "pct_change": 3.6101083032490973,
+        "market": "上市",
         "themes": [
           "半導體業"
         ]
@@ -158,6 +171,7 @@
         "mark": null,
         "price": 237.5,
         "pct_change": 0.0,
+        "market": "上市",
         "themes": [
           "其他電子業",
           "AI伺服器組裝"
@@ -170,6 +184,7 @@
         "mark": null,
         "price": 260.5,
         "pct_change": 3.5785288270377733,
+        "market": "上市",
         "themes": [
           "通信網路業"
         ]
