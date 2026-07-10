@@ -55,7 +55,7 @@ def parse_float(value):
     if isinstance(value, (int, float)):
         return float(value)
     s = str(value).replace(",", "").strip()
-    if s in ("", "--", "X", "x", "N/A"):
+    if s in ("", "--", "---", "X", "x", "N/A", "除息", "除權", "除權息"):
         return None
     try:
         return float(s)
@@ -275,8 +275,13 @@ def fetch_tpex_daily_quotes(today):
                           "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         }
         resp = requests.get(TPEX_DAILY_QUOTES_URL, params=params, headers=headers, timeout=30)
+        print(f"TPEx請求網址：{resp.url}，狀態碼：{resp.status_code}")
         resp.raise_for_status()
-        data = resp.json()
+        try:
+            data = resp.json()
+        except Exception as je:
+            print(f"警告：TPEx回應不是合法JSON（{je}），回應前200字：{resp.text[:200]!r}")
+            return None
 
         # 這隻API可能直接回傳list，也可能包在某個key底下（如 "aaData"），兩種都嘗試
         if isinstance(data, dict):
@@ -286,7 +291,7 @@ def fetch_tpex_daily_quotes(today):
                     break
 
         if not isinstance(data, list) or len(data) == 0:
-            print(f"警告：TPEx每日收盤行情回傳空資料或格式異常，型態={type(data)}")
+            print(f"警告：TPEx每日收盤行情回傳空資料或格式異常，型態={type(data)}，內容片段={str(data)[:200]!r}")
             return None
         return data
     except Exception as e:
@@ -624,7 +629,9 @@ def main():
     twse_normalized = normalize_twse_rows(raw_rows)
     tpex_raw = fetch_tpex_daily_quotes(today)
     tpex_normalized = normalize_tpex_rows(tpex_raw)
-    print(f"上市正規化後 {len(twse_normalized)} 檔，上櫃正規化後 {len(tpex_normalized)} 檔"
+    tpex_raw_count = len(tpex_raw) if tpex_raw else 0
+    print(f"上市正規化後 {len(twse_normalized)} 檔")
+    print(f"上櫃原始回傳 {tpex_raw_count} 筆，正規化後 {len(tpex_normalized)} 檔"
           + ("" if tpex_raw is not None else "（上櫃資料本次抓取失敗，僅使用上市資料）"))
 
     combined_rows = twse_normalized + tpex_normalized
