@@ -141,7 +141,11 @@ def fetch_industry_mapping_from_twse():
     這是全上市公司的官方分類（如：半導體業、航運業），免費、免Key。
     """
     try:
-        resp = requests.get(ISIN_LISTED_URL, timeout=30)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                          "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        }
+        resp = requests.get(ISIN_LISTED_URL, headers=headers, timeout=30)
         resp.encoding = "big5"
         soup = BeautifulSoup(resp.text, "html.parser")
         table = soup.find("table", {"class": "h4"})
