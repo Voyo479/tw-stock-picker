@@ -143,6 +143,41 @@
     color: var(--text-faint);
   }
 
+  .heat-gauge {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+  }
+
+  .heat-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .heat-label {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .heat-detail {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  .heat-level-5 { color: #E8483F; } .heat-dot.heat-level-5 { background: #E8483F; box-shadow: 0 0 8px rgba(232,72,63,0.6); }
+  .heat-level-4 { color: #E3703F; } .heat-dot.heat-level-4 { background: #E3703F; }
+  .heat-level-3 { color: #E3B341; } .heat-dot.heat-level-3 { background: #E3B341; }
+  .heat-level-2 { color: #4FAE7E; } .heat-dot.heat-level-2 { background: #4FAE7E; }
+  .heat-level-1 { color: #33C481; } .heat-dot.heat-level-1 { background: #33C481; box-shadow: 0 0 8px rgba(51,196,129,0.6); }
+
   .rows { padding: 6px 0; }
 
   .row {
@@ -318,6 +353,7 @@
         <div class="board-title">近5日強度榜</div>
         <div class="board-desc">依成交金額前30大、漲跌≥0之候選股，以「漲幅名次＋成交金額名次」排名制計分，近5個交易日累積分數最高的15檔。</div>
         <div class="board-range" id="core1-range">計算範圍：讀取中...</div>
+        <div id="core1-heat"></div>
       </div>
       <div class="rows" id="core1-rows">
         <div class="loading-state">讀取資料中...</div>
@@ -330,6 +366,7 @@
         <div class="board-title">近20日趨勢榜</div>
         <div class="board-desc">近20日內上榜≥2次，且「上榜頻率」與「上榜強度」斜率皆為正的候選股，已排除核心1名單，取前15檔。</div>
         <div class="board-range" id="core2-range">計算範圍：讀取中...</div>
+        <div id="core2-heat"></div>
       </div>
       <div class="rows" id="core2-rows">
         <div class="loading-state">讀取資料中...</div>
@@ -373,6 +410,21 @@
     if (!themes || themes.length === 0) return '<span class="theme-tag theme-none">未分類</span>';
     return themes.map((t) => `<span class="theme-tag">${escapeHtml(t)}</span>`).join('');
   };
+
+  function renderHeat(elementId, heat) {
+    const container = document.getElementById(elementId);
+    if (!heat) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = `
+      <div class="heat-gauge">
+        <span class="heat-dot heat-level-${heat.level}"></span>
+        <span class="heat-label heat-level-${heat.level}">${escapeHtml(heat.label)}</span>
+        <span class="heat-detail mono">平均 ${heat.average}／${heat.top_n} 檔（近${heat.sample_days}日）</span>
+      </div>
+    `;
+  }
 
   function renderCore1(list) {
     const container = document.getElementById('core1-rows');
@@ -438,6 +490,8 @@
       document.getElementById('core2-range').textContent = fmtRange(data.core2 && data.core2.range);
       renderCore1(data.core1 && data.core1.list);
       renderCore2(data.core2 && data.core2.list);
+      renderHeat('core1-heat', data.core1 && data.core1.heat);
+      renderHeat('core2-heat', data.core2 && data.core2.heat);
     })
     .catch((err) => {
       document.getElementById('update-time').textContent = '尚無資料';
@@ -447,6 +501,9 @@
       });
       ['core1-range', 'core2-range'].forEach((id) => {
         document.getElementById(id).textContent = '';
+      });
+      ['core1-heat', 'core2-heat'].forEach((id) => {
+        document.getElementById(id).innerHTML = '';
       });
     });
 })();
