@@ -16,10 +16,12 @@ update_data.py
 
 import json
 import os
+import re
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 import requests
+from bs4 import BeautifulSoup
 
 # ---------- 路徑設定 ----------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -27,8 +29,11 @@ REPO_ROOT = os.path.dirname(BASE_DIR)  # scripts/ 的上一層 = repo 根目錄
 POOL_PATH = os.path.join(REPO_ROOT, "data", "stock_pool.json")
 RESULT_PATH = os.path.join(REPO_ROOT, "docs", "result.json")
 THEME_MAPPING_PATH = os.path.join(REPO_ROOT, "data", "theme_mapping.json")
+INDUSTRY_MAPPING_PATH = os.path.join(REPO_ROOT, "data", "industry_mapping.json")
 
 STOCK_DAY_ALL_URL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
+ISIN_LISTED_URL = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
+INDUSTRY_REFRESH_DAYS = 7   # 官方產業別資料變動很慢，快取幾天重抓一次即可，不用每天抓
 
 TOP_N = 30          # 成交金額排名取前幾檔
 CORE1_DAYS = 5       # 核心1觀察天數
@@ -99,8 +104,9 @@ def save_result(result):
 def load_theme_mapping():
     """
     讀取「股票代號 -> 題材標籤」對照表(data/theme_mapping.json)。
-    這份表需要人工維護，找不到檔案或找不到該股代號都回傳空清單，不影響其他功能。
-    格式範例: {"2330": ["半導體", "AI伺服器供應鏈"], "2454": ["IC設計", "AI概念"]}
+    這是選填的補充標籤（例如想特別標注"AI概念"），不加也沒關係，
+    因為已經有 industry_mapping 自動抓的官方產業別打底。
+    格式範例: {"2330": ["AI伺服器供應鏈"], "2454": ["AI概念"]}
     """
     if not os.path.exists(THEME_MAPPING_PATH):
         return {}
@@ -108,8 +114,93 @@ def load_theme_mapping():
         with open(THEME_MAPPING_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
-        print(f"讀取 theme_mapping.json 失敗，將略過題材標記：{e}")
+        print(f"讀取 theme_mapping.json 失敗，將略過補充標籤：{e}")
         return {}
+
+
+# ---------- 官方產業別：自動抓取 + 快取 ----------
+def load_industry_cache():
+    if not os.path.exists(INDUSTRY_MAPPING_PATH):
+        return None
+    try:
+        with open(INDUSTRY_MAPPING_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def save_industry_cache(cache):
+    os.makedirs(os.path.dirname(INDUSTRY_MAPPING_PATH), exist_ok=True)
+    with open(INDUSTRY_MAPPING_PATH, "w", encoding="utf-8") as f:
+        json.dump(cache, f, ensure_ascii=False, indent=2)
+
+
+def fetch_industry_mapping_from_twse():
+    """
+    抓取 TWSE ISIN 上市證券總表，解析「產業別」欄位。
+    這是全上市公司的官方分類（如：半導體業、航運業），免費、免Key。
+    """
+    try:
+        resp = requests.get(ISIN_LISTED_URL, timeout=30)
+        resp.encoding = "big5"
+        soup = BeautifulSoup(resp.text, "html.parser")
+        table = soup.find("table", {"class": "h4"})
+        if table is None:
+            print("警告：找不到產業別資料表格，網頁結構可能已變動")
+            return None
+
+        mapping = {}
+        for row in table.find_all("tr"):
+            cells = row.find_all("td")
+            if len(cells) != 7:
+                continue  # 跳過標題列、分類標題列(如"股票"/"特別股")
+            code_name = cells[0].get_text(strip=True)
+            parts = code_name.split("\u3000")  # 全形空格分隔代號與名稱
+            if len(parts) != 2:
+                continue
+            code = parts[0]
+            if not re.match(r"^\d{4}$", code):
+                continue  # 只取4位數股票代號的普通股
+            industry = cells[4].get_text(strip=True)
+            if industry:
+                mapping[code] = industry
+
+        if not mapping:
+            print("警告：產業別資料解析結果為空")
+            return None
+        return mapping
+    except Exception as e:
+        print(f"抓取官方產業別資料失敗：{e}")
+        return None
+
+
+def get_industry_mapping(today):
+    """
+    產業別資料變動很慢，用快取機制：
+    快取存在且未超過 INDUSTRY_REFRESH_DAYS 天 -> 直接用快取
+    快取過期或不存在 -> 嘗試重新抓取，成功就更新快取
+    重新抓取失敗 -> 退回用舊快取（有總比沒有好），都沒有就回傳空字典
+    """
+    cache = load_industry_cache()
+    if cache and cache.get("generated_date"):
+        try:
+            days_old = (datetime.fromisoformat(today) - datetime.fromisoformat(cache["generated_date"])).days
+            if 0 <= days_old < INDUSTRY_REFRESH_DAYS:
+                return cache.get("mapping", {})
+        except Exception:
+            pass
+
+    fresh = fetch_industry_mapping_from_twse()
+    if fresh:
+        save_industry_cache({"generated_date": today, "mapping": fresh})
+        return fresh
+
+    if cache:
+        print("重新抓取產業別失敗，使用舊快取資料")
+        return cache.get("mapping", {})
+
+    print("沒有可用的產業別資料（首次抓取失敗），本次結果將不含產業別標籤")
+    return {}
 
 
 # ---------- 抓取資料 ----------
@@ -347,12 +438,20 @@ def compute_core2(pool, core1_codes):
 
 
 # ---------- 補充欄位：現價 / 今日漲幅 / 題材標籤 ----------
-def enrich_with_extra_fields(entries, pool, theme_mapping):
+def enrich_with_extra_fields(entries, pool, theme_mapping, industry_mapping):
     for e in entries:
         stock = pool["stocks"].get(e["code"], {})
         e["price"] = stock.get("last_close")
         e["pct_change"] = stock.get("last_pct_change")
-        e["themes"] = theme_mapping.get(e["code"], [])
+
+        industry = industry_mapping.get(e["code"])   # 自動抓取的官方產業別
+        extra_tags = theme_mapping.get(e["code"], [])  # 選填的補充標籤
+
+        themes = []
+        if industry:
+            themes.append(industry)
+        themes.extend(extra_tags)
+        e["themes"] = themes
     return entries
 
 
@@ -417,8 +516,9 @@ def main():
         c["mark"] = marks.get(c["code"])
 
     theme_mapping = load_theme_mapping()
-    enrich_with_extra_fields(core1_list, pool, theme_mapping)
-    enrich_with_extra_fields(core2_list, pool, theme_mapping)
+    industry_mapping = get_industry_mapping(today)
+    enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
+    enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
 
     save_pool(pool)
 
