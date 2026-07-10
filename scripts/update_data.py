@@ -263,40 +263,60 @@ def fetch_stock_day_all():
         return None
 
 
-def fetch_tpex_daily_quotes(today):
+def fetch_tpex_daily_quotes(today, max_retries=3):
     """
     抓取 TPEx(上櫃) 每日收盤行情。若這次執行失敗或解析不到資料，
     回傳 None，上層會直接略過上櫃資料，不影響上市資料照常運作。
+
+    加入重試機制：TPEx伺服器有時會在傳輸中途斷線("Response ended prematurely")，
+    這通常是暫時性的防爬蟲/網路問題，重試幾次多半就能成功。
     """
-    try:
-        params = {"l": "zh-tw", "d": to_roc_date(today)}
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                          "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-        }
-        resp = requests.get(TPEX_DAILY_QUOTES_URL, params=params, headers=headers, timeout=30)
-        print(f"TPEx請求網址：{resp.url}，狀態碼：{resp.status_code}")
-        resp.raise_for_status()
+    import time
+
+    params = {"l": "zh-tw", "d": to_roc_date(today)}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+        "Referer": "https://www.tpex.org.tw/",
+        "Connection": "close",  # 避免keep-alive連線被伺服器中途斷開
+    }
+
+    last_error = None
+    for attempt in range(1, max_retries + 1):
         try:
-            data = resp.json()
-        except Exception as je:
-            print(f"警告：TPEx回應不是合法JSON（{je}），回應前200字：{resp.text[:200]!r}")
-            return None
+            resp = requests.get(TPEX_DAILY_QUOTES_URL, params=params, headers=headers, timeout=30)
+            print(f"TPEx請求網址：{resp.url}，狀態碼：{resp.status_code}（第{attempt}次嘗試）")
+            resp.raise_for_status()
+            try:
+                data = resp.json()
+            except Exception as je:
+                print(f"警告：TPEx回應不是合法JSON（{je}），回應前200字：{resp.text[:200]!r}")
+                last_error = je
+                time.sleep(2 * attempt)
+                continue
 
-        # 這隻API可能直接回傳list，也可能包在某個key底下（如 "aaData"），兩種都嘗試
-        if isinstance(data, dict):
-            for key in ("aaData", "data", "tables"):
-                if key in data and isinstance(data[key], list):
-                    data = data[key]
-                    break
+            if isinstance(data, dict):
+                for key in ("aaData", "data", "tables"):
+                    if key in data and isinstance(data[key], list):
+                        data = data[key]
+                        break
 
-        if not isinstance(data, list) or len(data) == 0:
-            print(f"警告：TPEx每日收盤行情回傳空資料或格式異常，型態={type(data)}，內容片段={str(data)[:200]!r}")
-            return None
-        return data
-    except Exception as e:
-        print(f"抓取 TPEx 每日收盤行情失敗：{e}")
-        return None
+            if not isinstance(data, list) or len(data) == 0:
+                print(f"警告：TPEx每日收盤行情回傳空資料或格式異常，型態={type(data)}，內容片段={str(data)[:200]!r}")
+                last_error = ValueError("empty or malformed data")
+                time.sleep(2 * attempt)
+                continue
+
+            return data
+        except Exception as e:
+            print(f"抓取 TPEx 每日收盤行情失敗（第{attempt}次嘗試）：{e}")
+            last_error = e
+            time.sleep(2 * attempt)
+
+    print(f"TPEx資料抓取共嘗試{max_retries}次仍失敗，本次結果將不含上櫃資料。最後錯誤：{last_error}")
+    return None
 
 
 # ---------- 正規化：把TWSE/TPEx原始格式統一成共用欄位 ----------
