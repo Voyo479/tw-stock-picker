@@ -25,7 +25,7 @@ jobs:
           python-version: '3.11'
 
       - name: 安裝套件
-        run: pip install requests
+        run: pip install requests beautifulsoup4
 
       - name: 執行選股程式
         run: python scripts/update_data.py
@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/stock_pool.json docs/result.json
+          git add data/stock_pool.json data/industry_mapping.json docs/result.json
           if git diff --cached --quiet; then
             echo "今天沒有新資料變動（可能是假日），不需要commit"
           else
