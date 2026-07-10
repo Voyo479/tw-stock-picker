@@ -261,18 +261,37 @@ def get_industry_mapping(today):
 
 
 # ---------- 抓取資料 ----------
-def fetch_stock_day_all():
-    try:
-        resp = requests.get(STOCK_DAY_ALL_URL, timeout=30)
-        resp.raise_for_status()
-        data = resp.json()
-        if not isinstance(data, list) or len(data) == 0:
-            print("警告：STOCK_DAY_ALL 回傳空資料")
-            return None
-        return data
-    except Exception as e:
-        print(f"抓取 STOCK_DAY_ALL 失敗：{e}")
-        return None
+def fetch_stock_day_all(max_retries=3):
+    import time
+
+    last_error = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(STOCK_DAY_ALL_URL, timeout=30)
+            print(f"STOCK_DAY_ALL 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
+            resp.raise_for_status()
+            try:
+                data = resp.json()
+            except Exception as je:
+                print(f"警告：STOCK_DAY_ALL 回應不是合法JSON（{je}），回應前200字：{resp.text[:200]!r}")
+                last_error = je
+                time.sleep(2 * attempt)
+                continue
+
+            if not isinstance(data, list) or len(data) == 0:
+                print("警告：STOCK_DAY_ALL 回傳空資料")
+                last_error = ValueError("empty data")
+                time.sleep(2 * attempt)
+                continue
+
+            return data
+        except Exception as e:
+            print(f"抓取 STOCK_DAY_ALL 失敗（第{attempt}次嘗試）：{e}")
+            last_error = e
+            time.sleep(2 * attempt)
+
+    print(f"STOCK_DAY_ALL 共嘗試{max_retries}次仍失敗，本次執行中止。最後錯誤：{last_error}")
+    return None
 
 
 def fetch_tpex_daily_quotes(today, max_retries=3):
