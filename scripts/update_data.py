@@ -33,6 +33,8 @@ INDUSTRY_MAPPING_PATH = os.path.join(REPO_ROOT, "data", "industry_mapping.json")
 
 STOCK_DAY_ALL_URL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 ISIN_LISTED_URL = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
+ISIN_OTC_URL = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=4"
+TPEX_DAILY_QUOTES_URL = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 INDUSTRY_REFRESH_DAYS = 7   # 官方產業別資料變動很慢，快取幾天重抓一次即可，不用每天抓
 
 TOP_N = 30          # 成交金額排名取前幾檔
@@ -79,6 +81,22 @@ def today_taipei_str():
     """回傳台灣時區的今天日期字串 YYYY-MM-DD"""
     tz = ZoneInfo("Asia/Taipei")
     return datetime.now(tz).date().isoformat()
+
+
+def to_roc_date(iso_date_str):
+    """把 YYYY-MM-DD 轉成 TPEx 需要的民國年格式 YYY/MM/DD"""
+    y, m, d = iso_date_str.split("-")
+    roc_year = int(y) - 1911
+    return f"{roc_year}/{m}/{d}"
+
+
+def get_field(row, keys):
+    """依序嘗試多個可能的欄位名稱，回傳第一個有值的"""
+    for k in keys:
+        v = row.get(k)
+        if v not in (None, ""):
+            return v
+    return None
 
 
 # ---------- 資料庫讀寫 ----------
@@ -137,45 +155,48 @@ def save_industry_cache(cache):
 
 def fetch_industry_mapping_from_twse():
     """
-    抓取 TWSE ISIN 上市證券總表，解析「產業別」欄位。
-    這是全上市公司的官方分類（如：半導體業、航運業），免費、免Key。
+    抓取 TWSE ISIN 上市+上櫃證券總表，解析「產業別」欄位。
+    這是全上市櫃公司的官方分類（如：半導體業、航運業），免費、免Key。
     """
-    try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                          "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-        }
-        resp = requests.get(ISIN_LISTED_URL, headers=headers, timeout=30)
-        resp.encoding = "big5"
-        soup = BeautifulSoup(resp.text, "html.parser")
-        table = soup.find("table", {"class": "h4"})
-        if table is None:
-            print("警告：找不到產業別資料表格，網頁結構可能已變動")
-            return None
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    }
+    mapping = {}
 
-        mapping = {}
-        for row in table.find_all("tr"):
-            cells = row.find_all("td")
-            if len(cells) != 7:
-                continue  # 跳過標題列、分類標題列(如"股票"/"特別股")
-            code_name = cells[0].get_text(strip=True)
-            parts = code_name.split("\u3000")  # 全形空格分隔代號與名稱
-            if len(parts) != 2:
+    for url, label in [(ISIN_LISTED_URL, "上市"), (ISIN_OTC_URL, "上櫃")]:
+        try:
+            resp = requests.get(url, headers=headers, timeout=30)
+            resp.encoding = "big5"
+            soup = BeautifulSoup(resp.text, "html.parser")
+            table = soup.find("table", {"class": "h4"})
+            if table is None:
+                print(f"警告：找不到{label}產業別資料表格，網頁結構可能已變動")
                 continue
-            code = parts[0]
-            if not re.match(r"^\d{4}$", code):
-                continue  # 只取4位數股票代號的普通股
-            industry = cells[4].get_text(strip=True)
-            if industry:
-                mapping[code] = industry
 
-        if not mapping:
-            print("警告：產業別資料解析結果為空")
-            return None
-        return mapping
-    except Exception as e:
-        print(f"抓取官方產業別資料失敗：{e}")
+            count_before = len(mapping)
+            for row in table.find_all("tr"):
+                cells = row.find_all("td")
+                if len(cells) != 7:
+                    continue  # 跳過標題列、分類標題列(如"股票"/"特別股")
+                code_name = cells[0].get_text(strip=True)
+                parts = code_name.split("\u3000")  # 全形空格分隔代號與名稱
+                if len(parts) != 2:
+                    continue
+                code = parts[0]
+                if not re.match(r"^\d{4}$", code):
+                    continue  # 只取4位數股票代號的普通股
+                industry = cells[4].get_text(strip=True)
+                if industry:
+                    mapping[code] = industry
+            print(f"{label}產業別解析完成，累計 {len(mapping) - count_before} 檔")
+        except Exception as e:
+            print(f"抓取{label}產業別資料失敗：{e}")
+
+    if not mapping:
+        print("警告：產業別資料解析結果為空（上市+上櫃皆失敗）")
         return None
+    return mapping
 
 
 def get_industry_mapping(today):
@@ -222,6 +243,93 @@ def fetch_stock_day_all():
         return None
 
 
+def fetch_tpex_daily_quotes(today):
+    """
+    抓取 TPEx(上櫃) 每日收盤行情。若這次執行失敗或解析不到資料，
+    回傳 None，上層會直接略過上櫃資料，不影響上市資料照常運作。
+    """
+    try:
+        params = {"l": "zh-tw", "d": to_roc_date(today)}
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                          "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        }
+        resp = requests.get(TPEX_DAILY_QUOTES_URL, params=params, headers=headers, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # 這隻API可能直接回傳list，也可能包在某個key底下（如 "aaData"），兩種都嘗試
+        if isinstance(data, dict):
+            for key in ("aaData", "data", "tables"):
+                if key in data and isinstance(data[key], list):
+                    data = data[key]
+                    break
+
+        if not isinstance(data, list) or len(data) == 0:
+            print(f"警告：TPEx每日收盤行情回傳空資料或格式異常，型態={type(data)}")
+            return None
+        return data
+    except Exception as e:
+        print(f"抓取 TPEx 每日收盤行情失敗：{e}")
+        return None
+
+
+# ---------- 正規化：把TWSE/TPEx原始格式統一成共用欄位 ----------
+def normalize_twse_rows(raw_rows):
+    normalized = []
+    for row in raw_rows:
+        code = row.get("Code")
+        name = row.get("Name")
+        close = parse_float(row.get("ClosingPrice"))
+        change = parse_float(row.get("Change"))
+        trade_value = parse_float(row.get("TradeValue"))
+        if not code or close is None or change is None or trade_value is None:
+            continue
+        if trade_value <= 0:
+            continue
+        normalized.append({
+            "code": code, "name": name, "close": close,
+            "change": change, "trade_value": trade_value, "market": "上市",
+        })
+    return normalized
+
+
+def normalize_tpex_rows(raw_rows):
+    if not raw_rows:
+        return []
+    normalized = []
+    unknown_logged = False
+    for row in raw_rows:
+        if not isinstance(row, dict):
+            continue
+        code = get_field(row, ["Code", "SecuritiesCompanyCode", "CompanyCode", "代號", "Symbol", "SecurityId"])
+        name = get_field(row, ["Name", "CompanyName", "名稱", "StockName", "SecurityName"])
+        close_raw = get_field(row, ["Close", "ClosingPrice", "收盤", "收盤價", "Close_x0020_"])
+        change_raw = get_field(row, ["Change", "涨跌", "漲跌", "漲跌(元)", "Change_x0020_"])
+        value_raw = get_field(row, ["TradingAmount", "TransactionAmount", "TradeValue", "成交金額", "成交金額(元)"])
+
+        code_str = str(code).strip() if code is not None else None
+        close = parse_float(close_raw)
+        change = parse_float(change_raw)
+        trade_value = parse_float(value_raw)
+
+        if not code_str or close is None or change is None or trade_value is None:
+            if not unknown_logged and row:
+                print(f"警告：TPEx資料欄位無法完全辨識，該筆原始keys={list(row.keys())}")
+                unknown_logged = True
+            continue
+        if not re.match(r"^\d{4}$", code_str):
+            continue  # 只取4位數一般股票代號，排除權證/ETF/ETN
+        if trade_value <= 0:
+            continue
+
+        normalized.append({
+            "code": code_str, "name": name, "close": close,
+            "change": change, "trade_value": trade_value, "market": "上櫃",
+        })
+    return normalized
+
+
 # ---------- 判斷是否為新交易日（假日/國定假日排除） ----------
 def is_new_trading_day(raw_rows, pool):
     """
@@ -259,33 +367,20 @@ def is_new_trading_day(raw_rows, pool):
 
 
 # ---------- 建立當日候選清單 + 計算當日分數 ----------
-def build_candidate_list(raw_rows):
+def build_candidate_list(normalized_rows):
+    """
+    輸入已經過 normalize_twse_rows / normalize_tpex_rows 處理的統一格式清單，
+    (每筆含 code/name/close/change/trade_value/market)，直接做篩選排序。
+    """
     parsed = []
-    for row in raw_rows:
-        code = row.get("Code")
-        name = row.get("Name")
-        close = parse_float(row.get("ClosingPrice"))
-        change = parse_float(row.get("Change"))
-        trade_value = parse_float(row.get("TradeValue"))
-
-        if not code or close is None or change is None or trade_value is None:
-            continue
-        if trade_value <= 0:
-            continue
-
+    for row in normalized_rows:
+        close = row["close"]
+        change = row["change"]
         prev_close = close - change
         pct_change = (change / prev_close * 100) if prev_close and prev_close > 0 else 0.0
+        parsed.append({**row, "pct_change": pct_change})
 
-        parsed.append({
-            "code": code,
-            "name": name,
-            "close": close,
-            "change": change,
-            "pct_change": pct_change,
-            "trade_value": trade_value,
-        })
-
-    # 依成交金額排序取前 TOP_N
+    # 依成交金額排序取前 TOP_N（上市+上櫃合併排名）
     parsed.sort(key=lambda x: x["trade_value"], reverse=True)
     top_n = parsed[:TOP_N]
 
@@ -331,12 +426,14 @@ def update_pool_with_today(pool, today, candidates):
             "last_classification": None,
             "last_close": None,
             "last_pct_change": None,
+            "market": None,
         })
         stock["name"] = c["name"]
         stock["history"][today] = c["score"]
         stock["last_seen"] = today
         stock["last_close"] = c["close"]
         stock["last_pct_change"] = c["pct_change"]
+        stock["market"] = c.get("market")
 
 
 def prune_pool(pool):
@@ -447,6 +544,7 @@ def enrich_with_extra_fields(entries, pool, theme_mapping, industry_mapping):
         stock = pool["stocks"].get(e["code"], {})
         e["price"] = stock.get("last_close")
         e["pct_change"] = stock.get("last_pct_change")
+        e["market"] = stock.get("market")
 
         industry = industry_mapping.get(e["code"])   # 自動抓取的官方產業別
         extra_tags = theme_mapping.get(e["code"], [])  # 選填的補充標籤
@@ -493,16 +591,27 @@ def main():
         print("無法取得資料，結束本次執行")
         return
 
-    if not is_new_trading_day(raw_rows, pool):
+    if not is_new_trading_day(raw_rows, pool) and os.environ.get("FORCE_UPDATE", "").lower() != "true":
         print(f"{today} 判定為非交易日（假日/國定假日/資料未更新），跳過本次處理")
         save_pool(pool)  # 基準值可能有更新，還是存一下
         return
 
+    if os.environ.get("FORCE_UPDATE", "").lower() == "true":
+        print(f"{today} 收到強制執行指令(FORCE_UPDATE)，略過假日/重複資料判斷")
+
     print(f"{today} 判定為交易日，開始處理")
 
-    candidates = build_candidate_list(raw_rows)
+    twse_normalized = normalize_twse_rows(raw_rows)
+    tpex_raw = fetch_tpex_daily_quotes(today)
+    tpex_normalized = normalize_tpex_rows(tpex_raw)
+    print(f"上市正規化後 {len(twse_normalized)} 檔，上櫃正規化後 {len(tpex_normalized)} 檔"
+          + ("" if tpex_raw is not None else "（上櫃資料本次抓取失敗，僅使用上市資料）"))
+
+    combined_rows = twse_normalized + tpex_normalized
+
+    candidates = build_candidate_list(combined_rows)
     candidates = compute_daily_scores(candidates)
-    print(f"今日候選清單（成交金額前{TOP_N}+漲跌>=0）共 {len(candidates)} 檔")
+    print(f"今日候選清單（上市+上櫃合併，成交金額前{TOP_N}+漲跌>=0）共 {len(candidates)} 檔")
 
     update_pool_with_today(pool, today, candidates)
     prune_pool(pool)
