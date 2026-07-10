@@ -187,35 +187,50 @@
 
   .name-cell { min-width: 0; }
 
+  .name-line {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
+
   .stock-name {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 700;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
-  .sub-metric {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 2px;
+  .price {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
   }
 
-  .pct-change { font-weight: 700; }
+  .pct-change {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
   .pct-up { color: var(--red); }
   .pct-down { color: var(--green); }
   .pct-flat { color: var(--text-muted); }
 
+  .sub-metric {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
   .theme-row {
-    margin-top: 5px;
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 6px;
   }
 
   .theme-tag {
-    font-size: 10.5px;
-    padding: 1px 7px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 9px;
     border-radius: 999px;
     background: var(--gold-dim);
     color: var(--gold);
@@ -370,9 +385,12 @@
         <div class="rank mono">${String(i + 1).padStart(2, '0')}</div>
         <div class="code mono">${escapeHtml(item.code)}</div>
         <div class="name-cell">
-          <div class="stock-name">${escapeHtml(item.name)}</div>
-          <div class="sub-metric mono">$${fmtPrice(item.price)} ${fmtPctChange(item.pct_change)}</div>
-          <div class="theme-row">${themeTags(item.themes)}</div>
+          <div class="name-line">
+            <span class="stock-name">${escapeHtml(item.name)}</span>
+            <span class="price mono">$${fmtPrice(item.price)}</span>
+            ${fmtPctChange(item.pct_change)}
+            ${themeTags(item.themes)}
+          </div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
@@ -393,10 +411,13 @@
         <div class="rank mono">${String(i + 1).padStart(2, '0')}</div>
         <div class="code mono">${escapeHtml(item.code)}</div>
         <div class="name-cell">
-          <div class="stock-name">${escapeHtml(item.name)}</div>
-          <div class="sub-metric mono">$${fmtPrice(item.price)} ${fmtPctChange(item.pct_change)}</div>
+          <div class="name-line">
+            <span class="stock-name">${escapeHtml(item.name)}</span>
+            <span class="price mono">$${fmtPrice(item.price)}</span>
+            ${fmtPctChange(item.pct_change)}
+            ${themeTags(item.themes)}
+          </div>
           <div class="sub-metric mono">頻率斜率 ${fmtSlope(item.freq_slope)} · 強度斜率 ${fmtSlope(item.strength_slope)}</div>
-          <div class="theme-row">${themeTags(item.themes)}</div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
