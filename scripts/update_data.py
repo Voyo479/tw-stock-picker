@@ -101,10 +101,24 @@ def get_field(row, keys):
 
 # ---------- 資料庫讀寫 ----------
 def load_pool():
+    default_pool = {"reference_check": {}, "trading_days": [], "stocks": {}}
     if not os.path.exists(POOL_PATH):
-        return {"reference_check": {}, "trading_days": [], "stocks": {}}
-    with open(POOL_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+        return default_pool
+    try:
+        with open(POOL_PATH, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+        if not content:
+            print(f"警告：{POOL_PATH} 是空檔案，視為全新資料庫重新開始")
+            return default_pool
+        data = json.loads(content)
+        # 確保基本結構齊全，避免舊版/手動編輯過的檔案缺欄位
+        data.setdefault("reference_check", {})
+        data.setdefault("trading_days", [])
+        data.setdefault("stocks", {})
+        return data
+    except json.JSONDecodeError as e:
+        print(f"警告：{POOL_PATH} JSON格式錯誤（{e}），視為全新資料庫重新開始")
+        return default_pool
 
 
 def save_pool(pool):
@@ -130,7 +144,10 @@ def load_theme_mapping():
         return {}
     try:
         with open(THEME_MAPPING_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
+            content = f.read().strip()
+        if not content:
+            return {}
+        return json.loads(content)
     except Exception as e:
         print(f"讀取 theme_mapping.json 失敗，將略過補充標籤：{e}")
         return {}
@@ -142,7 +159,10 @@ def load_industry_cache():
         return None
     try:
         with open(INDUSTRY_MAPPING_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
+            content = f.read().strip()
+        if not content:
+            return None
+        return json.loads(content)
     except Exception:
         return None
 
