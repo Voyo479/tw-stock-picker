@@ -180,7 +180,19 @@
           "光電業"
         ]
       }
-    ]
+    ],
+    "heat": {
+      "average": 31.0,
+      "level": 3,
+      "label": "短線市場震盪",
+      "sample_days": 1,
+      "top_n": 50,
+      "range": {
+        "start": "2026-07-10",
+        "end": "2026-07-10",
+        "days": 1
+      }
+    }
   },
   "core2": {
     "range": {
@@ -188,6 +200,18 @@
       "end": "2026-07-10",
       "days": 1
     },
-    "list": []
+    "list": [],
+    "heat": {
+      "average": 31.0,
+      "level": 3,
+      "label": "中期市場震盪",
+      "sample_days": 1,
+      "top_n": 50,
+      "range": {
+        "start": "2026-07-10",
+        "end": "2026-07-10",
+        "days": 1
+      }
+    }
   }
 }
