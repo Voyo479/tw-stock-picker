@@ -1,9 +1,9 @@
 {
-  "update_date": "2026-07-10",
+  "update_date": "2026-07-11",
   "core1": {
     "range": {
-      "start": "2026-07-10",
-      "end": "2026-07-10",
+      "start": "2026-07-11",
+      "end": "2026-07-11",
       "days": 1
     },
     "list": [
@@ -188,16 +188,33 @@
       "sample_days": 1,
       "top_n": 50,
       "range": {
-        "start": "2026-07-10",
-        "end": "2026-07-10",
+        "start": "2026-07-11",
+        "end": "2026-07-11",
         "days": 1
       }
-    }
+    },
+    "sector_summary": [
+      {
+        "sector": "電子零組件業",
+        "count": 5,
+        "percentage": 33.3
+      },
+      {
+        "sector": "未分類",
+        "count": 4,
+        "percentage": 26.7
+      },
+      {
+        "sector": "半導體業",
+        "count": 3,
+        "percentage": 20.0
+      }
+    ]
   },
   "core2": {
     "range": {
-      "start": "2026-07-10",
-      "end": "2026-07-10",
+      "start": "2026-07-11",
+      "end": "2026-07-11",
       "days": 1
     },
     "list": [],
@@ -208,10 +225,11 @@
       "sample_days": 1,
       "top_n": 50,
       "range": {
-        "start": "2026-07-10",
-        "end": "2026-07-10",
+        "start": "2026-07-11",
+        "end": "2026-07-11",
         "days": 1
       }
-    }
+    },
+    "sector_summary": []
   }
 }
