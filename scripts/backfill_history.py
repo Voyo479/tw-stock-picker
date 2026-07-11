@@ -28,7 +28,7 @@ from datetime import datetime, timedelta
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import update_data as ud
 
-BACKFILL_TARGET_TRADING_DAYS = 20
+BACKFILL_TARGET_TRADING_DAYS = 5
 LOOKBACK_CALENDAR_DAYS = 40   # 往前找幾個日曆天當候選(扣掉週末+假日後應該還是夠20個交易日)
 REQUEST_INTERVAL_SECONDS = 2  # 每次請求之間的間隔，避免連續高頻請求被防爬蟲機制節流
 
