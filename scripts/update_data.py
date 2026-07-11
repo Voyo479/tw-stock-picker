@@ -925,7 +925,18 @@ def compute_core1(pool):
 
 
 # ---------- 核心2：近20日雙斜率趨勢 ----------
+DECAY_RATE_CORE2 = 0.9  # 資金部位時間折現率：每距今1個交易日，權重乘上這個係數
+
+
 def compute_core2(pool, core1_codes):
+    """
+    核心2：主力潛伏資金偵測。
+    對每檔候選股「有出現的那幾天」的「實際成交金額」做時間折現
+    (折現金額 = 成交金額 x DECAY_RATE_CORE2^距今交易日數)，
+    再對折現後金額序列做線性迴歸算斜率。
+    斜率同時吃進「出現得夠不夠近期/密集」與「資金量體夠不夠大」兩種資訊，
+    斜率為正代表資金部位持續放大(不只是分數排名進步，是實際金額在增溫)。
+    """
     trading_days = pool.get("trading_days", [])
     window = trading_days[-CORE2_DAYS:]
     n = len(window)
@@ -933,49 +944,34 @@ def compute_core2(pool, core1_codes):
         return [], {"start": None, "end": None, "days": 0}
 
     day_x = {d: i + 1 for i, d in enumerate(window)}  # X軸：1~n的交易日序號
+    today_idx = n
 
     candidates = []
     for code, stock in pool["stocks"].items():
         if code in core1_codes:
             continue
 
-        appear_dates = [d for d in window if d in stock["history"]]
+        trade_value_history = stock.get("trade_value_history", {})
+        appear_dates = [d for d in window if d in trade_value_history]
         if len(appear_dates) < MIN_APPEARANCE_FOR_CORE2:
             continue
 
-        # 頻率斜率：連續20天的0/1序列
-        freq_xs = list(range(1, n + 1))
-        freq_ys = [1 if d in stock["history"] else 0 for d in window]
-        freq_slope = linear_slope(freq_xs, freq_ys)
+        xs = [day_x[d] for d in appear_dates]
+        discounted_values = [
+            trade_value_history[d] * (DECAY_RATE_CORE2 ** (today_idx - day_x[d]))
+            for d in appear_dates
+        ]
+        slope = linear_slope(xs, discounted_values)
 
-        # 強度斜率：只取有出現的那幾天，保留實際交易日間距(做法A)
-        strength_xs = [day_x[d] for d in appear_dates]
-        strength_ys = [stock["history"][d] for d in appear_dates]
-        strength_slope = linear_slope(strength_xs, strength_ys)
-
-        if freq_slope > 0 and strength_slope > 0:
+        if slope > 0:
             candidates.append({
                 "code": code,
                 "name": stock["name"],
-                "freq_slope": freq_slope,
-                "strength_slope": strength_slope,
+                "discounted_slope": slope,
+                "appearance_count": len(appear_dates),
             })
 
-    m = len(candidates)
-    if m == 0:
-        range_info = {"start": window[0], "end": window[-1], "days": n}
-        return [], range_info
-
-    by_freq = sorted(candidates, key=lambda x: x["freq_slope"], reverse=True)
-    for i, c in enumerate(by_freq):
-        c["freq_rank"] = i + 1
-    by_strength = sorted(candidates, key=lambda x: x["strength_slope"], reverse=True)
-    for i, c in enumerate(by_strength):
-        c["strength_rank"] = i + 1
-    for c in candidates:
-        c["combined_score"] = (m - c["freq_rank"] + 1) + (m - c["strength_rank"] + 1)
-
-    candidates.sort(key=lambda x: x["combined_score"], reverse=True)
+    candidates.sort(key=lambda x: x["discounted_slope"], reverse=True)
     top = candidates[:CORE2_TOPK]
 
     range_info = {"start": window[0], "end": window[-1], "days": n}
