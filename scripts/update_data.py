@@ -423,19 +423,26 @@ def fetch_finmind_historical_day(date_str, max_retries=3):
     當成爬蟲擋下來；而且不指定 data_id 時，一次呼叫就能拿到「當天全部股票」
     (上市+上櫃+興櫃合併)的資料，不用像TWSE/TPEx那樣分開查兩次。
 
+    「全市場、不指定單一股票」的查法需要FinMind的註冊token才能使用，
+    從環境變數 FINMIND_TOKEN 讀取(在GitHub Actions裡透過repository secret設定，
+    不會出現在程式碼或commit紀錄裡)。
+
     回傳值：
       - list：正規化後的資料(可能是空list，代表這天判斷為非交易日/假日)
       - None：重試多次後仍抓取失敗(網路問題，非假日判斷)
-
-    免費額度：未註冊 300次/小時，這對回補20天(=20次呼叫)來說綽綽有餘。
     """
     import time
 
+    token = os.environ.get("FINMIND_TOKEN", "")
     params = {"dataset": "TaiwanStockPrice", "start_date": date_str, "end_date": date_str}
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                       "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     }
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    else:
+        print("警告：環境變數 FINMIND_TOKEN 是空的，全市場查詢可能會被拒絕(400)")
 
     for attempt in range(1, max_retries + 1):
         try:
@@ -446,6 +453,9 @@ def fetch_finmind_historical_day(date_str, max_retries=3):
                 print(f"FinMind API 已達當前額度上限（402），第{attempt}次嘗試")
                 time.sleep(5 * attempt)
                 continue
+
+            if resp.status_code == 400:
+                print(f"{date_str} FinMind回應400，內容：{resp.text[:300]!r}")
 
             resp.raise_for_status()
             try:
