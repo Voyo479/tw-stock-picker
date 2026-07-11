@@ -987,6 +987,14 @@ def main():
     today = today_taipei_str()
     print(f"=== 開始執行，台灣時間日期：{today} ===")
 
+    # 安全閥：不管reference_check有沒有基準值可比對，週六日一律直接跳過。
+    # 這是為了防止「reference_check剛好是空的(例如資料庫被重置過)+ TWSE API
+    # 剛好回傳前一交易日的舊資料」這種組合，被誤判成「今天(週末)的新交易日」。
+    weekday = datetime.fromisoformat(today).weekday()  # 0=Mon ... 5=Sat, 6=Sun
+    if weekday >= 5 and os.environ.get("FORCE_UPDATE", "").lower() != "true":
+        print(f"{today} 是週末（星期{'六' if weekday == 5 else '日'}），直接跳過，不處理")
+        return
+
     pool = load_pool()
 
     raw_rows = fetch_stock_day_all()
