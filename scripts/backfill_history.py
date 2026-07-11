@@ -4,6 +4,11 @@ backfill_history.py
 一次性回補過去約20個交易日的歷史資料，讓核心2(近20日趨勢)跟熱度指標
 不用等排程每天累積，馬上就有完整資料可以看。
 
+資料來源：改用 FinMind 開放資料API（https://finmindtrade.com），一次呼叫
+就能拿到「指定日期」全部股票(上市+上櫃+興櫃合併)的收盤行情，不用像日常排程
+那樣分開查TWSE+TPEx兩個來源。這隻API是設計給程式化查詢用的，額度限制寬鬆
+(未註冊300次/小時)，回補20天只需要20次呼叫，遠低於額度上限。
+
 用法：手動在 GitHub Actions 執行一次即可(或本機執行後把 data/ 目錄下的
 stock_pool.json、docs/result.json 一起commit上去)。
 
@@ -56,6 +61,10 @@ def main():
     existing_days = set(pool.get("trading_days", []))
     print(f"回補前，資料庫已有 {len(existing_days)} 個交易日：{sorted(existing_days)}")
 
+    # FinMind的股價資料不含股票名稱，先取得ISIN的代號->名稱對照表(跟產業別共用同一份快取)
+    name_mapping = ud.get_stock_name_mapping(today_str)
+    print(f"取得股票名稱對照表，共 {len(name_mapping)} 檔")
+
     filled_count = 0
     skipped_holiday = 0
     skipped_failed = 0
@@ -69,23 +78,23 @@ def main():
             print(f"{date_str} 已存在於資料庫，跳過")
             continue
 
-        twse_rows = ud.fetch_twse_historical_day(date_str)
-        if twse_rows is None:
-            print(f"{date_str} TWSE抓取失敗(非假日判斷，是網路/API問題)，跳過此日")
+        combined = ud.fetch_finmind_historical_day(date_str)
+        if combined is None:
+            print(f"{date_str} FinMind抓取失敗(非假日判斷，是網路/API問題)，跳過此日")
             skipped_failed += 1
             time.sleep(REQUEST_INTERVAL_SECONDS)
             continue
-        if len(twse_rows) == 0:
+        if len(combined) == 0:
             print(f"{date_str} 判斷為非交易日(假日)，跳過")
             skipped_holiday += 1
             time.sleep(REQUEST_INTERVAL_SECONDS)
             continue
 
-        tpex_raw = ud.fetch_tpex_daily_quotes(date_str)
-        tpex_rows = ud.normalize_tpex_rows(tpex_raw)
-        print(f"{date_str} 上市 {len(twse_rows)} 檔，上櫃 {len(tpex_rows)} 檔")
+        # 補上股票名稱(FinMind本身不含名稱)，找不到就用代號當名稱顯示，不影響排序計分
+        for row in combined:
+            row["name"] = name_mapping.get(row["code"], row["code"])
 
-        combined = twse_rows + tpex_rows
+        print(f"{date_str} FinMind合併資料(上市+上櫃) {len(combined)} 檔")
 
         candidates = ud.build_candidate_list(combined)
         candidates = ud.compute_daily_scores(candidates)
