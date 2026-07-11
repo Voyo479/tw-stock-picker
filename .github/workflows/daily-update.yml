@@ -6,6 +6,11 @@ on:
     - cron: '0 7 * * 1-5'
   workflow_dispatch:
     # 允許手動觸發（在GitHub網頁上點按鈕手動執行一次，方便測試）
+    inputs:
+      force_update:
+        description: '強制執行（略過假日/重複資料判斷，測試用）'
+        type: boolean
+        default: false
 
 # 讓這個排程有權限把結果commit回repo
 permissions:
@@ -28,7 +33,10 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: 執行選股程式
-        run: python scripts/backfill_history.py
+        env:
+          FORCE_UPDATE: ${{ inputs.force_update }}
+          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
+        run: python scripts/update_data.py
 
       - name: 檢查是否有資料變動並commit
         run: |
