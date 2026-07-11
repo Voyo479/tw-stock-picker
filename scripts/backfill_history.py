@@ -145,13 +145,16 @@ def main():
     core1_heat = ud.compute_heat_index(pool, ud.CORE1_DAYS, ud.CORE1_HEAT_LABELS)
     core2_heat = ud.compute_heat_index(pool, ud.CORE2_DAYS, ud.CORE2_HEAT_LABELS)
 
+    core1_sectors = ud.compute_sector_summary(core1_list, top_n=3)
+    core2_sectors = ud.compute_sector_summary(core2_list, top_n=3)
+
     ud.save_pool(pool)
 
     latest_date = pool["trading_days"][-1]
     result = {
         "update_date": latest_date,
-        "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat},
-        "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat},
+        "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
+        "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
     }
     ud.save_result(result)
 
