@@ -91,6 +91,67 @@
     100% { box-shadow: 0 0 0 0 rgba(51, 196, 129, 0); }
   }
 
+  /* ---------- Market Overview ---------- */
+  .market-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 760px) {
+    .market-overview { grid-template-columns: 1fr; }
+  }
+
+  .overview-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+
+  .overview-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+  }
+
+  .overview-main {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .overview-value {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .overview-sub {
+    font-size: 11.5px;
+    color: var(--text-faint);
+    margin-top: 8px;
+  }
+
+  .inst-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 4px 0;
+  }
+
+  .inst-name {
+    color: var(--text-muted);
+  }
+
+  .inst-value {
+    font-weight: 700;
+  }
+
   /* ---------- Panels ---------- */
   .boards {
     display: grid;
@@ -418,6 +479,10 @@
     </div>
   </header>
 
+  <div class="market-overview" id="market-overview">
+    <div class="loading-state">讀取大盤資料中...</div>
+  </div>
+
   <div class="boards">
 
     <div class="board core1">
@@ -487,18 +552,68 @@
     return themes.map((t) => `<span class="theme-tag">${escapeHtml(t)}</span>`).join('');
   };
 
-  const fmtRelativeStrength = (rs) => {
-    if (typeof rs !== 'number') return '';
-    const cls = rs > 0 ? 'pct-up' : (rs < 0 ? 'pct-down' : 'pct-flat');
-    const sign = rs > 0 ? '+' : '';
-    return `<span class="metric-chip">大盤相對 <span class="${cls}">${sign}${rs.toFixed(2)}%</span></span>`;
-  };
-
   const fmtVolumeRatio = (vr) => {
     if (typeof vr !== 'number') return '';
     const cls = vr >= 3 ? 'pct-up' : (vr >= 1.5 ? 'heat-level-3' : '');
     return `<span class="metric-chip">量能 <span class="${cls}">${vr.toFixed(2)}x</span></span>`;
   };
+
+  function renderMarketOverview(marketSummary) {
+    const container = document.getElementById('market-overview');
+    if (!marketSummary) {
+      container.innerHTML = '<div class="empty-state">大盤資料尚未產生</div>';
+      return;
+    }
+
+    const taiex = marketSummary.taiex;
+    const inst = marketSummary.institutional;
+    const breadth = marketSummary.breadth;
+
+    const taiexCard = `
+      <div class="overview-card">
+        <div class="overview-title">大盤指數</div>
+        ${taiex ? `
+          <div class="overview-main">
+            <span class="overview-value mono">${taiex.close.toLocaleString()}</span>
+            ${fmtPctChange(taiex.pct_change)}
+          </div>
+          <div class="overview-sub">發行量加權股價指數</div>
+        ` : `<div class="overview-sub">大盤指數本次抓取失敗</div>`}
+      </div>
+    `;
+
+    const fmtInstAmount = (v) => {
+      const yi = v / 1e8;  // 轉換成「億元」
+      const cls = yi > 0 ? 'pct-up' : (yi < 0 ? 'pct-down' : 'pct-flat');
+      const sign = yi > 0 ? '+' : '';
+      return `<span class="inst-value ${cls} mono">${sign}${yi.toFixed(1)}億</span>`;
+    };
+
+    const instCard = `
+      <div class="overview-card">
+        <div class="overview-title">三大法人買賣超</div>
+        ${inst ? `
+          <div class="inst-row"><span class="inst-name">外資</span>${fmtInstAmount(inst.foreign)}</div>
+          <div class="inst-row"><span class="inst-name">投信</span>${fmtInstAmount(inst.trust)}</div>
+          <div class="inst-row"><span class="inst-name">自營商</span>${fmtInstAmount(inst.dealer)}</div>
+        ` : `<div class="overview-sub">三大法人資料本次抓取失敗</div>`}
+      </div>
+    `;
+
+    const breadthCard = `
+      <div class="overview-card">
+        <div class="overview-title">大盤今日強度</div>
+        ${breadth ? `
+          <div class="overview-main">
+            <span class="overview-value mono">${breadth.up_count}／${breadth.top_n}</span>
+          </div>
+          <div class="overview-sub">全市場成交金額前${breadth.top_n}大中，今日上漲(含平盤)檔數</div>
+        ` : `<div class="overview-sub">尚無資料</div>`}
+      </div>
+    `;
+
+    container.innerHTML = taiexCard + instCard + breadthCard;
+  }
 
   function renderHeat(elementId, heat) {
     const container = document.getElementById(elementId);
@@ -555,7 +670,7 @@
             ${fmtPctChange(item.pct_change)}
             ${themeTags(item.themes)}
           </div>
-          <div class="metric-row mono">${fmtRelativeStrength(item.relative_strength)}${fmtVolumeRatio(item.volume_ratio)}</div>
+          <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}</div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
@@ -583,7 +698,7 @@
             ${themeTags(item.themes)}
           </div>
           <div class="sub-metric mono">頻率斜率 ${fmtSlope(item.freq_slope)} · 強度斜率 ${fmtSlope(item.strength_slope)}</div>
-          <div class="metric-row mono">${fmtRelativeStrength(item.relative_strength)}${fmtVolumeRatio(item.volume_ratio)}</div>
+          <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}</div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
@@ -600,6 +715,7 @@
     })
     .then((data) => {
       document.getElementById('update-time').textContent = `更新於 ${data.update_date}`;
+      renderMarketOverview(data.market_summary);
       document.getElementById('core1-range').textContent = fmtRange(data.core1 && data.core1.range);
       document.getElementById('core2-range').textContent = fmtRange(data.core2 && data.core2.range);
       renderCore1(data.core1 && data.core1.list);
@@ -611,6 +727,8 @@
     })
     .catch((err) => {
       document.getElementById('update-time').textContent = '尚無資料';
+      document.getElementById('market-overview').innerHTML =
+        '<div class="empty-state">尚未產生資料。請確認 GitHub Actions 排程是否已成功執行過一次。</div>';
       ['core1-rows', 'core2-rows'].forEach((id) => {
         document.getElementById(id).innerHTML =
           '<div class="error-state">尚未產生資料。請確認 GitHub Actions 排程是否已成功執行過一次。</div>';
