@@ -142,6 +142,13 @@ def main():
     ud.enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
     ud.enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
 
+    # 回補情境沒有「歷史大盤指數」資料可用，相對大盤強度先留空(None)；
+    # 量能異常倍數則可以正常計算，因為trade_value_history在回補過程中已經累積
+    latest_trading_days = pool.get("trading_days", [])
+    latest_date_for_metrics = latest_trading_days[-1] if latest_trading_days else today_str
+    ud.enrich_with_optimization_metrics(core1_list, pool, None, latest_date_for_metrics, latest_trading_days)
+    ud.enrich_with_optimization_metrics(core2_list, pool, None, latest_date_for_metrics, latest_trading_days)
+
     core1_heat = ud.compute_heat_index(pool, ud.CORE1_DAYS, ud.CORE1_HEAT_LABELS)
     core2_heat = ud.compute_heat_index(pool, ud.CORE2_DAYS, ud.CORE2_HEAT_LABELS)
 
