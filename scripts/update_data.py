@@ -32,6 +32,7 @@ THEME_MAPPING_PATH = os.path.join(REPO_ROOT, "data", "theme_mapping.json")
 INDUSTRY_MAPPING_PATH = os.path.join(REPO_ROOT, "data", "industry_mapping.json")
 
 STOCK_DAY_ALL_URL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
+TWSE_HISTORICAL_URL = "https://www.twse.com.tw/exchangeReport/MI_INDEX"  # 支援查詢過去任一交易日
 ISIN_LISTED_URL = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
 ISIN_OTC_URL = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=4"
 TPEX_DAILY_QUOTES_URL = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
@@ -100,6 +101,18 @@ def to_roc_date(iso_date_str):
     y, m, d = iso_date_str.split("-")
     roc_year = int(y) - 1911
     return f"{roc_year}/{m}/{d}"
+
+
+def to_compact_date(iso_date_str):
+    """把 YYYY-MM-DD 轉成 TWSE歷史API需要的 YYYYMMDD 格式"""
+    return iso_date_str.replace("-", "")
+
+
+def strip_html_tags(s):
+    """TWSE歷史API的漲跌符號欄位有時包在HTML標籤裡(如 <p style=...>+</p>)，去掉標籤只留文字"""
+    if s is None:
+        return ""
+    return re.sub(r"<[^>]+>", "", s).strip()
 
 
 def get_field(row, keys):
@@ -258,6 +271,76 @@ def get_industry_mapping(today):
 
     print("沒有可用的產業別資料（首次抓取失敗），本次結果將不含產業別標籤")
     return {}
+
+
+# ---------- 歷史資料回補專用：查詢過去任一交易日的上市資料 ----------
+def fetch_twse_historical_day(date_str, max_retries=3):
+    """
+    抓取指定日期(YYYY-MM-DD)的上市個股全部交易資訊，用於歷史資料回補。
+    回傳值：
+      - list：正規化後的資料(可能是空list，代表這天判斷為非交易日/假日)
+      - None：重試多次後仍抓取失敗(網路問題，非假日判斷)
+    """
+    import time
+
+    params = {"response": "json", "date": to_compact_date(date_str), "type": "ALLBUT0999"}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Referer": "https://www.twse.com.tw/",
+    }
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(TWSE_HISTORICAL_URL, params=params, headers=headers, timeout=30)
+            resp.raise_for_status()
+            try:
+                data = resp.json()
+            except Exception as je:
+                print(f"{date_str} TWSE歷史資料回應不是合法JSON（{je}），第{attempt}次嘗試")
+                time.sleep(2 * attempt)
+                continue
+
+            rows = data.get("data9")
+            if not rows:
+                stat = data.get("stat")
+                print(f"{date_str} TWSE歷史資料無交易紀錄(可能是假日)，stat={stat!r}")
+                return []  # 空list：判斷為非交易日
+
+            normalized = []
+            for row in rows:
+                if len(row) < 11:
+                    continue
+                code = str(row[0]).strip()
+                name = str(row[1]).strip()
+                trade_value = parse_float(row[4])
+                close = parse_float(row[8])
+                sign = strip_html_tags(row[9])
+                diff = parse_float(row[10])
+
+                if close is None or trade_value is None or trade_value <= 0:
+                    continue
+
+                if diff is None:
+                    change = 0.0
+                elif sign == "+":
+                    change = diff
+                elif sign == "-":
+                    change = -diff
+                else:
+                    change = 0.0  # 平盤(空白)或無法判斷符號(如除權息當日的X)，視為0
+
+                normalized.append({
+                    "code": code, "name": name, "close": close,
+                    "change": change, "trade_value": trade_value, "market": "上市",
+                })
+            return normalized
+        except Exception as e:
+            print(f"{date_str} 抓取TWSE歷史資料失敗（第{attempt}次嘗試）：{e}")
+            time.sleep(2 * attempt)
+
+    print(f"{date_str} TWSE歷史資料共嘗試{max_retries}次仍失敗")
+    return None
 
 
 # ---------- 抓取資料 ----------
