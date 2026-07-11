@@ -324,6 +324,18 @@
     color: var(--text);
   }
 
+  .code-link {
+    text-decoration: none;
+    border-bottom: 1px dashed var(--text-faint);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .code-link:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
   .name-cell { min-width: 0; }
 
   .name-line {
@@ -503,6 +515,7 @@
     <div><strong>紅色▲</strong>：上次歸類為核心2、本次升上核心1　　<strong>綠色▼</strong>：上次歸類為核心1、本次降至核心2</div>
     <div><strong>金色標籤</strong>：第一個標籤為 TWSE 官方產業別（程式自動抓取，每週更新），其餘為選填補充標籤（由 data/theme_mapping.json 人工維護），未收錄的股票顯示「未分類」。</div>
     <div><strong>大盤相對</strong>：個股當日漲跌幅減去大盤(加權指數)當日漲跌幅，正值代表比大盤強。<strong>量能</strong>：今日成交金額 ÷ 近20日平均成交金額，倍數越高代表資金今天特別關注。兩者資料不足時不顯示。</div>
+    <div>點擊<strong>股票代號</strong>可開啟該股在 Yahoo奇摩股市 的K線技術分析頁面（新分頁開啟）。</div>
     <div>資料來源：台灣證券交易所 OpenAPI（僅上市股票）。本頁為資料統計工具，呈現內容僅供研究參考，不構成投資建議，任何交易決策請自行評估風險。</div>
   </footer>
 
@@ -523,6 +536,11 @@
   const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[c]));
+
+  const yahooStockUrl = (code, market) => {
+    const suffix = market === '上櫃' ? '.TWO' : '.TW';
+    return `https://tw.stock.yahoo.com/quote/${encodeURIComponent(code)}${suffix}/technical-analysis`;
+  };
 
   const fmtPrice = (p) => (typeof p === 'number' ? p.toFixed(2) : '--');
   const fmtPctChange = (p) => {
@@ -627,7 +645,7 @@
     container.innerHTML = list.map((item, i) => `
       <div class="row" style="animation-delay:${i * 40}ms">
         <div class="rank mono">${String(i + 1).padStart(2, '0')}</div>
-        <div class="code mono">${escapeHtml(item.code)}</div>
+        <a class="code mono code-link" href="${yahooStockUrl(item.code, item.market)}" target="_blank" rel="noopener" title="查看K線技術圖(Yahoo股市)">${escapeHtml(item.code)}</a>
         <div class="name-cell">
           <div class="name-line">
             <span class="stock-name">${escapeHtml(item.name)}</span>
@@ -654,7 +672,7 @@
     container.innerHTML = list.map((item, i) => `
       <div class="row" style="animation-delay:${i * 40}ms">
         <div class="rank mono">${String(i + 1).padStart(2, '0')}</div>
-        <div class="code mono">${escapeHtml(item.code)}</div>
+        <a class="code mono code-link" href="${yahooStockUrl(item.code, item.market)}" target="_blank" rel="noopener" title="查看K線技術圖(Yahoo股市)">${escapeHtml(item.code)}</a>
         <div class="name-cell">
           <div class="name-line">
             <span class="stock-name">${escapeHtml(item.name)}</span>
