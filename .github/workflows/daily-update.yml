@@ -36,7 +36,7 @@ jobs:
         env:
           FORCE_UPDATE: ${{ inputs.force_update }}
           FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
-        run: python scripts/update_data.py
+        run: python scripts/backfill_history.py
 
       - name: 檢查是否有資料變動並commit
         run: |
