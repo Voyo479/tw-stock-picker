@@ -1,0 +1,152 @@
+# -*- coding: utf-8 -*-
+"""
+backfill_history.py
+一次性回補過去約20個交易日的歷史資料，讓核心2(近20日趨勢)跟熱度指標
+不用等排程每天累積，馬上就有完整資料可以看。
+
+用法：手動在 GitHub Actions 執行一次即可(或本機執行後把 data/ 目錄下的
+stock_pool.json、docs/result.json 一起commit上去)。
+
+執行邏輯：
+  1. 從「今天」往前推算候選日期(排除週六日)，逐一嘗試抓取
+  2. 已經存在資料庫裡的日期會跳過，不重複抓取
+  3. 遇到抓不到資料的日期，判斷為假日直接跳過，不中斷整個回補流程
+  4. 補到累積滿20個「有效交易日」為止(或候選日期試完為止)
+  5. 回補完成後，立即計算一次核心1/核心2/熱度指標，產生完整的result.json
+"""
+
+import sys
+import os
+from datetime import datetime, timedelta
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import update_data as ud
+
+BACKFILL_TARGET_TRADING_DAYS = 20
+LOOKBACK_CALENDAR_DAYS = 40   # 往前找幾個日曆天當候選(扣掉週末+假日後應該還是夠20個交易日)
+
+
+def generate_candidate_dates(end_date, lookback_calendar_days):
+    """
+    從 end_date 往前推算候選日期(不含 end_date 本身)，只保留週一到週五，
+    由「新到舊」排序回傳 —— 這樣才能優先抓到最近的交易日，
+    一旦補滿 BACKFILL_TARGET_TRADING_DAYS 就停止，不會把預算浪費在40天前的舊資料上。
+    (trading_days最終會依日期字串排序寫回，所以這裡的處理順序不影響最終儲存順序)
+    """
+    dates = []
+    d = end_date
+    for _ in range(lookback_calendar_days):
+        d = d - timedelta(days=1)
+        if d.weekday() < 5:  # 0=Mon ... 4=Fri
+            dates.append(d.date().isoformat())
+    return dates  # 新到舊
+
+
+def main():
+    today_str = ud.today_taipei_str()
+    today_date = datetime.fromisoformat(today_str)
+
+    candidate_dates = generate_candidate_dates(today_date, LOOKBACK_CALENDAR_DAYS)
+    print(f"=== 開始回補歷史資料，今天日期：{today_str} ===")
+    print(f"候選日期範圍：{candidate_dates[-1]}（最舊）～ {candidate_dates[0]}（最新），共{len(candidate_dates)}個候選日，由新到舊嘗試")
+
+    pool = ud.load_pool()
+    existing_days = set(pool.get("trading_days", []))
+    print(f"回補前，資料庫已有 {len(existing_days)} 個交易日：{sorted(existing_days)}")
+
+    filled_count = 0
+    skipped_holiday = 0
+    skipped_failed = 0
+
+    for date_str in candidate_dates:
+        if filled_count >= BACKFILL_TARGET_TRADING_DAYS:
+            print(f"已補滿{BACKFILL_TARGET_TRADING_DAYS}個交易日，停止回補")
+            break
+
+        if date_str in existing_days:
+            print(f"{date_str} 已存在於資料庫，跳過")
+            continue
+
+        twse_rows = ud.fetch_twse_historical_day(date_str)
+        if twse_rows is None:
+            print(f"{date_str} TWSE抓取失敗(非假日判斷，是網路/API問題)，跳過此日")
+            skipped_failed += 1
+            continue
+        if len(twse_rows) == 0:
+            print(f"{date_str} 判斷為非交易日(假日)，跳過")
+            skipped_holiday += 1
+            continue
+
+        tpex_raw = ud.fetch_tpex_daily_quotes(date_str)
+        tpex_rows = ud.normalize_tpex_rows(tpex_raw)
+        print(f"{date_str} 上市 {len(twse_rows)} 檔，上櫃 {len(tpex_rows)} 檔")
+
+        combined = twse_rows + tpex_rows
+
+        candidates = ud.build_candidate_list(combined)
+        candidates = ud.compute_daily_scores(candidates)
+
+        ud.update_pool_with_today(pool, date_str, candidates)
+
+        breadth = ud.compute_market_breadth_count(combined)
+        ud.update_market_breadth(pool, date_str, breadth)
+
+        filled_count += 1
+        print(f"{date_str} 回補完成：候選清單 {len(candidates)} 檔，前50大上漲(含平盤) {breadth} 檔")
+
+    # 重要：backfill是由新到舊往前推、再反轉成舊到新逐一處理，
+    # 但trading_days欄位在update_pool_with_today內只是單純append，
+    # 為了保險起見，這裡強制依日期字串排序(YYYY-MM-DD字串排序=時間排序)，
+    # 確保後續核心1/核心2/熱度指標的window切片邏�輯不會拿到錯誤順序的資料。
+    pool["trading_days"] = sorted(set(pool.get("trading_days", [])))
+
+    ud.prune_pool(pool)
+    ud.save_pool(pool)
+
+    print(f"\n=== 回補統計 ===")
+    print(f"新增 {filled_count} 個交易日，跳過假日 {skipped_holiday} 天，抓取失敗 {skipped_failed} 天")
+    print(f"回補後，資料庫共有 {len(pool.get('trading_days', []))} 個交易日")
+
+    if not pool.get("trading_days"):
+        print("資料庫仍是空的，無法計算核心1/核心2，結束")
+        return
+
+    # 立即計算一次核心1/核心2/熱度指標，產生完整result.json，不用等下次排程
+    core1_list, core1_range = ud.compute_core1(pool)
+    core1_codes = {c["code"] for c in core1_list}
+    core2_list, core2_range = ud.compute_core2(pool, core1_codes)
+
+    marks = ud.compute_marks_and_update_classification(pool, core1_list, core2_list)
+    for c in core1_list:
+        c["mark"] = marks.get(c["code"])
+    for c in core2_list:
+        c["mark"] = marks.get(c["code"])
+
+    theme_mapping = ud.load_theme_mapping()
+    industry_mapping = ud.get_industry_mapping(today_str)
+    ud.enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
+    ud.enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
+
+    core1_heat = ud.compute_heat_index(pool, ud.CORE1_DAYS, ud.CORE1_HEAT_LABELS)
+    core2_heat = ud.compute_heat_index(pool, ud.CORE2_DAYS, ud.CORE2_HEAT_LABELS)
+
+    ud.save_pool(pool)
+
+    latest_date = pool["trading_days"][-1]
+    result = {
+        "update_date": latest_date,
+        "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat},
+        "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat},
+    }
+    ud.save_result(result)
+
+    print(f"核心1：{len(core1_list)} 檔，核心2：{len(core2_list)} 檔")
+    if core1_heat:
+        print(f"核心1熱度：{core1_heat['label']}")
+    if core2_heat:
+        print(f"核心2熱度：{core2_heat['label']}")
+    print("回補與計算全部完成")
+
+
+if __name__ == "__main__":
+    main()
