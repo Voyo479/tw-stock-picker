@@ -315,6 +315,20 @@
     margin-top: 4px;
   }
 
+  .metric-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+    font-size: 11.5px;
+  }
+
+  .metric-chip {
+    color: var(--text-faint);
+  }
+
+  .metric-chip .heat-level-3 { color: var(--gold); }
+
   .theme-row {
     display: flex;
     flex-wrap: wrap;
@@ -439,6 +453,7 @@
   <footer>
     <div><strong>紅色▲</strong>：上次歸類為核心2、本次升上核心1　　<strong>綠色▼</strong>：上次歸類為核心1、本次降至核心2</div>
     <div><strong>金色標籤</strong>：第一個標籤為 TWSE 官方產業別（程式自動抓取，每週更新），其餘為選填補充標籤（由 data/theme_mapping.json 人工維護），未收錄的股票顯示「未分類」。</div>
+    <div><strong>大盤相對</strong>：個股當日漲跌幅減去大盤(加權指數)當日漲跌幅，正值代表比大盤強。<strong>量能</strong>：今日成交金額 ÷ 近20日平均成交金額，倍數越高代表資金今天特別關注。兩者資料不足時不顯示。</div>
     <div>資料來源：台灣證券交易所 OpenAPI（僅上市股票）。本頁為資料統計工具，呈現內容僅供研究參考，不構成投資建議，任何交易決策請自行評估風險。</div>
   </footer>
 
@@ -470,6 +485,19 @@
   const themeTags = (themes) => {
     if (!themes || themes.length === 0) return '<span class="theme-tag theme-none">未分類</span>';
     return themes.map((t) => `<span class="theme-tag">${escapeHtml(t)}</span>`).join('');
+  };
+
+  const fmtRelativeStrength = (rs) => {
+    if (typeof rs !== 'number') return '';
+    const cls = rs > 0 ? 'pct-up' : (rs < 0 ? 'pct-down' : 'pct-flat');
+    const sign = rs > 0 ? '+' : '';
+    return `<span class="metric-chip">大盤相對 <span class="${cls}">${sign}${rs.toFixed(2)}%</span></span>`;
+  };
+
+  const fmtVolumeRatio = (vr) => {
+    if (typeof vr !== 'number') return '';
+    const cls = vr >= 3 ? 'pct-up' : (vr >= 1.5 ? 'heat-level-3' : '');
+    return `<span class="metric-chip">量能 <span class="${cls}">${vr.toFixed(2)}x</span></span>`;
   };
 
   function renderHeat(elementId, heat) {
@@ -527,6 +555,7 @@
             ${fmtPctChange(item.pct_change)}
             ${themeTags(item.themes)}
           </div>
+          <div class="metric-row mono">${fmtRelativeStrength(item.relative_strength)}${fmtVolumeRatio(item.volume_ratio)}</div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
@@ -554,6 +583,7 @@
             ${themeTags(item.themes)}
           </div>
           <div class="sub-metric mono">頻率斜率 ${fmtSlope(item.freq_slope)} · 強度斜率 ${fmtSlope(item.strength_slope)}</div>
+          <div class="metric-row mono">${fmtRelativeStrength(item.relative_strength)}${fmtVolumeRatio(item.volume_ratio)}</div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
