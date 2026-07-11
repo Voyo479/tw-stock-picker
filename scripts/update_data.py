@@ -32,6 +32,7 @@ THEME_MAPPING_PATH = os.path.join(REPO_ROOT, "data", "theme_mapping.json")
 INDUSTRY_MAPPING_PATH = os.path.join(REPO_ROOT, "data", "industry_mapping.json")
 
 STOCK_DAY_ALL_URL = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
+MI_INDEX_URL = "https://openapi.twse.com.tw/v1/exchangeReport/MI_INDEX"  # 大盤指數(含加權指數)當日快照
 TWSE_HISTORICAL_URL = "https://www.twse.com.tw/exchangeReport/MI_INDEX"  # 支援查詢過去任一交易日
 ISIN_LISTED_URL = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=2"
 ISIN_OTC_URL = "https://isin.twse.com.tw/isin/C_public.jsp?strMode=4"
@@ -536,6 +537,59 @@ def fetch_stock_day_all(max_retries=3):
     return None
 
 
+def fetch_taiex_pct_change(max_retries=3):
+    """
+    抓取「發行量加權股價指數」(大盤)當日漲跌百分比，用來計算個股的「相對大盤強度」。
+    用 openapi.twse.com.tw 這個網域(跟STOCK_DAY_ALL同網域，已驗證穩定可用)，
+    不用 www.twse.com.tw (那個網域對雲端IP有封鎖問題)。
+
+    回傳值：
+      - float：大盤當日漲跌百分比(可能是負數)
+      - None：抓取失敗，或找不到對應資料列
+    """
+    import time
+
+    last_error = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(MI_INDEX_URL, timeout=30)
+            print(f"MI_INDEX(大盤指數) 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
+            resp.raise_for_status()
+            try:
+                data = resp.json()
+            except Exception as je:
+                print(f"警告：MI_INDEX 回應不是合法JSON（{je}）")
+                last_error = je
+                time.sleep(2 * attempt)
+                continue
+
+            if not isinstance(data, list):
+                print(f"警告：MI_INDEX 回傳格式異常，型態={type(data)}")
+                last_error = ValueError("unexpected format")
+                time.sleep(2 * attempt)
+                continue
+
+            for row in data:
+                if row.get("指數") == "發行量加權股價指數":
+                    pct = parse_float(row.get("漲跌百分比"))
+                    if pct is not None:
+                        return pct
+                    print(f"警告：找到大盤指數列，但「漲跌百分比」欄位無法解析：{row}")
+                    last_error = ValueError("cannot parse pct")
+                    break
+
+            print(f"警告：MI_INDEX 資料中找不到「發行量加權股價指數」這一列")
+            last_error = ValueError("TAIEX row not found")
+            time.sleep(2 * attempt)
+        except Exception as e:
+            print(f"抓取大盤指數失敗（第{attempt}次嘗試）：{e}")
+            last_error = e
+            time.sleep(2 * attempt)
+
+    print(f"大盤指數共嘗試{max_retries}次仍失敗，本次「相對大盤強度」將無法計算。最後錯誤：{last_error}")
+    return None
+
+
 def fetch_tpex_daily_quotes(today, max_retries=3):
     """
     抓取 TPEx(上櫃) 每日收盤行情。若這次執行失敗或解析不到資料，
@@ -740,6 +794,7 @@ def update_pool_with_today(pool, today, candidates):
         stock = pool["stocks"].setdefault(c["code"], {
             "name": c["name"],
             "history": {},
+            "trade_value_history": {},
             "last_seen": None,
             "last_classification": None,
             "last_close": None,
@@ -748,6 +803,7 @@ def update_pool_with_today(pool, today, candidates):
         })
         stock["name"] = c["name"]
         stock["history"][today] = c["score"]
+        stock.setdefault("trade_value_history", {})[today] = c["trade_value"]
         stock["last_seen"] = today
         stock["last_close"] = c["close"]
         stock["last_pct_change"] = c["pct_change"]
@@ -774,10 +830,18 @@ def prune_pool(pool):
             continue
         # 順便把history內、不在目前trading_days緩衝範圍內的舊紀錄清掉
         stock["history"] = {d: s for d, s in stock["history"].items() if d in day_index}
+        stock["trade_value_history"] = {
+            d: v for d, v in stock.get("trade_value_history", {}).items() if d in day_index
+        }
 
     # 熱度指標的每日檔數紀錄，也只保留在trading_days緩衝範圍內的
     if "market_breadth" in pool:
         pool["market_breadth"] = {d: c for d, c in pool["market_breadth"].items() if d in day_index}
+
+    if "market_index_pct_change" in pool:
+        pool["market_index_pct_change"] = {
+            d: v for d, v in pool["market_index_pct_change"].items() if d in day_index
+        }
 
 
 # ---------- 熱度指標：全市場前50大成交金額中的上漲檔數 ----------
@@ -960,6 +1024,51 @@ def compute_sector_summary(entries, top_n=3):
     ]
 
 
+# ---------- 優化指標：量能異常倍數 / 相對大盤強度 ----------
+VOLUME_ANOMALY_WINDOW = 20  # 量能異常倍數的比較基準天數
+
+
+def compute_volume_anomaly_ratio(stock, today, trading_days, window=VOLUME_ANOMALY_WINDOW):
+    """
+    量能異常倍數 = 今日成交金額 / 近window個交易日(不含今日)的平均成交金額。
+    數值越大代表今天的成交金額比近期平均放大越多倍，用來抓「資金剛開始關注」的訊號。
+    資料不足(該股歷史紀錄不足)時回傳 None，不強行計算。
+    """
+    history = stock.get("trade_value_history", {})
+    today_value = history.get(today)
+    if today_value is None:
+        return None
+
+    baseline_days = [d for d in trading_days[-(window + 1):] if d != today]
+    baseline_values = [history[d] for d in baseline_days if d in history]
+
+    if not baseline_values:
+        return None  # 還沒有足夠的歷史資料可以當基準(例如剛好是這檔股票第一次上榜)
+
+    baseline_avg = sum(baseline_values) / len(baseline_values)
+    if baseline_avg <= 0:
+        return None
+
+    return round(today_value / baseline_avg, 2)
+
+
+def enrich_with_optimization_metrics(entries, pool, taiex_pct_change, today, trading_days):
+    """
+    補上「相對大盤強度」與「量能異常倍數」這兩項優化指標。
+    taiex_pct_change 為 None 時(大盤指數抓取失敗)，relative_strength 一併回傳 None，
+    不會讓其他欄位或整個流程失敗。
+    """
+    for e in entries:
+        if taiex_pct_change is not None and e.get("pct_change") is not None:
+            e["relative_strength"] = round(e["pct_change"] - taiex_pct_change, 2)
+        else:
+            e["relative_strength"] = None
+
+        stock = pool["stocks"].get(e["code"], {})
+        e["volume_ratio"] = compute_volume_anomaly_ratio(stock, today, trading_days)
+    return entries
+
+
 # ---------- 升降標記 ----------
 def compute_marks_and_update_classification(pool, core1_list, core2_list):
     marks = {}
@@ -984,31 +1093,45 @@ def compute_marks_and_update_classification(pool, core1_list, core2_list):
 
 # ---------- 主流程 ----------
 def main():
-    today = today_taipei_str()
-    print(f"=== 開始執行，台灣時間日期：{today} ===")
+    override_date = os.environ.get("OVERRIDE_DATE", "").strip()
+    if override_date:
+        today = override_date
+        print(f"=== 收到手動指定日期 OVERRIDE_DATE={today}，以此日期標記本次抓到的資料 ===")
+    else:
+        today = today_taipei_str()
+        print(f"=== 開始執行，台灣時間日期：{today} ===")
+
+    pool = load_pool()
+    is_bootstrap = len(pool.get("trading_days", [])) == 0  # 資料庫完全空白 = 第一次啟動
+
+    force = os.environ.get("FORCE_UPDATE", "").lower() == "true" or bool(override_date) or is_bootstrap
 
     # 安全閥：不管reference_check有沒有基準值可比對，週六日一律直接跳過。
     # 這是為了防止「reference_check剛好是空的(例如資料庫被重置過)+ TWSE API
     # 剛好回傳前一交易日的舊資料」這種組合，被誤判成「今天(週末)的新交易日」。
+    # 但如果資料庫「完全是空的」(第一次啟動，還沒有任何一筆紀錄)，就自動放行，
+    # 讓系統至少能抓到第一筆資料當作起點；之後只要有了第一筆正確資料，
+    # 這道安全閥就會照常對之後的每一次執行生效，不會有反覆誤判的風險。
     weekday = datetime.fromisoformat(today).weekday()  # 0=Mon ... 5=Sat, 6=Sun
-    if weekday >= 5 and os.environ.get("FORCE_UPDATE", "").lower() != "true":
+    if weekday >= 5 and not force:
         print(f"{today} 是週末（星期{'六' if weekday == 5 else '日'}），直接跳過，不處理")
         return
-
-    pool = load_pool()
+    if weekday >= 5 and is_bootstrap:
+        print(f"{today} 是週末，但資料庫目前完全空白（第一次啟動），允許抓取第一筆資料當起點")
 
     raw_rows = fetch_stock_day_all()
     if raw_rows is None:
         print("無法取得資料，結束本次執行")
         return
 
-    if not is_new_trading_day(raw_rows, pool) and os.environ.get("FORCE_UPDATE", "").lower() != "true":
+    if not is_new_trading_day(raw_rows, pool) and not force:
         print(f"{today} 判定為非交易日（假日/國定假日/資料未更新），跳過本次處理")
         save_pool(pool)  # 基準值可能有更新，還是存一下
         return
 
-    if os.environ.get("FORCE_UPDATE", "").lower() == "true":
-        print(f"{today} 收到強制執行指令(FORCE_UPDATE)，略過假日/重複資料判斷")
+    if force:
+        reason = "資料庫為空白(第一次啟動)" if is_bootstrap else "FORCE_UPDATE 或 OVERRIDE_DATE 生效中"
+        print(f"{today} 略過假日/重複資料/週末判斷（{reason}）")
 
     print(f"{today} 判定為交易日，開始處理")
 
@@ -1050,6 +1173,14 @@ def main():
     industry_mapping = get_industry_mapping(today)
     enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
     enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
+
+    taiex_pct_change = fetch_taiex_pct_change()
+    if taiex_pct_change is not None:
+        print(f"大盤(加權指數)今日漲跌：{taiex_pct_change}%")
+        pool.setdefault("market_index_pct_change", {})[today] = taiex_pct_change
+    trading_days_snapshot = pool.get("trading_days", [])
+    enrich_with_optimization_metrics(core1_list, pool, taiex_pct_change, today, trading_days_snapshot)
+    enrich_with_optimization_metrics(core2_list, pool, taiex_pct_change, today, trading_days_snapshot)
 
     core1_heat = compute_heat_index(pool, CORE1_DAYS, CORE1_HEAT_LABELS)
     core2_heat = compute_heat_index(pool, CORE2_DAYS, CORE2_HEAT_LABELS)
