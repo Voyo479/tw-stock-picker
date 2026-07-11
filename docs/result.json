@@ -17,7 +17,9 @@
         "market": "上市",
         "themes": [
           "半導體業"
-        ]
+        ],
+        "relative_strength": 10.8,
+        "volume_ratio": null
       },
       {
         "code": "8046",
@@ -29,7 +31,9 @@
         "market": "上市",
         "themes": [
           "電子零組件業"
-        ]
+        ],
+        "relative_strength": 10.78,
+        "volume_ratio": null
       },
       {
         "code": "6182",
@@ -39,7 +43,9 @@
         "price": 172.5,
         "pct_change": 7.8125,
         "market": "上櫃",
-        "themes": []
+        "themes": [],
+        "relative_strength": 8.64,
+        "volume_ratio": null
       },
       {
         "code": "3711",
@@ -51,7 +57,9 @@
         "market": "上市",
         "themes": [
           "半導體業"
-        ]
+        ],
+        "relative_strength": 9.15,
+        "volume_ratio": null
       },
       {
         "code": "2344",
@@ -63,7 +71,9 @@
         "market": "上市",
         "themes": [
           "半導體業"
-        ]
+        ],
+        "relative_strength": 5.58,
+        "volume_ratio": null
       },
       {
         "code": "2327",
@@ -75,7 +85,9 @@
         "market": "上市",
         "themes": [
           "電子零組件業"
-        ]
+        ],
+        "relative_strength": 1.84,
+        "volume_ratio": null
       },
       {
         "code": "2409",
@@ -87,7 +99,9 @@
         "market": "上市",
         "themes": [
           "光電業"
-        ]
+        ],
+        "relative_strength": 7.26,
+        "volume_ratio": null
       },
       {
         "code": "6488",
@@ -97,7 +111,9 @@
         "price": 1350.0,
         "pct_change": 9.75609756097561,
         "market": "上櫃",
-        "themes": []
+        "themes": [],
+        "relative_strength": 10.59,
+        "volume_ratio": null
       },
       {
         "code": "3037",
@@ -110,7 +126,9 @@
         "themes": [
           "電子零組件業",
           "AI伺服器供應鏈"
-        ]
+        ],
+        "relative_strength": 2.22,
+        "volume_ratio": null
       },
       {
         "code": "3026",
@@ -122,7 +140,9 @@
         "market": "上市",
         "themes": [
           "電子零組件業"
-        ]
+        ],
+        "relative_strength": 6.29,
+        "volume_ratio": null
       },
       {
         "code": "3211",
@@ -132,7 +152,9 @@
         "price": 454.0,
         "pct_change": 6.1988304093567255,
         "market": "上櫃",
-        "themes": []
+        "themes": [],
+        "relative_strength": 7.03,
+        "volume_ratio": null
       },
       {
         "code": "6147",
@@ -142,7 +164,9 @@
         "price": 217.0,
         "pct_change": 8.771929824561402,
         "market": "上櫃",
-        "themes": []
+        "themes": [],
+        "relative_strength": 9.6,
+        "volume_ratio": null
       },
       {
         "code": "4958",
@@ -154,7 +178,9 @@
         "market": "上市",
         "themes": [
           "電子零組件業"
-        ]
+        ],
+        "relative_strength": 4.9,
+        "volume_ratio": null
       },
       {
         "code": "2356",
@@ -166,7 +192,9 @@
         "market": "上市",
         "themes": [
           "電腦及週邊設備業"
-        ]
+        ],
+        "relative_strength": 6.27,
+        "volume_ratio": null
       },
       {
         "code": "3481",
@@ -178,7 +206,9 @@
         "market": "上市",
         "themes": [
           "光電業"
-        ]
+        ],
+        "relative_strength": 0.98,
+        "volume_ratio": null
       }
     ],
     "heat": {
