@@ -537,14 +537,14 @@ def fetch_stock_day_all(max_retries=3):
     return None
 
 
-def fetch_taiex_pct_change(max_retries=3):
+def fetch_taiex_index(max_retries=3):
     """
-    抓取「發行量加權股價指數」(大盤)當日漲跌百分比，用來計算個股的「相對大盤強度」。
+    抓取「發行量加權股價指數」(大盤)當日收盤指數與漲跌百分比。
     用 openapi.twse.com.tw 這個網域(跟STOCK_DAY_ALL同網域，已驗證穩定可用)，
     不用 www.twse.com.tw (那個網域對雲端IP有封鎖問題)。
 
     回傳值：
-      - float：大盤當日漲跌百分比(可能是負數)
+      - dict {"close": float, "pct_change": float}：成功
       - None：抓取失敗，或找不到對應資料列
     """
     import time
@@ -571,11 +571,12 @@ def fetch_taiex_pct_change(max_retries=3):
 
             for row in data:
                 if row.get("指數") == "發行量加權股價指數":
+                    close = parse_float(row.get("收盤指數"))
                     pct = parse_float(row.get("漲跌百分比"))
-                    if pct is not None:
-                        return pct
-                    print(f"警告：找到大盤指數列，但「漲跌百分比」欄位無法解析：{row}")
-                    last_error = ValueError("cannot parse pct")
+                    if close is not None and pct is not None:
+                        return {"close": close, "pct_change": pct}
+                    print(f"警告：找到大盤指數列，但欄位無法解析：{row}")
+                    last_error = ValueError("cannot parse taiex row")
                     break
 
             print(f"警告：MI_INDEX 資料中找不到「發行量加權股價指數」這一列")
@@ -587,6 +588,101 @@ def fetch_taiex_pct_change(max_retries=3):
             time.sleep(2 * attempt)
 
     print(f"大盤指數共嘗試{max_retries}次仍失敗，本次「相對大盤強度」將無法計算。最後錯誤：{last_error}")
+    return None
+
+
+BFI82U_URL = "https://openapi.twse.com.tw/v1/fund/BFI82U"
+
+
+def categorize_institutional_unit(name):
+    """
+    把BFI82U原始的「單位名稱」欄位(可能是"自營商(自行買賣)"、"自營商(避險)"、
+    "投信"、"外資及陸資(不含外資自營商)"、"外資自營商"等)歸類成三大法人常見的三分類。
+    外資自營商依官方註記已計入自營商合計，不重複算進外資。
+
+    注意：用 startswith 而非 in 判斷「外資自營商」，因為"外資及陸資(不含外資自營商)"
+    這個名稱裡雖然提到"外資自營商"四個字(用來說明"不含")，但整體應歸類為foreign，
+    只有名稱真正"以外資自營商開頭"的那一列才歸類為dealer。
+    """
+    if "投信" in name:
+        return "trust"
+    if name.startswith("外資自營商"):
+        return "dealer"
+    if "外資" in name or "陸資" in name:
+        return "foreign"
+    if "自營商" in name:
+        return "dealer"
+    return None
+
+
+def fetch_institutional_investors(max_retries=3):
+    """
+    抓取三大法人(外資/投信/自營商)當日買賣金額統計(BFI82U)。
+    這隻API的實際欄位名稱我無法100%事先確認(官方文件沒有列出明確的英文/中文key)，
+    所以用「多重欄位別名嘗試」+ 診斷訊息的方式處理，跟TPEx歷史資料當初的做法一致。
+    若欄位對不上，程式會印出原始keys方便之後排查，不會讓整個流程失敗。
+
+    回傳值：
+      - dict {"foreign": 買賣超金額, "trust": ..., "dealer": ..., "total": ...}（金額單位：元）
+      - None：抓取失敗或完全無法解析
+    """
+    import time
+
+    last_error = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(BFI82U_URL, timeout=30)
+            print(f"BFI82U(三大法人) 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
+            resp.raise_for_status()
+            try:
+                data = resp.json()
+            except Exception as je:
+                print(f"警告：BFI82U 回應不是合法JSON（{je}），回應前200字：{resp.text[:200]!r}")
+                last_error = je
+                time.sleep(2 * attempt)
+                continue
+
+            if not isinstance(data, list) or len(data) == 0:
+                print(f"警告：BFI82U 回傳空資料或格式異常，型態={type(data)}")
+                last_error = ValueError("empty or malformed")
+                time.sleep(2 * attempt)
+                continue
+
+            totals = {"foreign": 0.0, "trust": 0.0, "dealer": 0.0}
+            matched_any = False
+            unmatched_logged = False
+
+            for row in data:
+                unit_name = get_field(row, ["單位名稱", "Name", "name"])
+                net_amount = parse_float(get_field(row, ["買賣差額", "買賣超金額", "NetBuySell", "net"]))
+
+                if unit_name is None or net_amount is None:
+                    if not unmatched_logged:
+                        print(f"警告：BFI82U資料欄位無法完全辨識，該筆原始keys={list(row.keys())}")
+                        unmatched_logged = True
+                    continue
+
+                category = categorize_institutional_unit(unit_name)
+                if category is None:
+                    continue
+
+                totals[category] += net_amount
+                matched_any = True
+
+            if not matched_any:
+                print("警告：BFI82U 資料一筆都無法歸類到外資/投信/自營商，本次三大法人資訊將略過")
+                last_error = ValueError("no rows categorized")
+                time.sleep(2 * attempt)
+                continue
+
+            totals["total"] = totals["foreign"] + totals["trust"] + totals["dealer"]
+            return totals
+        except Exception as e:
+            print(f"抓取三大法人資料失敗（第{attempt}次嘗試）：{e}")
+            last_error = e
+            time.sleep(2 * attempt)
+
+    print(f"三大法人資料共嘗試{max_retries}次仍失敗，本次結果將不含三大法人資訊。最後錯誤：{last_error}")
     return None
 
 
@@ -1174,13 +1270,26 @@ def main():
     enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
     enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
 
-    taiex_pct_change = fetch_taiex_pct_change()
-    if taiex_pct_change is not None:
-        print(f"大盤(加權指數)今日漲跌：{taiex_pct_change}%")
+    taiex_data = fetch_taiex_index()
+    taiex_pct_change = taiex_data["pct_change"] if taiex_data else None
+    if taiex_data is not None:
+        print(f"大盤(加權指數)今日收盤：{taiex_data['close']}，漲跌：{taiex_data['pct_change']}%")
         pool.setdefault("market_index_pct_change", {})[today] = taiex_pct_change
     trading_days_snapshot = pool.get("trading_days", [])
     enrich_with_optimization_metrics(core1_list, pool, taiex_pct_change, today, trading_days_snapshot)
     enrich_with_optimization_metrics(core2_list, pool, taiex_pct_change, today, trading_days_snapshot)
+
+    institutional_data = fetch_institutional_investors()
+    if institutional_data:
+        print(f"三大法人買賣超：外資{institutional_data['foreign']/1e8:.1f}億、"
+              f"投信{institutional_data['trust']/1e8:.1f}億、"
+              f"自營商{institutional_data['dealer']/1e8:.1f}億")
+
+    market_summary = {
+        "taiex": taiex_data,  # {"close":..., "pct_change":...} 或 None
+        "institutional": institutional_data,  # {"foreign":..., "trust":..., "dealer":..., "total":...} 或 None
+        "breadth": {"up_count": breadth_count, "top_n": HEAT_BREADTH_TOP_N},
+    }
 
     core1_heat = compute_heat_index(pool, CORE1_DAYS, CORE1_HEAT_LABELS)
     core2_heat = compute_heat_index(pool, CORE2_DAYS, CORE2_HEAT_LABELS)
@@ -1202,6 +1311,7 @@ def main():
 
     result = {
         "update_date": today,
+        "market_summary": market_summary,
         "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
         "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
     }
