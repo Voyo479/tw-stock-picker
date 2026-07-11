@@ -28,7 +28,7 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: 執行選股程式
-        run: python scripts/update_data.py
+        run: python scripts/backfill_history.py
 
       - name: 檢查是否有資料變動並commit
         run: |
