@@ -17,6 +17,7 @@ stock_pool.json、docs/result.json 一起commit上去)。
 
 import sys
 import os
+import time
 from datetime import datetime, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +25,7 @@ import update_data as ud
 
 BACKFILL_TARGET_TRADING_DAYS = 20
 LOOKBACK_CALENDAR_DAYS = 40   # 往前找幾個日曆天當候選(扣掉週末+假日後應該還是夠20個交易日)
+REQUEST_INTERVAL_SECONDS = 2  # 每次請求之間的間隔，避免連續高頻請求被防爬蟲機制節流
 
 
 def generate_candidate_dates(end_date, lookback_calendar_days):
@@ -71,10 +73,12 @@ def main():
         if twse_rows is None:
             print(f"{date_str} TWSE抓取失敗(非假日判斷，是網路/API問題)，跳過此日")
             skipped_failed += 1
+            time.sleep(REQUEST_INTERVAL_SECONDS)
             continue
         if len(twse_rows) == 0:
             print(f"{date_str} 判斷為非交易日(假日)，跳過")
             skipped_holiday += 1
+            time.sleep(REQUEST_INTERVAL_SECONDS)
             continue
 
         tpex_raw = ud.fetch_tpex_daily_quotes(date_str)
@@ -93,6 +97,8 @@ def main():
 
         filled_count += 1
         print(f"{date_str} 回補完成：候選清單 {len(candidates)} 檔，前50大上漲(含平盤) {breadth} 檔")
+
+        time.sleep(REQUEST_INTERVAL_SECONDS)
 
     # 重要：backfill是由新到舊往前推、再反轉成舊到新逐一處理，
     # 但trading_days欄位在update_pool_with_today內只是單純append，
