@@ -936,6 +936,30 @@ def enrich_with_extra_fields(entries, pool, theme_mapping, industry_mapping):
     return entries
 
 
+def compute_sector_summary(entries, top_n=3):
+    """
+    依entries(核心1或核心2最終清單)裡每檔股票的官方產業別(themes的第一個標籤，
+    沒有則算「未分類」)，統計族群分布，取前top_n大並附上佔比。
+    這代表「資金目前主要流向哪些族群」，是核心清單的彙總視角，跟個股層級的
+    themes欄位是分開的兩件事。
+    """
+    total = len(entries)
+    if total == 0:
+        return []
+
+    counts = {}
+    for e in entries:
+        themes = e.get("themes") or []
+        sector = themes[0] if themes else "未分類"
+        counts[sector] = counts.get(sector, 0) + 1
+
+    ranked = sorted(counts.items(), key=lambda x: x[1], reverse=True)[:top_n]
+    return [
+        {"sector": name, "count": cnt, "percentage": round(cnt / total * 100, 1)}
+        for name, cnt in ranked
+    ]
+
+
 # ---------- 升降標記 ----------
 def compute_marks_and_update_classification(pool, core1_list, core2_list):
     marks = {}
@@ -1026,12 +1050,21 @@ def main():
     if core2_heat:
         print(f"核心2熱度：平均{core2_heat['average']}檔／{HEAT_BREADTH_TOP_N} → {core2_heat['label']}")
 
+    core1_sectors = compute_sector_summary(core1_list, top_n=3)
+    core2_sectors = compute_sector_summary(core2_list, top_n=3)
+    if core1_sectors:
+        summary_str = ", ".join(f"{s['sector']} {s['percentage']}%" for s in core1_sectors)
+        print(f"核心1族群分布前3：{summary_str}")
+    if core2_sectors:
+        summary_str = ", ".join(f"{s['sector']} {s['percentage']}%" for s in core2_sectors)
+        print(f"核心2族群分布前3：{summary_str}")
+
     save_pool(pool)
 
     result = {
         "update_date": today,
-        "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat},
-        "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat},
+        "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
+        "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
     }
     save_result(result)
 
