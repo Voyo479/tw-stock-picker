@@ -499,7 +499,7 @@
       <div class="board-head">
         <div class="board-eyebrow">Core 2 · 潛力起漲</div>
         <div class="board-title">近20日趨勢榜</div>
-        <div class="board-desc">近20日內上榜≥2次，且「上榜頻率」與「上榜強度」斜率皆為正的候選股，已排除核心1名單，取前15檔。</div>
+        <div class="board-desc">近20日內上榜≥2次，對「有上榜那幾天的成交金額」做時間折現後計算斜率，斜率為正代表資金部位持續放大，已排除核心1名單，取斜率最高的前15檔。</div>
         <div class="board-range" id="core2-range">計算範圍：讀取中...</div>
         <div id="core2-heat"></div>
         <div id="core2-sectors"></div>
@@ -514,7 +514,8 @@
   <footer>
     <div><strong>紅色▲</strong>：上次歸類為核心2、本次升上核心1　　<strong>綠色▼</strong>：上次歸類為核心1、本次降至核心2</div>
     <div><strong>金色標籤</strong>：第一個標籤為 TWSE 官方產業別（程式自動抓取，每週更新），其餘為選填補充標籤（由 data/theme_mapping.json 人工維護），未收錄的股票顯示「未分類」。</div>
-    <div><strong>大盤相對</strong>：個股當日漲跌幅減去大盤(加權指數)當日漲跌幅，正值代表比大盤強。<strong>量能</strong>：今日成交金額 ÷ 近20日平均成交金額，倍數越高代表資金今天特別關注。兩者資料不足時不顯示。</div>
+    <div><strong>量能</strong>：今日成交金額 ÷ 近20日平均成交金額，倍數越高代表資金今天特別關注。資料不足時不顯示。</div>
+    <div><strong>核心2右側數字</strong>：資金部位折現斜率（單位：萬/日）。把每次上榜的成交金額依離今天的天數做時間折現後算趨勢斜率，數字越大代表資金越是「近期且大量」地持續湧入。</div>
     <div>點擊<strong>股票代號</strong>可開啟該股在 Yahoo奇摩股市 的K線技術分析頁面（新分頁開啟）。</div>
     <div>資料來源：台灣證券交易所 OpenAPI（僅上市股票）。本頁為資料統計工具，呈現內容僅供研究參考，不構成投資建議，任何交易決策請自行評估風險。</div>
   </footer>
@@ -523,7 +524,6 @@
 
 <script>
 (function () {
-  const fmtSlope = (n) => (typeof n === 'number' ? n.toFixed(2) : '--');
   const fmtRange = (range) => {
     if (!range || !range.start) return '尚無足夠資料';
     return `計算範圍：${range.start} ～ ${range.end}（共 ${range.days} 個交易日）`;
@@ -666,9 +666,13 @@
   function renderCore2(list) {
     const container = document.getElementById('core2-rows');
     if (!list || list.length === 0) {
-      container.innerHTML = '<div class="empty-state">今日暫無符合「頻率、強度雙斜率皆向上」條件的個股</div>';
+      container.innerHTML = '<div class="empty-state">今日暫無「資金部位折現斜率」為正的候選股</div>';
       return;
     }
+    const fmtSlopeAmount = (v) => {
+      if (typeof v !== 'number') return '--';
+      return (v / 10000).toLocaleString(undefined, { maximumFractionDigits: 0 });
+    };
     container.innerHTML = list.map((item, i) => `
       <div class="row" style="animation-delay:${i * 40}ms">
         <div class="rank mono">${String(i + 1).padStart(2, '0')}</div>
@@ -680,12 +684,12 @@
             ${fmtPctChange(item.pct_change)}
             ${themeTags(item.themes)}
           </div>
-          <div class="sub-metric mono">頻率斜率 ${fmtSlope(item.freq_slope)} · 強度斜率 ${fmtSlope(item.strength_slope)}</div>
+          <div class="sub-metric mono">近20日上榜 ${item.appearance_count} 次</div>
           <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}</div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
-          <span class="score mono">${item.combined_score}</span>
+          <span class="score mono">${fmtSlopeAmount(item.discounted_slope)}</span>
         </div>
       </div>
     `).join('');
