@@ -591,101 +591,6 @@ def fetch_taiex_index(max_retries=3):
     return None
 
 
-BFI82U_URL = "https://openapi.twse.com.tw/v1/fund/BFI82U"
-
-
-def categorize_institutional_unit(name):
-    """
-    把BFI82U原始的「單位名稱」欄位(可能是"自營商(自行買賣)"、"自營商(避險)"、
-    "投信"、"外資及陸資(不含外資自營商)"、"外資自營商"等)歸類成三大法人常見的三分類。
-    外資自營商依官方註記已計入自營商合計，不重複算進外資。
-
-    注意：用 startswith 而非 in 判斷「外資自營商」，因為"外資及陸資(不含外資自營商)"
-    這個名稱裡雖然提到"外資自營商"四個字(用來說明"不含")，但整體應歸類為foreign，
-    只有名稱真正"以外資自營商開頭"的那一列才歸類為dealer。
-    """
-    if "投信" in name:
-        return "trust"
-    if name.startswith("外資自營商"):
-        return "dealer"
-    if "外資" in name or "陸資" in name:
-        return "foreign"
-    if "自營商" in name:
-        return "dealer"
-    return None
-
-
-def fetch_institutional_investors(max_retries=3):
-    """
-    抓取三大法人(外資/投信/自營商)當日買賣金額統計(BFI82U)。
-    這隻API的實際欄位名稱我無法100%事先確認(官方文件沒有列出明確的英文/中文key)，
-    所以用「多重欄位別名嘗試」+ 診斷訊息的方式處理，跟TPEx歷史資料當初的做法一致。
-    若欄位對不上，程式會印出原始keys方便之後排查，不會讓整個流程失敗。
-
-    回傳值：
-      - dict {"foreign": 買賣超金額, "trust": ..., "dealer": ..., "total": ...}（金額單位：元）
-      - None：抓取失敗或完全無法解析
-    """
-    import time
-
-    last_error = None
-    for attempt in range(1, max_retries + 1):
-        try:
-            resp = requests.get(BFI82U_URL, timeout=30)
-            print(f"BFI82U(三大法人) 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
-            resp.raise_for_status()
-            try:
-                data = resp.json()
-            except Exception as je:
-                print(f"警告：BFI82U 回應不是合法JSON（{je}），回應前200字：{resp.text[:200]!r}")
-                last_error = je
-                time.sleep(2 * attempt)
-                continue
-
-            if not isinstance(data, list) or len(data) == 0:
-                print(f"警告：BFI82U 回傳空資料或格式異常，型態={type(data)}")
-                last_error = ValueError("empty or malformed")
-                time.sleep(2 * attempt)
-                continue
-
-            totals = {"foreign": 0.0, "trust": 0.0, "dealer": 0.0}
-            matched_any = False
-            unmatched_logged = False
-
-            for row in data:
-                unit_name = get_field(row, ["單位名稱", "Name", "name"])
-                net_amount = parse_float(get_field(row, ["買賣差額", "買賣超金額", "NetBuySell", "net"]))
-
-                if unit_name is None or net_amount is None:
-                    if not unmatched_logged:
-                        print(f"警告：BFI82U資料欄位無法完全辨識，該筆原始keys={list(row.keys())}")
-                        unmatched_logged = True
-                    continue
-
-                category = categorize_institutional_unit(unit_name)
-                if category is None:
-                    continue
-
-                totals[category] += net_amount
-                matched_any = True
-
-            if not matched_any:
-                print("警告：BFI82U 資料一筆都無法歸類到外資/投信/自營商，本次三大法人資訊將略過")
-                last_error = ValueError("no rows categorized")
-                time.sleep(2 * attempt)
-                continue
-
-            totals["total"] = totals["foreign"] + totals["trust"] + totals["dealer"]
-            return totals
-        except Exception as e:
-            print(f"抓取三大法人資料失敗（第{attempt}次嘗試）：{e}")
-            last_error = e
-            time.sleep(2 * attempt)
-
-    print(f"三大法人資料共嘗試{max_retries}次仍失敗，本次結果將不含三大法人資訊。最後錯誤：{last_error}")
-    return None
-
-
 def fetch_tpex_daily_quotes(today, max_retries=3):
     """
     抓取 TPEx(上櫃) 每日收盤行情。若這次執行失敗或解析不到資料，
@@ -1279,15 +1184,8 @@ def main():
     enrich_with_optimization_metrics(core1_list, pool, taiex_pct_change, today, trading_days_snapshot)
     enrich_with_optimization_metrics(core2_list, pool, taiex_pct_change, today, trading_days_snapshot)
 
-    institutional_data = fetch_institutional_investors()
-    if institutional_data:
-        print(f"三大法人買賣超：外資{institutional_data['foreign']/1e8:.1f}億、"
-              f"投信{institutional_data['trust']/1e8:.1f}億、"
-              f"自營商{institutional_data['dealer']/1e8:.1f}億")
-
     market_summary = {
         "taiex": taiex_data,  # {"close":..., "pct_change":...} 或 None
-        "institutional": institutional_data,  # {"foreign":..., "trust":..., "dealer":..., "total":...} 或 None
         "breadth": {"up_count": breadth_count, "top_n": HEAT_BREADTH_TOP_N},
     }
 
