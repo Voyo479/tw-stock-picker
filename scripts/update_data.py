@@ -273,6 +273,38 @@ def get_industry_mapping(today):
     return {}
 
 
+_twse_session = None
+
+
+def get_twse_session():
+    """
+    建立一個共用的requests.Session，先訪問TWSE的報表網頁取得cookie，
+    再用同一個session查詢歷史資料。有些網站的防護機制會要求先有
+    「瀏覽過網頁」的session紀錄才放行後續的資料查詢，這是常見的繞過技巧。
+    整個程式執行期間只會暖身一次(session會被快取重複使用)。
+    """
+    global _twse_session
+    if _twse_session is not None:
+        return _twse_session
+
+    session = requests.Session()
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+    }
+    try:
+        session.get("https://www.twse.com.tw/zh/trading/historical/mi-index.html",
+                     headers=headers, timeout=15)
+        print("TWSE session暖身完成（已取得cookie）")
+    except Exception as e:
+        print(f"TWSE session暖身失敗（不影響後續，仍會嘗試直接查詢）：{e}")
+
+    _twse_session = session
+    return session
+
+
 # ---------- 歷史資料回補專用：查詢過去任一交易日的上市資料 ----------
 def fetch_twse_historical_day(date_str, max_retries=3):
     """
@@ -291,10 +323,11 @@ def fetch_twse_historical_day(date_str, max_retries=3):
         "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
         "Referer": "https://www.twse.com.tw/zh/trading/historical/mi-index.html",
     }
+    session = get_twse_session()
 
     for attempt in range(1, max_retries + 1):
         try:
-            resp = requests.get(TWSE_HISTORICAL_URL, params=params, headers=headers, timeout=30)
+            resp = session.get(TWSE_HISTORICAL_URL, params=params, headers=headers, timeout=30)
             resp.raise_for_status()
             try:
                 data = resp.json()
