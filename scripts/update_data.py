@@ -287,7 +287,9 @@ def fetch_twse_historical_day(date_str, max_retries=3):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                       "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Referer": "https://www.twse.com.tw/",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+        "Referer": "https://www.twse.com.tw/zh/trading/historical/mi-index.html",
     }
 
     for attempt in range(1, max_retries + 1):
@@ -298,12 +300,18 @@ def fetch_twse_historical_day(date_str, max_retries=3):
                 data = resp.json()
             except Exception as je:
                 print(f"{date_str} TWSE歷史資料回應不是合法JSON（{je}），第{attempt}次嘗試")
-                time.sleep(2 * attempt)
+                time.sleep(3 * attempt)
                 continue
 
             rows = data.get("data9")
             if not rows:
                 stat = data.get("stat")
+                # stat不是"OK"，比較能確定是查詢範圍或格式問題；
+                # 但如果stat是"OK"卻沒有data9，很可能是短時間內連續查詢被節流/擋下，值得重試
+                if stat == "OK" and attempt < max_retries:
+                    print(f"{date_str} stat=OK但無data9，疑似被節流，第{attempt}次嘗試，稍後重試")
+                    time.sleep(3 * attempt)
+                    continue
                 print(f"{date_str} TWSE歷史資料無交易紀錄(可能是假日)，stat={stat!r}")
                 return []  # 空list：判斷為非交易日
 
@@ -337,7 +345,7 @@ def fetch_twse_historical_day(date_str, max_retries=3):
             return normalized
         except Exception as e:
             print(f"{date_str} 抓取TWSE歷史資料失敗（第{attempt}次嘗試）：{e}")
-            time.sleep(2 * attempt)
+            time.sleep(3 * attempt)
 
     print(f"{date_str} TWSE歷史資料共嘗試{max_retries}次仍失敗")
     return None
