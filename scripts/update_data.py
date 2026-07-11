@@ -198,16 +198,18 @@ def save_industry_cache(cache):
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
 
-def fetch_industry_mapping_from_twse():
+def fetch_industry_and_names_from_twse():
     """
-    抓取 TWSE ISIN 上市+上櫃證券總表，解析「產業別」欄位。
+    抓取 TWSE ISIN 上市+上櫃證券總表，解析「產業別」與「股票名稱」。
     這是全上市櫃公司的官方分類（如：半導體業、航運業），免費、免Key。
+    回傳 (industry_map, name_map) 兩個字典，key都是股票代號。
     """
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                       "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
     }
-    mapping = {}
+    industry_map = {}
+    name_map = {}
 
     for url, label in [(ISIN_LISTED_URL, "上市"), (ISIN_OTC_URL, "上櫃")]:
         try:
@@ -219,7 +221,7 @@ def fetch_industry_mapping_from_twse():
                 print(f"警告：找不到{label}產業別資料表格，網頁結構可能已變動")
                 continue
 
-            count_before = len(mapping)
+            count_before = len(industry_map)
             for row in table.find_all("tr"):
                 cells = row.find_all("td")
                 if len(cells) != 7:
@@ -228,20 +230,22 @@ def fetch_industry_mapping_from_twse():
                 parts = code_name.split("\u3000")  # 全形空格分隔代號與名稱
                 if len(parts) != 2:
                     continue
-                code = parts[0]
+                code, name = parts[0], parts[1]
                 if not re.match(r"^\d{4}$", code):
                     continue  # 只取4位數股票代號的普通股
+                if name:
+                    name_map[code] = name
                 industry = cells[4].get_text(strip=True)
                 if industry:
-                    mapping[code] = industry
-            print(f"{label}產業別解析完成，累計 {len(mapping) - count_before} 檔")
+                    industry_map[code] = industry
+            print(f"{label}產業別解析完成，累計 {len(industry_map) - count_before} 檔")
         except Exception as e:
             print(f"抓取{label}產業別資料失敗：{e}")
 
-    if not mapping:
+    if not industry_map:
         print("警告：產業別資料解析結果為空（上市+上櫃皆失敗）")
-        return None
-    return mapping
+        return None, None
+    return industry_map, name_map
 
 
 def get_industry_mapping(today):
@@ -260,16 +264,41 @@ def get_industry_mapping(today):
         except Exception:
             pass
 
-    fresh = fetch_industry_mapping_from_twse()
-    if fresh:
-        save_industry_cache({"generated_date": today, "mapping": fresh})
-        return fresh
+    industry_fresh, names_fresh = fetch_industry_and_names_from_twse()
+    if industry_fresh:
+        save_industry_cache({"generated_date": today, "mapping": industry_fresh, "names": names_fresh or {}})
+        return industry_fresh
 
     if cache:
         print("重新抓取產業別失敗，使用舊快取資料")
         return cache.get("mapping", {})
 
     print("沒有可用的產業別資料（首次抓取失敗），本次結果將不含產業別標籤")
+    return {}
+
+
+def get_stock_name_mapping(today):
+    """
+    取得「股票代號 -> 名稱」對照表，跟產業別共用同一份快取(同一次ISIN網頁抓取)，
+    不會多打一次網路請求。主要給歷史資料回補用，因為FinMind的股價資料不含股票名稱。
+    """
+    cache = load_industry_cache()
+    if cache and cache.get("generated_date"):
+        try:
+            days_old = (datetime.fromisoformat(today) - datetime.fromisoformat(cache["generated_date"])).days
+            if 0 <= days_old < INDUSTRY_REFRESH_DAYS:
+                return cache.get("names", {})
+        except Exception:
+            pass
+
+    industry_fresh, names_fresh = fetch_industry_and_names_from_twse()
+    if industry_fresh:
+        save_industry_cache({"generated_date": today, "mapping": industry_fresh, "names": names_fresh or {}})
+        return names_fresh or {}
+
+    if cache:
+        return cache.get("names", {})
+
     return {}
 
 
@@ -381,6 +410,85 @@ def fetch_twse_historical_day(date_str, max_retries=3):
             time.sleep(3 * attempt)
 
     print(f"{date_str} TWSE歷史資料共嘗試{max_retries}次仍失敗")
+    return None
+
+
+FINMIND_API_URL = "https://api.finmindtrade.com/api/v4/data"
+
+
+def fetch_finmind_historical_day(date_str, max_retries=3):
+    """
+    改用 FinMind 開放資料 API 抓取歷史資料，用於歷史資料回補。
+    這隻API是設計給程式化查詢用的，不像 www.twse.com.tw 那樣容易被
+    當成爬蟲擋下來；而且不指定 data_id 時，一次呼叫就能拿到「當天全部股票」
+    (上市+上櫃+興櫃合併)的資料，不用像TWSE/TPEx那樣分開查兩次。
+
+    回傳值：
+      - list：正規化後的資料(可能是空list，代表這天判斷為非交易日/假日)
+      - None：重試多次後仍抓取失敗(網路問題，非假日判斷)
+
+    免費額度：未註冊 300次/小時，這對回補20天(=20次呼叫)來說綽綽有餘。
+    """
+    import time
+
+    params = {"dataset": "TaiwanStockPrice", "start_date": date_str, "end_date": date_str}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    }
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(FINMIND_API_URL, params=params, headers=headers, timeout=30)
+            print(f"FinMind請求：{date_str}，狀態碼：{resp.status_code}（第{attempt}次嘗試）")
+
+            if resp.status_code == 402:
+                print(f"FinMind API 已達當前額度上限（402），第{attempt}次嘗試")
+                time.sleep(5 * attempt)
+                continue
+
+            resp.raise_for_status()
+            try:
+                payload = resp.json()
+            except Exception as je:
+                print(f"{date_str} FinMind回應不是合法JSON（{je}）")
+                time.sleep(3 * attempt)
+                continue
+
+            rows = payload.get("data")
+            if rows is None:
+                print(f"{date_str} FinMind回應缺少data欄位，內容片段：{str(payload)[:200]!r}")
+                time.sleep(3 * attempt)
+                continue
+
+            if len(rows) == 0:
+                print(f"{date_str} FinMind回傳空資料(可能是假日)")
+                return []  # 空list：判斷為非交易日
+
+            normalized = []
+            for row in rows:
+                code = str(row.get("stock_id", "")).strip()
+                if not re.match(r"^\d{4}$", code):
+                    continue  # 只取4位數一般股票代號
+
+                close = parse_float(row.get("close"))
+                change = parse_float(row.get("spread"))  # FinMind的spread是價差(元)，非百分比
+                trade_value = parse_float(row.get("Trading_money"))
+
+                if close is None or change is None or trade_value is None or trade_value <= 0:
+                    continue
+
+                normalized.append({
+                    "code": code, "name": None,  # FinMind不含股票名稱，之後用ISIN名稱對照表補上
+                    "close": close, "change": change,
+                    "trade_value": trade_value, "market": "上市/上櫃",
+                })
+            return normalized
+        except Exception as e:
+            print(f"{date_str} 抓取FinMind歷史資料失敗（第{attempt}次嘗試）：{e}")
+            time.sleep(3 * attempt)
+
+    print(f"{date_str} FinMind歷史資料共嘗試{max_retries}次仍失敗")
     return None
 
 
