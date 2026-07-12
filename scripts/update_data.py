@@ -544,6 +544,8 @@ def fetch_stock_disposition_info(stock_code, today, max_retries=3):
             if resp.status_code == 402:
                 time.sleep(2 * attempt)
                 continue
+            if resp.status_code == 400:
+                print(f"{stock_code} 查詢處置狀態回應400，內容：{resp.text[:300]!r}")
             resp.raise_for_status()
             payload = resp.json()
             rows = payload.get("data")
