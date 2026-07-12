@@ -503,88 +503,6 @@ def fetch_finmind_historical_day(date_str, max_retries=3):
     return None
 
 
-DISPOSITION_LOOKBACK_DAYS = 90  # 往前查詢的天數範圍，抓最近有沒有被公告處置
-
-
-def fetch_stock_disposition_info(stock_code, today, max_retries=3):
-    """
-    查詢單一股票近期(近DISPOSITION_LOOKBACK_DAYS天)是否有被公告處置。
-    用FinMind「公布處置有價證券表」(TaiwanStockDispositionSecuritiesPeriod)，
-    指定單一股票+日期範圍查詢，免費版即可使用(不用查全市場，不會撞到付費限制)。
-
-    只回傳「處置期間尚未結束(period_end >= 今天)」的最新一筆紀錄，
-    代表這檔股票目前正在處置中、或即將被處置。
-
-    回傳值：
-      - dict {"period_start":..., "period_end":..., "measure":..., "condition":...}：有效處置紀錄
-      - None：沒有處置紀錄，或查詢失敗(不影響其他功能，僅該股票的處置標記略過)
-    """
-    import time
-    from datetime import timedelta
-
-    token = os.environ.get("FINMIND_TOKEN", "")
-    start_date = (datetime.fromisoformat(today) - timedelta(days=DISPOSITION_LOOKBACK_DAYS)).date().isoformat()
-
-    params = {
-        "dataset": "TaiwanStockDispositionSecuritiesPeriod",
-        "data_id": stock_code,
-        "start_date": start_date,
-        "end_date": today,
-    }
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    }
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-
-    for attempt in range(1, max_retries + 1):
-        try:
-            resp = requests.get(FINMIND_API_URL, params=params, headers=headers, timeout=20)
-            if resp.status_code == 402:
-                time.sleep(2 * attempt)
-                continue
-            if resp.status_code == 400:
-                print(f"{stock_code} 查詢處置狀態回應400，內容：{resp.text[:300]!r}")
-            resp.raise_for_status()
-            payload = resp.json()
-            rows = payload.get("data")
-            if not rows:
-                return None
-
-            # 只留下「處置結束日 >= 今天」的紀錄(還在處置期間內，或即將開始)
-            active = [r for r in rows if r.get("period_end", "") >= today]
-            if not active:
-                return None
-
-            # 取「處置開始日」最新的一筆(最近一次公告)
-            latest = sorted(active, key=lambda r: r.get("period_start", ""), reverse=True)[0]
-            return {
-                "period_start": latest.get("period_start"),
-                "period_end": latest.get("period_end"),
-                "measure": latest.get("measure"),
-                "condition": latest.get("condition"),
-            }
-        except Exception as e:
-            print(f"{stock_code} 查詢處置狀態失敗（第{attempt}次嘗試）：{e}")
-            time.sleep(2 * attempt)
-
-    return None
-
-
-def enrich_with_disposition_info(entries, today):
-    """
-    幫entries(核心1或核心2清單)裡的每檔股票，查詢是否有處置紀錄，
-    補上"disposition"欄位。逐檔查詢間會有小延遲，避免短時間內對FinMind
-    送出過多請求(候選股通常只有15~30檔，總延遲可接受)。
-    """
-    import time
-    for e in entries:
-        e["disposition"] = fetch_stock_disposition_info(e["code"], today)
-        time.sleep(0.3)
-    return entries
-
-
 # ---------- 抓取資料 ----------
 def fetch_stock_day_all(max_retries=3):
     import time
@@ -1338,12 +1256,6 @@ def main():
     trading_days_snapshot = pool.get("trading_days", [])
     enrich_with_optimization_metrics(core1_list, pool, taiex_pct_change, today, trading_days_snapshot)
     enrich_with_optimization_metrics(core2_list, pool, taiex_pct_change, today, trading_days_snapshot)
-
-    print(f"查詢核心1/核心2共 {len(core1_list) + len(core2_list)} 檔股票的處置狀態...")
-    enrich_with_disposition_info(core1_list, today)
-    enrich_with_disposition_info(core2_list, today)
-    disposed_count = sum(1 for c in core1_list + core2_list if c.get("disposition"))
-    print(f"處置狀態查詢完成，其中 {disposed_count} 檔目前在處置期間內")
 
     market_summary = {
         "taiex": taiex_data,  # {"close":..., "pct_change":...} 或 None
