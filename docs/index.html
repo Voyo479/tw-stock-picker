@@ -485,7 +485,7 @@
       <div class="board-head">
         <div class="board-eyebrow">Core 1 · 現在最強</div>
         <div class="board-title">近5日強度榜</div>
-        <div class="board-desc">依成交金額前30大、漲跌≥0之候選股，以「漲幅名次＋成交金額名次」排名制計分，近5個交易日累積分數最高的15檔。</div>
+        <div class="board-desc">依成交金額前30大、漲跌≥0之候選股，當日得分＝當日漲幅×0.7＋個股佔大盤成交比重×0.3，近5個交易日累積分數最高的15檔。</div>
         <div class="board-range" id="core1-range">計算範圍：讀取中...</div>
         <div id="core1-heat"></div>
         <div id="core1-sectors"></div>
@@ -657,7 +657,7 @@
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
-          <span class="score mono">${item.score}</span>
+          <span class="score mono">${typeof item.score === 'number' ? item.score.toFixed(2) : item.score}</span>
         </div>
       </div>
     `).join('');
