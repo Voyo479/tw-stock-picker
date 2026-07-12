@@ -762,22 +762,35 @@ def build_candidate_list(normalized_rows):
     return candidates
 
 
-def compute_daily_scores(candidates):
-    """排名制：漲幅名次 + 成交金額名次 → 分數 = (N-漲幅名次+1) + (N-成交金額名次+1)"""
-    n = len(candidates)
-    if n == 0:
-        return candidates
+CORE1_CHANGE_WEIGHT = 0.7   # 核心1當日分數：漲幅權重
+CORE1_VALUE_SHARE_WEIGHT = 0.3   # 核心1當日分數：個股佔大盤成交比重權重
 
-    by_change = sorted(candidates, key=lambda x: x["pct_change"], reverse=True)
-    for i, c in enumerate(by_change):
-        c["change_rank"] = i + 1
 
-    by_value = sorted(candidates, key=lambda x: x["trade_value"], reverse=True)
-    for i, c in enumerate(by_value):
-        c["value_rank"] = i + 1
+def compute_market_total_trade_value(combined_rows):
+    """加總全市場(上市+上櫃合併，篩選前的完整清單)當日總成交金額，當作「大盤總成交金額」"""
+    return sum(r["trade_value"] for r in combined_rows if r.get("trade_value"))
 
-    for c in candidates:
-        c["score"] = (n - c["change_rank"] + 1) + (n - c["value_rank"] + 1)
+
+def compute_daily_scores(candidates, market_total_trade_value):
+    """
+    當日得分 = 當日漲幅(%) x 0.7 + (個股成交金額 / 大盤總成交金額 x 100) x 0.3
+
+    第二項是「個股佔大盤當日總成交金額的比重(百分比數值)」，用相對於大盤的比例
+    取代直接使用原始金額，避免大型股光靠量體基期大就主導分數(規模偏誤)。
+    """
+    if market_total_trade_value and market_total_trade_value > 0:
+        for c in candidates:
+            market_share_pct = c["trade_value"] / market_total_trade_value * 100
+            c["market_share_pct"] = round(market_share_pct, 4)
+            c["score"] = round(
+                c["pct_change"] * CORE1_CHANGE_WEIGHT + market_share_pct * CORE1_VALUE_SHARE_WEIGHT, 4
+            )
+    else:
+        # 大盤總成交金額異常(0或缺失)時的防呆：退回只看漲幅，避免除以0
+        print("警告：大盤總成交金額無法計算或為0，本次核心1當日分數僅採用漲幅(市占比項略過)")
+        for c in candidates:
+            c["market_share_pct"] = None
+            c["score"] = round(c["pct_change"] * CORE1_CHANGE_WEIGHT, 4)
 
     return candidates
 
@@ -1142,8 +1155,11 @@ def main():
 
     combined_rows = twse_normalized + tpex_normalized
 
+    market_total_trade_value = compute_market_total_trade_value(combined_rows)
+    print(f"大盤總成交金額：{market_total_trade_value/1e8:,.1f} 億元")
+
     candidates = build_candidate_list(combined_rows)
-    candidates = compute_daily_scores(candidates)
+    candidates = compute_daily_scores(candidates, market_total_trade_value)
     print(f"今日候選清單（上市+上櫃合併，成交金額前{TOP_N}+漲跌>=0）共 {len(candidates)} 檔")
 
     update_pool_with_today(pool, today, candidates)
