@@ -152,6 +152,10 @@ def main():
     ud.enrich_with_optimization_metrics(core1_list, pool, None, latest_date_for_metrics, latest_trading_days)
     ud.enrich_with_optimization_metrics(core2_list, pool, None, latest_date_for_metrics, latest_trading_days)
 
+    print(f"查詢核心1/核心2共 {len(core1_list) + len(core2_list)} 檔股票的處置狀態...")
+    ud.enrich_with_disposition_info(core1_list, latest_date_for_metrics)
+    ud.enrich_with_disposition_info(core2_list, latest_date_for_metrics)
+
     core1_heat = ud.compute_heat_index(pool, ud.CORE1_DAYS, ud.CORE1_HEAT_LABELS)
     core2_heat = ud.compute_heat_index(pool, ud.CORE2_DAYS, ud.CORE2_HEAT_LABELS)
 
