@@ -102,6 +102,7 @@ def main():
         candidates = ud.compute_daily_scores(candidates, market_total_trade_value)
 
         ud.update_pool_with_today(pool, date_str, candidates)
+        ud.update_market_total_trade_value_history(pool, date_str, market_total_trade_value)
 
         breadth = ud.compute_market_breadth_count(combined)
         ud.update_market_breadth(pool, date_str, breadth)
@@ -157,11 +158,20 @@ def main():
     core1_sectors = ud.compute_sector_summary(core1_list, top_n=3)
     core2_sectors = ud.compute_sector_summary(core2_list, top_n=3)
 
+    market_amount_stats = ud.compute_market_amount_stats(pool, latest_date_for_metrics)
+    latest_breadth = pool.get("market_breadth", {}).get(latest_date_for_metrics)
+    market_summary = {
+        "taiex": None,  # 回補情境沒有歷史大盤指數資料
+        "breadth": {"up_count": latest_breadth, "top_n": ud.HEAT_BREADTH_TOP_N},
+        "amount_stats": market_amount_stats,
+    }
+
     ud.save_pool(pool)
 
     latest_date = pool["trading_days"][-1]
     result = {
         "update_date": latest_date,
+        "market_summary": market_summary,
         "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
         "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
     }
