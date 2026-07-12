@@ -96,8 +96,10 @@ def main():
 
         print(f"{date_str} FinMind合併資料(上市+上櫃) {len(combined)} 檔")
 
+        market_total_trade_value = ud.compute_market_total_trade_value(combined)
+
         candidates = ud.build_candidate_list(combined)
-        candidates = ud.compute_daily_scores(candidates)
+        candidates = ud.compute_daily_scores(candidates, market_total_trade_value)
 
         ud.update_pool_with_today(pool, date_str, candidates)
 
