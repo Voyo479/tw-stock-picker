@@ -857,6 +857,11 @@ def prune_pool(pool):
             d: v for d, v in pool["market_index_pct_change"].items() if d in day_index
         }
 
+    if "market_total_trade_value_history" in pool:
+        pool["market_total_trade_value_history"] = {
+            d: v for d, v in pool["market_total_trade_value_history"].items() if d in day_index
+        }
+
 
 # ---------- 熱度指標：全市場前50大成交金額中的上漲檔數 ----------
 def compute_market_breadth_count(combined_rows):
@@ -876,6 +881,58 @@ def compute_market_breadth_count(combined_rows):
 def update_market_breadth(pool, today, count):
     pool.setdefault("market_breadth", {})
     pool["market_breadth"][today] = count
+
+
+def update_market_total_trade_value_history(pool, today, value):
+    pool.setdefault("market_total_trade_value_history", {})
+    pool["market_total_trade_value_history"][today] = value
+
+
+def compute_market_amount_stats(pool, today):
+    """
+    大盤成交金額統計：
+      1. 今日金額 vs 前一交易日差異% (沒有前一天資料就是None)
+      2. 5日窗口：最舊那天(N-4)當基準，其餘4天(N-3~N)加總跟基準比差異%
+      3. 20日窗口：最舊那天(N-19)當基準，其餘19天(N-18~N)加總跟基準比差異%
+    窗口天數不足時，對應項目回傳None(需要湊滿完整天數才計算，不做動態縮短)。
+    """
+    history = pool.get("market_total_trade_value_history", {})
+    trading_days = pool.get("trading_days", [])
+    today_value = history.get(today)
+
+    result = {
+        "today_amount": today_value,
+        "day_over_day_pct": None,
+        "five_day_pct": None,
+        "twenty_day_pct": None,
+    }
+    if today_value is None:
+        return result
+
+    if today in trading_days:
+        idx = trading_days.index(today)
+        if idx >= 1:
+            prev_value = history.get(trading_days[idx - 1])
+            if prev_value:
+                result["day_over_day_pct"] = round((today_value - prev_value) / prev_value * 100, 2)
+
+    window5 = trading_days[-5:]
+    if len(window5) == 5:
+        baseline_value = history.get(window5[0])
+        recent_values = [history.get(d) for d in window5[1:]]
+        if baseline_value and all(v is not None for v in recent_values):
+            recent_sum = sum(recent_values)
+            result["five_day_pct"] = round((recent_sum - baseline_value) / baseline_value * 100, 2)
+
+    window20 = trading_days[-20:]
+    if len(window20) == 20:
+        baseline_value = history.get(window20[0])
+        recent_values = [history.get(d) for d in window20[1:]]
+        if baseline_value and all(v is not None for v in recent_values):
+            recent_sum = sum(recent_values)
+            result["twenty_day_pct"] = round((recent_sum - baseline_value) / baseline_value * 100, 2)
+
+    return result
 
 
 def compute_heat_level(avg):
@@ -1163,12 +1220,16 @@ def main():
     print(f"今日候選清單（上市+上櫃合併，成交金額前{TOP_N}+漲跌>=0）共 {len(candidates)} 檔")
 
     update_pool_with_today(pool, today, candidates)
+    update_market_total_trade_value_history(pool, today, market_total_trade_value)
 
     breadth_count = compute_market_breadth_count(combined_rows)
     update_market_breadth(pool, today, breadth_count)
     print(f"熱度指標：全市場成交金額前{HEAT_BREADTH_TOP_N}大中，今日上漲 {breadth_count} 檔")
 
     prune_pool(pool)
+
+    market_amount_stats = compute_market_amount_stats(pool, today)
+    print(f"大盤成交金額統計：{market_amount_stats}")
 
     core1_list, core1_range = compute_core1(pool)
     core1_codes = {c["code"] for c in core1_list}
@@ -1199,6 +1260,7 @@ def main():
     market_summary = {
         "taiex": taiex_data,  # {"close":..., "pct_change":...} 或 None
         "breadth": {"up_count": breadth_count, "top_n": HEAT_BREADTH_TOP_N},
+        "amount_stats": market_amount_stats,
     }
 
     core1_heat = compute_heat_index(pool, CORE1_DAYS, CORE1_HEAT_LABELS)
