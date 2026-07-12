@@ -35,7 +35,8 @@
           "半導體業"
         ],
         "relative_strength": 10.8,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "8046",
@@ -49,7 +50,8 @@
           "電子零組件業"
         ],
         "relative_strength": 10.78,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "6488",
@@ -60,10 +62,11 @@
         "pct_change": 9.75609756097561,
         "market": "上櫃",
         "themes": [
-          "半導體"
+          "半導體業"
         ],
         "relative_strength": 10.59,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "6147",
@@ -74,10 +77,11 @@
         "pct_change": 8.771929824561402,
         "market": "上櫃",
         "themes": [
-          "半導體"
+          "半導體業"
         ],
         "relative_strength": 9.6,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "3711",
@@ -91,7 +95,8 @@
           "半導體業"
         ],
         "relative_strength": 9.15,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "6182",
@@ -102,10 +107,11 @@
         "pct_change": 7.8125,
         "market": "上櫃",
         "themes": [
-          "半導體"
+          "半導體業"
         ],
         "relative_strength": 8.64,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "2409",
@@ -119,7 +125,8 @@
           "光電業"
         ],
         "relative_strength": 7.26,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "3211",
@@ -133,7 +140,8 @@
           "電腦及週邊設備業"
         ],
         "relative_strength": 7.03,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "3026",
@@ -147,7 +155,8 @@
           "電子零組件業"
         ],
         "relative_strength": 6.29,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "2356",
@@ -161,7 +170,8 @@
           "電腦及週邊設備業"
         ],
         "relative_strength": 6.27,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "2344",
@@ -175,7 +185,8 @@
           "半導體業"
         ],
         "relative_strength": 5.58,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "4958",
@@ -189,7 +200,8 @@
           "電子零組件業"
         ],
         "relative_strength": 4.9,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "8299",
@@ -199,9 +211,12 @@
         "price": 2220.0,
         "pct_change": 3.7383177570093453,
         "market": "上櫃",
-        "themes": [],
+        "themes": [
+          "半導體業"
+        ],
         "relative_strength": 4.57,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "2337",
@@ -215,7 +230,8 @@
           "半導體業"
         ],
         "relative_strength": 4.44,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       },
       {
         "code": "2327",
@@ -229,7 +245,8 @@
           "電子零組件業"
         ],
         "relative_strength": 1.84,
-        "volume_ratio": null
+        "volume_ratio": null,
+        "disposition": null
       }
     ],
     "heat": {
@@ -247,8 +264,8 @@
     "sector_summary": [
       {
         "sector": "半導體業",
-        "count": 4,
-        "percentage": 26.7
+        "count": 8,
+        "percentage": 53.3
       },
       {
         "sector": "電子零組件業",
@@ -256,9 +273,9 @@
         "percentage": 26.7
       },
       {
-        "sector": "半導體",
-        "count": 3,
-        "percentage": 20.0
+        "sector": "電腦及週邊設備業",
+        "count": 2,
+        "percentage": 13.3
       }
     ]
   },
