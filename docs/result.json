@@ -8,6 +8,12 @@
     "breadth": {
       "up_count": 31,
       "top_n": 50
+    },
+    "amount_stats": {
+      "today_amount": 1220410016231.0,
+      "day_over_day_pct": null,
+      "five_day_pct": null,
+      "twenty_day_pct": null
     }
   },
   "core1": {
