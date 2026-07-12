@@ -59,7 +59,9 @@
         "price": 1350.0,
         "pct_change": 9.75609756097561,
         "market": "上櫃",
-        "themes": [],
+        "themes": [
+          "半導體"
+        ],
         "relative_strength": 10.59,
         "volume_ratio": null
       },
@@ -71,7 +73,9 @@
         "price": 217.0,
         "pct_change": 8.771929824561402,
         "market": "上櫃",
-        "themes": [],
+        "themes": [
+          "半導體"
+        ],
         "relative_strength": 9.6,
         "volume_ratio": null
       },
@@ -97,7 +101,9 @@
         "price": 172.5,
         "pct_change": 7.8125,
         "market": "上櫃",
-        "themes": [],
+        "themes": [
+          "半導體"
+        ],
         "relative_strength": 8.64,
         "volume_ratio": null
       },
@@ -123,7 +129,9 @@
         "price": 454.0,
         "pct_change": 6.1988304093567255,
         "market": "上櫃",
-        "themes": [],
+        "themes": [
+          "電腦及週邊設備業"
+        ],
         "relative_strength": 7.03,
         "volume_ratio": null
       },
@@ -238,11 +246,6 @@
     },
     "sector_summary": [
       {
-        "sector": "未分類",
-        "count": 5,
-        "percentage": 33.3
-      },
-      {
         "sector": "半導體業",
         "count": 4,
         "percentage": 26.7
@@ -251,6 +254,11 @@
         "sector": "電子零組件業",
         "count": 4,
         "percentage": 26.7
+      },
+      {
+        "sector": "半導體",
+        "count": 3,
+        "percentage": 20.0
       }
     ]
   },
