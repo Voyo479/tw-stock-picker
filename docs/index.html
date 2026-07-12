@@ -425,6 +425,19 @@
     border: 1px dashed var(--border);
   }
 
+  .disposition-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(232, 72, 63, 0.15);
+    color: var(--red);
+    border: 1px solid rgba(232, 72, 63, 0.4);
+    cursor: help;
+    white-space: nowrap;
+  }
+
   .score-cell {
     text-align: right;
     display: flex;
@@ -533,6 +546,7 @@
     <div><strong>金色標籤</strong>：第一個標籤為 TWSE 官方產業別（程式自動抓取，每週更新），其餘為選填補充標籤（由 data/theme_mapping.json 人工維護），未收錄的股票顯示「未分類」。</div>
     <div><strong>量能</strong>：今日成交金額 ÷ 近20日平均成交金額，倍數越高代表資金今天特別關注。資料不足時不顯示。</div>
     <div><strong>核心2右側數字</strong>：資金部位折現斜率（單位：萬/日）。把每次上榜的成交金額依離今天的天數做時間折現後算趨勢斜率，數字越大代表資金越是「近期且大量」地持續湧入。</div>
+    <div><strong>⚠ 處置警示</strong>：該股近期被公告處置(異常價量交易限制)，滑鼠移到標籤上可看處置條件與內容細節。資料來源FinMind，僅涵蓋近90天內的公告紀錄。</div>
     <div>點擊<strong>股票代號</strong>可開啟該股在 Yahoo奇摩股市 的K線技術分析頁面（新分頁開啟）。</div>
     <div>資料來源：台灣證券交易所 OpenAPI（僅上市股票）。本頁為資料統計工具，呈現內容僅供研究參考，不構成投資建議，任何交易決策請自行評估風險。</div>
   </footer>
@@ -575,6 +589,17 @@
     if (typeof vr !== 'number') return '';
     const cls = vr >= 3 ? 'pct-up' : (vr >= 1.5 ? 'heat-level-3' : '');
     return `<span class="metric-chip">量能 <span class="${cls}">${vr.toFixed(2)}x</span></span>`;
+  };
+
+  const fmtDisposition = (disposition) => {
+    if (!disposition) return '';
+    const today = new Date().toISOString().slice(0, 10);
+    const isUpcoming = disposition.period_start > today;
+    const label = isUpcoming
+      ? `處置預告：${disposition.period_start}起`
+      : `處置中：至${disposition.period_end}`;
+    const title = `處置條件：${disposition.condition || '--'}\n處置內容：${disposition.measure || '--'}`;
+    return `<span class="disposition-badge" title="${escapeHtml(title)}">⚠ ${escapeHtml(label)}</span>`;
   };
 
   function renderMarketOverview(marketSummary) {
@@ -692,6 +717,7 @@
             <span class="price mono">$${fmtPrice(item.price)}</span>
             ${fmtPctChange(item.pct_change)}
             ${themeTags(item.themes)}
+            ${fmtDisposition(item.disposition)}
           </div>
           <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}</div>
         </div>
@@ -723,6 +749,7 @@
             <span class="price mono">$${fmtPrice(item.price)}</span>
             ${fmtPctChange(item.pct_change)}
             ${themeTags(item.themes)}
+            ${fmtDisposition(item.disposition)}
           </div>
           <div class="sub-metric mono">近20日上榜 ${item.appearance_count} 次</div>
           <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}</div>
