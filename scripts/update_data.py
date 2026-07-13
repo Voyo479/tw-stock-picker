@@ -60,6 +60,20 @@ CORE2_HEAT_LABELS = {
     2: "中期市場走弱", 1: "中期極度弱勢",
 }
 
+# ---------- 建議資金水位：把短線/中期燈號換算成核心1/核心2的持股上限(檔數) ----------
+CORE1_CAP_BY_HEAT_LEVEL = {5: 4, 4: 4, 3: 3, 2: 2, 1: 2}
+CORE2_CAP_BY_HEAT_LEVEL = {5: 2, 4: 2, 3: 1, 2: 0, 1: 0}
+CAPITAL_PCT_PER_SLOT = 20  # 每一檔持股上限，換算成資金水位的百分比
+MAX_TOTAL_SLOTS = 5  # 滿倉檔數上限，核心1+核心2上限加總不會超過這個數字(對應100%資金水位)
+
+# 大盤系統性風險：連續N日符合「強度<20且金額日增減為負」時，覆蓋總持股上限
+MARKET_WEAKNESS_BREADTH_THRESHOLD = 20
+MARKET_WEAKNESS_STREAK_OVERRIDES = [(5, 2), (3, 3)]  # (連續天數, 覆蓋後的總上限檔數)，由嚴格到寬鬆排序
+
+VOLUME_RATIO_ENTRY_THRESHOLD = 1.5  # 進場條件：量能異常倍數至少要達到這個倍數
+VOLUME_RATIO_DROP_WARNING_FROM = 3.0  # 軟性警示：昨天量能倍數若曾經達到這個水準
+VOLUME_RATIO_DROP_WARNING_TO = 1.0   # 軟性警示：今天量能倍數滑落到這個水準以下就示警
+
 
 # ---------- 小工具 ----------
 def parse_float(value):
@@ -935,6 +949,71 @@ def compute_market_amount_stats(pool, today):
     return result
 
 
+def compute_market_weakness_streak(pool, today):
+    """
+    計算「近幾個交易日連續符合弱勢條件」的天數(由今天往前算，中斷就停止)。
+    弱勢條件：當天全市場前50大成交金額中上漲(含平盤)檔數 < MARKET_WEAKNESS_BREADTH_THRESHOLD
+              且 當天大盤總成交金額比前一交易日減少(日增減為負)
+    只計算資料足夠的天數，資料不足或缺任一項就視為「不符合弱勢條件」，streak中斷。
+    """
+    trading_days = pool.get("trading_days", [])
+    breadth_history = pool.get("market_breadth", {})
+    amount_history = pool.get("market_total_trade_value_history", {})
+
+    if today not in trading_days:
+        return 0
+
+    idx = trading_days.index(today)
+    streak = 0
+    for i in range(idx, -1, -1):
+        day = trading_days[i]
+        up_count = breadth_history.get(day)
+        day_amount = amount_history.get(day)
+        prev_amount = amount_history.get(trading_days[i - 1]) if i >= 1 else None
+
+        if up_count is None or day_amount is None or prev_amount is None or prev_amount <= 0:
+            break  # 資料不足，無法判斷，streak在此中斷
+
+        day_over_day = (day_amount - prev_amount) / prev_amount
+        is_weak = (up_count < MARKET_WEAKNESS_BREADTH_THRESHOLD) and (day_over_day < 0)
+        if not is_weak:
+            break
+        streak += 1
+
+    return streak
+
+
+def compute_suggested_capital_level(pool, today, core1_heat_level, core2_heat_level):
+    """
+    把短線/中期燈號、以及大盤連續轉弱天數，換算成「建議資金水位」。
+    燈號決定核心1/核心2各自的持股上限(檔數)，加總後如果大盤連續轉弱天數觸發，
+    再用更嚴格的總上限覆蓋。最終上限檔數 x 每檔20% = 建議資金水位百分比。
+    """
+    core1_cap = CORE1_CAP_BY_HEAT_LEVEL.get(core1_heat_level, 2)
+    core2_cap = CORE2_CAP_BY_HEAT_LEVEL.get(core2_heat_level, 0)
+    base_cap = min(core1_cap + core2_cap, MAX_TOTAL_SLOTS)  # 加總不超過滿倉檔數上限
+
+    streak = compute_market_weakness_streak(pool, today)
+    override_cap = None
+    for streak_days, capped_slots in MARKET_WEAKNESS_STREAK_OVERRIDES:
+        if streak >= streak_days:
+            override_cap = capped_slots
+            break  # 清單已由嚴格到寬鬆排序，符合第一個就是最嚴格適用的
+
+    final_cap = min(base_cap, override_cap) if override_cap is not None else base_cap
+    final_cap = max(final_cap, 0)
+
+    return {
+        "core1_cap_slots": core1_cap,
+        "core2_cap_slots": core2_cap,
+        "base_cap_slots": base_cap,
+        "weakness_streak_days": streak,
+        "override_cap_slots": override_cap,
+        "final_cap_slots": final_cap,
+        "suggested_capital_pct": final_cap * CAPITAL_PCT_PER_SLOT,
+    }
+
+
 def compute_heat_level(avg):
     for lower, level in HEAT_THRESHOLDS:
         if avg >= lower:
@@ -1121,10 +1200,13 @@ def compute_volume_anomaly_ratio(stock, today, trading_days, window=VOLUME_ANOMA
 
 def enrich_with_optimization_metrics(entries, pool, taiex_pct_change, today, trading_days):
     """
-    補上「相對大盤強度」與「量能異常倍數」這兩項優化指標。
+    補上「相對大盤強度」、「量能異常倍數」、「量能滑落警示」這幾項優化指標。
     taiex_pct_change 為 None 時(大盤指數抓取失敗)，relative_strength 一併回傳 None，
     不會讓其他欄位或整個流程失敗。
     """
+    yesterday = trading_days[-2] if len(trading_days) >= 2 else None
+    yesterday_window = trading_days[:-1] if len(trading_days) >= 2 else []
+
     for e in entries:
         if taiex_pct_change is not None and e.get("pct_change") is not None:
             e["relative_strength"] = round(e["pct_change"] - taiex_pct_change, 2)
@@ -1133,6 +1215,16 @@ def enrich_with_optimization_metrics(entries, pool, taiex_pct_change, today, tra
 
         stock = pool["stocks"].get(e["code"], {})
         e["volume_ratio"] = compute_volume_anomaly_ratio(stock, today, trading_days)
+
+        # 量能滑落警示：昨天量能倍數曾經很高(>=3x)，今天卻滑落到很低(<1x)
+        e["volume_drop_warning"] = False
+        if yesterday is not None:
+            yesterday_ratio = compute_volume_anomaly_ratio(stock, yesterday, yesterday_window)
+            if (yesterday_ratio is not None and e["volume_ratio"] is not None
+                    and yesterday_ratio >= VOLUME_RATIO_DROP_WARNING_FROM
+                    and e["volume_ratio"] < VOLUME_RATIO_DROP_WARNING_TO):
+                e["volume_drop_warning"] = True
+
     return entries
 
 
@@ -1278,6 +1370,16 @@ def main():
     if core2_sectors:
         summary_str = ", ".join(f"{s['sector']} {s['percentage']}%" for s in core2_sectors)
         print(f"核心2族群分布前3：{summary_str}")
+
+    capital_guidance = None
+    if core1_heat and core2_heat:
+        capital_guidance = compute_suggested_capital_level(pool, today, core1_heat["level"], core2_heat["level"])
+        print(
+            f"建議資金水位：{capital_guidance['suggested_capital_pct']}%"
+            f"（核心1上限{capital_guidance['core1_cap_slots']}檔，核心2上限{capital_guidance['core2_cap_slots']}檔，"
+            f"連續轉弱{capital_guidance['weakness_streak_days']}天）"
+        )
+    market_summary["capital_guidance"] = capital_guidance
 
     save_pool(pool)
 
