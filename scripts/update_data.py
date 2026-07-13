@@ -732,14 +732,17 @@ def is_new_trading_day(raw_rows, pool):
     for code in REFERENCE_CODES:
         row = row_map.get(code)
         if row is None:
+            print(f"診斷：{code} 在本次STOCK_DAY_ALL回應中找不到資料列")
             continue  # 該檔今天找不到資料（可能暫停交易），忽略，看另一檔
         close = parse_float(row.get("ClosingPrice"))
         volume = parse_float(row.get("TradeVolume"))
         if close is None or volume is None:
+            print(f"診斷：{code} 抓到資料但close/volume無法解析，原始值 close={row.get('ClosingPrice')!r} volume={row.get('TradeVolume')!r}")
             continue
         new_ref[code] = {"close": close, "volume": volume}
 
         prev = prev_ref.get(code)
+        print(f"診斷：{code} 本次抓到 close={close}, volume={volume}；資料庫記錄 close={prev.get('close') if prev else None}, volume={prev.get('volume') if prev else None}")
         if prev is None:
             # 第一次執行，沒有基準可比對，視為新交易日
             new_day = True
