@@ -160,10 +160,18 @@ def main():
 
     market_amount_stats = ud.compute_market_amount_stats(pool, latest_date_for_metrics)
     latest_breadth = pool.get("market_breadth", {}).get(latest_date_for_metrics)
+
+    capital_guidance = None
+    if core1_heat and core2_heat:
+        capital_guidance = ud.compute_suggested_capital_level(
+            pool, latest_date_for_metrics, core1_heat["level"], core2_heat["level"]
+        )
+
     market_summary = {
         "taiex": None,  # 回補情境沒有歷史大盤指數資料
         "breadth": {"up_count": latest_breadth, "top_n": ud.HEAT_BREADTH_TOP_N},
         "amount_stats": market_amount_stats,
+        "capital_guidance": capital_guidance,
     }
 
     ud.save_pool(pool)
