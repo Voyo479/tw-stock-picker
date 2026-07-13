@@ -94,7 +94,7 @@
   /* ---------- Market Overview ---------- */
   .market-overview {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 14px;
     margin-bottom: 24px;
   }
@@ -151,6 +151,18 @@
   .amount-pct-na {
     color: var(--text-faint);
     font-size: 11px;
+  }
+
+  .capital-tree {
+    margin-top: 10px;
+  }
+
+  .capital-tree-row {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    white-space: nowrap;
+    overflow-x: auto;
   }
 
   /* ---------- Panels ---------- */
@@ -403,6 +415,18 @@
 
   .metric-chip .heat-level-3 { color: var(--gold); }
 
+  .volume-drop-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(232, 72, 63, 0.15);
+    color: var(--red);
+    border: 1px solid rgba(232, 72, 63, 0.4);
+    cursor: help;
+  }
+
   .theme-row {
     display: flex;
     flex-wrap: wrap;
@@ -533,6 +557,7 @@
     <div><strong>金色標籤</strong>：第一個標籤為 TWSE 官方產業別（程式自動抓取，每週更新），其餘為選填補充標籤（由 data/theme_mapping.json 人工維護），未收錄的股票顯示「未分類」。</div>
     <div><strong>量能</strong>：今日成交金額 ÷ 近20日平均成交金額，倍數越高代表資金今天特別關注。資料不足時不顯示。</div>
     <div><strong>核心2右側數字</strong>：資金部位折現斜率（單位：萬/日）。把每次上榜的成交金額依離今天的天數做時間折現後算趨勢斜率，數字越大代表資金越是「近期且大量」地持續湧入。</div>
+    <div><strong>⚠ 量能急縮</strong>：昨日量能倍數曾達3倍以上、今日急速滑落到1倍以下，可能是資金退潮的提早訊號。<strong>提醒</strong>：本頁不會自動判斷是否站上5日/20日均線，進場前請點擊股票代號查看K線圖人工複核。</div>
     <div>點擊<strong>股票代號</strong>可開啟該股在 Yahoo奇摩股市 的K線技術分析頁面（新分頁開啟）。</div>
     <div>資料來源：台灣證券交易所 OpenAPI（僅上市股票）。本頁為資料統計工具，呈現內容僅供研究參考，不構成投資建議，任何交易決策請自行評估風險。</div>
   </footer>
@@ -575,6 +600,11 @@
     if (typeof vr !== 'number') return '';
     const cls = vr >= 3 ? 'pct-up' : (vr >= 1.5 ? 'heat-level-3' : '');
     return `<span class="metric-chip">量能 <span class="${cls}">${vr.toFixed(2)}x</span></span>`;
+  };
+
+  const fmtVolumeDropWarning = (warning) => {
+    if (!warning) return '';
+    return `<span class="volume-drop-badge" title="昨日量能異常放大(≥3x)，今日急速滑落(&lt;1x)，資金可能正在退潮">⚠ 量能急縮</span>`;
   };
 
   function renderMarketOverview(marketSummary) {
@@ -635,7 +665,29 @@
       </div>
     `;
 
-    container.innerHTML = taiexCard + breadthCard + amountCard;
+    const capital = marketSummary.capital_guidance;
+    const capitalCard = `
+      <div class="overview-card">
+        <div class="overview-title">建議資金水位</div>
+        ${capital ? `
+          <div class="overview-main">
+            <span class="overview-value mono">${capital.suggested_capital_pct}%</span>
+            <span class="overview-sub" style="margin-top:0">滿倉數量5檔</span>
+          </div>
+          <div class="capital-tree">
+            <div class="capital-tree-row">├─ 核心1可用上限：${capital.core1_cap_slots}檔（${capital.core1_cap_slots * 20}%資金水位，以每檔20%計算）</div>
+            <div class="capital-tree-row">├─ 核心2可用上限：${capital.core2_cap_slots}檔（${capital.core2_cap_slots * 20}%資金水位）</div>
+            <div class="capital-tree-row">└─ 大盤系統性風險覆蓋：${
+              capital.override_cap_slots == null
+                ? '無觸發'
+                : `已觸發連續${capital.weakness_streak_days}日轉弱（上限降為${capital.override_cap_slots}檔=${capital.override_cap_slots * 20}%）`
+            }</div>
+          </div>
+        ` : `<div class="overview-sub">尚無資料</div>`}
+      </div>
+    `;
+
+    container.innerHTML = taiexCard + breadthCard + amountCard + capitalCard;
   }
 
   function renderHeat(elementId, heat) {
@@ -693,7 +745,7 @@
             ${fmtPctChange(item.pct_change)}
             ${themeTags(item.themes)}
           </div>
-          <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}</div>
+          <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}${fmtVolumeDropWarning(item.volume_drop_warning)}</div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
@@ -725,7 +777,7 @@
             ${themeTags(item.themes)}
           </div>
           <div class="sub-metric mono">近20日上榜 ${item.appearance_count} 次</div>
-          <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}</div>
+          <div class="metric-row mono">${fmtVolumeRatio(item.volume_ratio)}${fmtVolumeDropWarning(item.volume_drop_warning)}</div>
         </div>
         <div class="score-cell">
           ${markLabel(item.mark)}
