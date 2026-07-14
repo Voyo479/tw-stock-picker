@@ -14,9 +14,11 @@ update_data.py
   8. 輸出 data/stock_pool.json（滾動資料庫）與 docs/result.json（給網頁顯示用）
 """
 
+import collections
 import json
 import os
 import re
+import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -89,6 +91,35 @@ def parse_float(value):
         return float(s)
     except ValueError:
         return None
+
+
+# ---------- TWSE 請求節流器 ----------
+# TWSE官方有明確的請求限制：每5秒鐘最多3個請求，超過會被暫時封鎖(ban)。
+# 這個節流器統一套用在所有TWSE相關網域(openapi.twse.com.tw / www.twse.com.tw /
+# isin.twse.com.tw)的請求上，確保不管單次執行呼叫了多少支TWSE端點，
+# 全部加起來都不會超過這個限制，避免因為連續呼叫太密集而觸發封鎖。
+TWSE_RATE_LIMIT_COUNT = 3
+TWSE_RATE_LIMIT_WINDOW = 5.0  # 秒
+_twse_request_timestamps = collections.deque()
+
+
+def throttle_twse_request():
+    """
+    在每次對TWSE相關網域發送請求之前呼叫這個函式。
+    如果最近TWSE_RATE_LIMIT_WINDOW秒內的請求數已經達到上限，
+    就主動睡到安全的時間點再繼續，而不是直接送出去冒著被封鎖的風險。
+    """
+    now = time.time()
+    while _twse_request_timestamps and now - _twse_request_timestamps[0] > TWSE_RATE_LIMIT_WINDOW:
+        _twse_request_timestamps.popleft()
+
+    if len(_twse_request_timestamps) >= TWSE_RATE_LIMIT_COUNT:
+        sleep_time = TWSE_RATE_LIMIT_WINDOW - (now - _twse_request_timestamps[0]) + 0.1
+        if sleep_time > 0:
+            print(f"TWSE請求節流：已達每{TWSE_RATE_LIMIT_WINDOW}秒{TWSE_RATE_LIMIT_COUNT}次上限，暫停 {sleep_time:.1f} 秒")
+            time.sleep(sleep_time)
+
+    _twse_request_timestamps.append(time.time())
 
 
 def linear_slope(xs, ys):
@@ -228,6 +259,7 @@ def fetch_industry_and_names_from_twse():
 
     for url, label in [(ISIN_LISTED_URL, "上市"), (ISIN_OTC_URL, "上櫃")]:
         try:
+            throttle_twse_request()
             resp = requests.get(url, headers=headers, timeout=30)
             resp.encoding = "big5"
             soup = BeautifulSoup(resp.text, "html.parser")
@@ -339,6 +371,7 @@ def get_twse_session():
         "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
     }
     try:
+        throttle_twse_request()
         session.get("https://www.twse.com.tw/zh/trading/historical/mi-index.html",
                      headers=headers, timeout=15)
         print("TWSE session暖身完成（已取得cookie）")
@@ -371,6 +404,7 @@ def fetch_twse_historical_day(date_str, max_retries=3):
 
     for attempt in range(1, max_retries + 1):
         try:
+            throttle_twse_request()
             resp = session.get(TWSE_HISTORICAL_URL, params=params, headers=headers, timeout=30)
             resp.raise_for_status()
             try:
@@ -524,6 +558,7 @@ def fetch_stock_day_all(max_retries=3):
     last_error = None
     for attempt in range(1, max_retries + 1):
         try:
+            throttle_twse_request()
             resp = requests.get(STOCK_DAY_ALL_URL, timeout=30)
             print(f"STOCK_DAY_ALL 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
             resp.raise_for_status()
@@ -605,6 +640,7 @@ def fetch_stock_day_all_rwd_fallback(today, max_retries=2):
     last_error = None
     for attempt in range(1, max_retries + 1):
         try:
+            throttle_twse_request()
             resp = requests.get(RWD_STOCK_DAY_ALL_URL, params=params, headers=headers, timeout=30)
             print(f"RWD備援(STOCK_DAY_ALL) 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
             resp.raise_for_status()
@@ -655,6 +691,7 @@ def fetch_taiex_index(max_retries=3):
     last_error = None
     for attempt in range(1, max_retries + 1):
         try:
+            throttle_twse_request()
             resp = requests.get(MI_INDEX_URL, timeout=30)
             print(f"MI_INDEX(大盤指數) 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
             resp.raise_for_status()
