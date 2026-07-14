@@ -1371,25 +1371,31 @@ def main():
         print(f"{today} 是週末，但資料庫目前完全空白（第一次啟動），允許抓取第一筆資料當起點")
 
     raw_rows = fetch_stock_day_all()
+
     if raw_rows is None:
-        print("無法取得資料，結束本次執行")
-        return
+        print(f"{today} 主要資料源(openapi)完全抓取失敗，嘗試RWD備援端點...")
+        raw_rows = fetch_stock_day_all_rwd_fallback(today)
+        if raw_rows is None:
+            print("RWD備援端點也抓取失敗，無法取得資料，結束本次執行")
+            return
+        print(f"{today} RWD備援端點抓取成功，改用備援資料繼續判斷")
+        new_day = is_new_trading_day(raw_rows, pool)
+    else:
+        new_day = is_new_trading_day(raw_rows, pool)
 
-    new_day = is_new_trading_day(raw_rows, pool)
-
-    if not new_day and not force:
-        print(f"{today} 主要資料源(openapi)判定無變化，嘗試RWD備援端點...")
-        fallback_rows = fetch_stock_day_all_rwd_fallback(today)
-        if fallback_rows:
-            new_day_fallback = is_new_trading_day(fallback_rows, pool)
-            if new_day_fallback:
-                print(f"{today} RWD備援端點偵測到資料已更新，改用備援資料繼續處理")
-                raw_rows = fallback_rows
-                new_day = True
+        if not new_day and not force:
+            print(f"{today} 主要資料源(openapi)判定無變化，嘗試RWD備援端點...")
+            fallback_rows = fetch_stock_day_all_rwd_fallback(today)
+            if fallback_rows:
+                new_day_fallback = is_new_trading_day(fallback_rows, pool)
+                if new_day_fallback:
+                    print(f"{today} RWD備援端點偵測到資料已更新，改用備援資料繼續處理")
+                    raw_rows = fallback_rows
+                    new_day = True
+                else:
+                    print(f"{today} RWD備援端點資料仍相同，確認為非交易日/資料未更新")
             else:
-                print(f"{today} RWD備援端點資料仍相同，確認為非交易日/資料未更新")
-        else:
-            print(f"{today} RWD備援端點也抓取失敗，維持原判斷")
+                print(f"{today} RWD備援端點也抓取失敗，維持原判斷")
 
     if not new_day and not force:
         print(f"{today} 判定為非交易日（假日/國定假日/資料未更新），跳過本次處理")
