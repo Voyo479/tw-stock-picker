@@ -551,6 +551,95 @@ def fetch_stock_day_all(max_retries=3):
     return None
 
 
+RWD_STOCK_DAY_ALL_URL = "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY_ALL"
+
+
+def convert_rwd_row_to_dict(row):
+    """
+    把RWD備援端點回傳的單筆資料(array格式，欄位順序跟openapi版STOCK_DAY_ALL一致)
+    轉成跟 fetch_stock_day_all() 回傳格式相同的dict，這樣下游的
+    is_new_trading_day()、normalize_twse_rows() 完全不用修改就能直接沿用。
+
+    欄位順序(依實測參考): 0代號 1名稱 2成交股數 3成交金額 4開盤價 5最高價 6最低價 7收盤價 8漲跌 9成交筆數
+    """
+    if not isinstance(row, list) or len(row) < 10:
+        return None
+    return {
+        "Code": str(row[0]).strip(),
+        "Name": str(row[1]).strip(),
+        "TradeVolume": row[2],
+        "TradeValue": row[3],
+        "OpeningPrice": row[4],
+        "HighestPrice": row[5],
+        "LowestPrice": row[6],
+        "ClosingPrice": row[7],
+        "Change": row[8],
+        "Transaction": row[9],
+    }
+
+
+def fetch_stock_day_all_rwd_fallback(today, max_retries=2):
+    """
+    備援資料源：當 openapi.twse.com.tw/STOCK_DAY_ALL 疑似回傳「沒有變化」的舊快照時
+    (例如連續好幾天都跟基準值一模一樣)，改試這支 www.twse.com.tw 的日期參數化端點，
+    看能不能拿到真正當天的資料。
+
+    這支端點過去我們用同網域下的 MI_INDEX(歷史查詢) 曾經被安全機制封鎖過，
+    所以這裡的重試次數刻意設得比較保守(預設2次)，失敗就直接放棄、回傳None，
+    讓上層退回原本「非交易日/資料未更新」的判斷，不會卡住整個流程。
+
+    回傳值：
+      - list：轉換成統一dict格式的資料(可以直接餵給is_new_trading_day/normalize_twse_rows)
+      - None：抓取失敗或解析不到有效資料
+    """
+    import time
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Referer": "https://www.twse.com.tw/zh/trading/historical/mi-index.html",
+    }
+    params = {"response": "json", "date": to_compact_date(today)}
+
+    last_error = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(RWD_STOCK_DAY_ALL_URL, params=params, headers=headers, timeout=30)
+            print(f"RWD備援(STOCK_DAY_ALL) 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
+            resp.raise_for_status()
+            try:
+                payload = resp.json()
+            except Exception as je:
+                print(f"警告：RWD備援回應不是合法JSON（{je}），回應前200字：{resp.text[:200]!r}")
+                last_error = je
+                time.sleep(2 * attempt)
+                continue
+
+            rows = payload.get("data")
+            if not rows:
+                print(f"警告：RWD備援回傳無data或空資料，stat={payload.get('stat')!r}")
+                last_error = ValueError("empty data")
+                time.sleep(2 * attempt)
+                continue
+
+            converted = [d for d in (convert_rwd_row_to_dict(r) for r in rows) if d is not None]
+            if not converted:
+                print("警告：RWD備援資料格式無法解析(欄位數不足或格式異常)")
+                last_error = ValueError("no valid rows")
+                time.sleep(2 * attempt)
+                continue
+
+            return converted
+        except Exception as e:
+            print(f"RWD備援抓取失敗（第{attempt}次嘗試）：{e}")
+            last_error = e
+            time.sleep(2 * attempt)
+
+    print(f"RWD備援共嘗試{max_retries}次仍失敗，維持原判斷。最後錯誤：{last_error}")
+    return None
+
+
 def fetch_taiex_index(max_retries=3):
     """
     抓取「發行量加權股價指數」(大盤)當日收盤指數與漲跌百分比。
@@ -1286,7 +1375,23 @@ def main():
         print("無法取得資料，結束本次執行")
         return
 
-    if not is_new_trading_day(raw_rows, pool) and not force:
+    new_day = is_new_trading_day(raw_rows, pool)
+
+    if not new_day and not force:
+        print(f"{today} 主要資料源(openapi)判定無變化，嘗試RWD備援端點...")
+        fallback_rows = fetch_stock_day_all_rwd_fallback(today)
+        if fallback_rows:
+            new_day_fallback = is_new_trading_day(fallback_rows, pool)
+            if new_day_fallback:
+                print(f"{today} RWD備援端點偵測到資料已更新，改用備援資料繼續處理")
+                raw_rows = fallback_rows
+                new_day = True
+            else:
+                print(f"{today} RWD備援端點資料仍相同，確認為非交易日/資料未更新")
+        else:
+            print(f"{today} RWD備援端點也抓取失敗，維持原判斷")
+
+    if not new_day and not force:
         print(f"{today} 判定為非交易日（假日/國定假日/資料未更新），跳過本次處理")
         save_pool(pool)  # 基準值可能有更新，還是存一下
         return
