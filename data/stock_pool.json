@@ -1,16 +1,17 @@
 {
   "reference_check": {
     "2330": {
-      "close": 2415.0,
-      "volume": 34681018.0
+      "close": 2440.0,
+      "volume": 35310380.0
     },
     "2454": {
-      "close": 3925.0,
-      "volume": 7370647.0
+      "close": 3825.0,
+      "volume": 7033208.0
     }
   },
   "trading_days": [
-    "2026-07-09"
+    "2026-07-09",
+    "2026-07-14"
   ],
   "stocks": {
     "2327": {
@@ -44,43 +45,49 @@
     "6182": {
       "name": "合晶",
       "history": {
-        "2026-07-09": 6.2246
+        "2026-07-09": 6.2246,
+        "2026-07-14": 7.2154
       },
       "trade_value_history": {
-        "2026-07-09": 30747630350.0
+        "2026-07-09": 30747630350.0,
+        "2026-07-14": 13479366407.0
       },
-      "last_seen": "2026-07-09",
+      "last_seen": "2026-07-14",
       "last_classification": "core1",
-      "last_close": 172.5,
-      "last_pct_change": 7.8125,
+      "last_close": 189.5,
+      "last_pct_change": 9.855072463768117,
       "market": "上櫃"
     },
     "3037": {
       "name": "欣興",
       "history": {
-        "2026-07-09": 1.7093
+        "2026-07-09": 1.7093,
+        "2026-07-14": 2.9698
       },
       "trade_value_history": {
-        "2026-07-09": 29937100512.0
+        "2026-07-09": 29937100512.0,
+        "2026-07-14": 31045938081.0
       },
-      "last_seen": "2026-07-09",
+      "last_seen": "2026-07-14",
       "last_classification": "core1",
-      "last_close": 875.0,
-      "last_pct_change": 1.3904982618771726,
+      "last_close": 903.0,
+      "last_pct_change": 3.2,
       "market": "上市"
     },
     "8046": {
       "name": "南電",
       "history": {
-        "2026-07-09": 7.6879
+        "2026-07-09": 7.6879,
+        "2026-07-14": 3.9581
       },
       "trade_value_history": {
-        "2026-07-09": 29270658415.0
+        "2026-07-09": 29270658415.0,
+        "2026-07-14": 33581284065.0
       },
-      "last_seen": "2026-07-09",
+      "last_seen": "2026-07-14",
       "last_classification": "core1",
-      "last_close": 1215.0,
-      "last_pct_change": 9.95475113122172,
+      "last_close": 1270.0,
+      "last_pct_change": 4.526748971193416,
       "market": "上市"
     },
     "2344": {
@@ -128,15 +135,17 @@
     "4958": {
       "name": "臻鼎-KY",
       "history": {
-        "2026-07-09": 3.3338
+        "2026-07-09": 3.3338,
+        "2026-07-14": 7.9909
       },
       "trade_value_history": {
-        "2026-07-09": 19698525306.0
+        "2026-07-09": 19698525306.0,
+        "2026-07-14": 46207604908.0
       },
-      "last_seen": "2026-07-09",
+      "last_seen": "2026-07-14",
       "last_classification": "core1",
-      "last_close": 588.0,
-      "last_pct_change": 4.070796460176991,
+      "last_close": 646.0,
+      "last_pct_change": 9.863945578231291,
       "market": "上市"
     },
     "3026": {
@@ -292,15 +301,144 @@
       "last_close": 1285.0,
       "last_pct_change": 0.0,
       "market": "上市"
+    },
+    "2330": {
+      "name": "台積電",
+      "history": {
+        "2026-07-14": 2.7626
+      },
+      "trade_value_history": {
+        "2026-07-14": 86697387632.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": null,
+      "last_close": 2440.0,
+      "last_pct_change": 1.0351966873706004,
+      "market": "上市"
+    },
+    "2308": {
+      "name": "台達電",
+      "history": {
+        "2026-07-14": 0.7941
+      },
+      "trade_value_history": {
+        "2026-07-14": 17940977138.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": null,
+      "last_close": 1890.0,
+      "last_pct_change": 0.5319148936170213,
+      "market": "上市"
+    },
+    "1303": {
+      "name": "南亞",
+      "history": {
+        "2026-07-14": 7.3582
+      },
+      "trade_value_history": {
+        "2026-07-14": 17700400057.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": "core1",
+      "last_close": 199.5,
+      "last_pct_change": 9.917355371900827,
+      "market": "上市"
+    },
+    "2313": {
+      "name": "華通",
+      "history": {
+        "2026-07-14": 4.1212
+      },
+      "trade_value_history": {
+        "2026-07-14": 15077679721.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": "core1",
+      "last_close": 235.0,
+      "last_pct_change": 5.381165919282512,
+      "market": "上市"
+    },
+    "3374": {
+      "name": "精材",
+      "history": {
+        "2026-07-14": 0.5381
+      },
+      "trade_value_history": {
+        "2026-07-14": 10359741968.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": null,
+      "last_close": 358.0,
+      "last_pct_change": 0.42075736325385693,
+      "market": "上櫃"
+    },
+    "5351": {
+      "name": "鈺創",
+      "history": {
+        "2026-07-14": 1.4744
+      },
+      "trade_value_history": {
+        "2026-07-14": 8138079742.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": null,
+      "last_close": 100.0,
+      "last_pct_change": 1.8329938900203666,
+      "market": "上櫃"
+    },
+    "00631L": {
+      "name": "元大台灣50正2",
+      "history": {
+        "2026-07-14": 0.3316
+      },
+      "trade_value_history": {
+        "2026-07-14": 7631133322.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": null,
+      "last_close": 36.86,
+      "last_pct_change": 0.2175095160413268,
+      "market": "上市"
+    },
+    "0050": {
+      "name": "元大台灣50",
+      "history": {
+        "2026-07-14": 0.3115
+      },
+      "trade_value_history": {
+        "2026-07-14": 7623449944.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": null,
+      "last_close": 106.0,
+      "last_pct_change": 0.1890359168241966,
+      "market": "上市"
+    },
+    "2301": {
+      "name": "光寶科",
+      "history": {
+        "2026-07-14": 2.9641
+      },
+      "trade_value_history": {
+        "2026-07-14": 7538945952.0
+      },
+      "last_seen": "2026-07-14",
+      "last_classification": null,
+      "last_close": 222.0,
+      "last_pct_change": 3.9812646370023423,
+      "market": "上市"
     }
   },
   "market_total_trade_value_history": {
-    "2026-07-09": 1220410016231.0
+    "2026-07-09": 1220410016231.0,
+    "2026-07-14": 1276245072557.0
   },
   "market_breadth": {
-    "2026-07-09": 31
+    "2026-07-09": 31,
+    "2026-07-14": 19
   },
   "market_index_pct_change": {
-    "2026-07-09": -0.83
+    "2026-07-09": -0.83,
+    "2026-07-14": 0.06
   }
 }
