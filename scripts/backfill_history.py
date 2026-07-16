@@ -177,11 +177,14 @@ def main():
     ud.save_pool(pool)
 
     latest_date = pool["trading_days"][-1]
+    red_up_tracker_display = ud.compute_red_up_tracker_display(pool, latest_date)
+
     result = {
         "update_date": latest_date,
         "market_summary": market_summary,
         "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
         "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
+        "red_up_tracker": red_up_tracker_display,
     }
     ud.save_result(result)
 
