@@ -1379,6 +1379,172 @@ def compute_marks_and_update_classification(pool, core1_list, core2_list):
     return marks
 
 
+# ---------- 紅▲事件測試紀錄表 ----------
+RED_UP_TRACKER_MA_WINDOW = 20  # 賣出條件用的均線天數
+RED_UP_TRACKER_LOOKBACK_DAYS = 45  # 向FinMind查詢的日曆天回溯範圍(確保能湊到20個交易日)
+
+
+def find_close_in_combined_rows(combined_rows, code):
+    """從當日全市場資料(combined_rows，篩選前的完整清單)裡找出指定股票的收盤價與市場別"""
+    for row in combined_rows:
+        if row.get("code") == code:
+            return row.get("close"), row.get("market")
+    return None, None
+
+
+def fetch_stock_recent_closes(code, today, lookback_days=RED_UP_TRACKER_LOOKBACK_DAYS, max_retries=3):
+    """
+    用FinMind查詢單一股票近期的每日收盤價，用來計算20日均線。
+    這是「單一股票+日期範圍」查詢，免費版即可使用，不會像全市場查詢那樣
+    撞到FinMind的付費限制(我們之前處理處置股、backfill都是靠這個特性)。
+
+    好處：股票一觸發紅▲，馬上就能拿到過去的完整歷史窗口算均線，
+    不用像自己累積資料那樣，要等20天才有辦法判斷。
+
+    回傳值：{日期: 收盤價} 的dict，查詢失敗或無資料回傳空dict(不影響其他功能，
+    這檔股票這次就先當作「資料不足，暫時判斷不了」處理)。
+    """
+    from datetime import timedelta
+    import time
+
+    token = os.environ.get("FINMIND_TOKEN", "")
+    start_date = (datetime.fromisoformat(today) - timedelta(days=lookback_days)).date().isoformat()
+    params = {"dataset": "TaiwanStockPrice", "data_id": code, "start_date": start_date, "end_date": today}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    }
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(FINMIND_API_URL, params=params, headers=headers, timeout=20)
+            if resp.status_code == 402:
+                print(f"{code} 查詢近期收盤價達額度上限(402)，第{attempt}次嘗試")
+                time.sleep(2 * attempt)
+                continue
+            resp.raise_for_status()
+            payload = resp.json()
+            rows = payload.get("data")
+            if not rows:
+                return {}
+
+            result = {}
+            for r in rows:
+                d = r.get("date")
+                c = parse_float(r.get("close"))
+                if d and c is not None:
+                    result[d] = c
+            return result
+        except Exception as e:
+            print(f"{code} 查詢近期收盤價失敗（第{attempt}次嘗試）：{e}")
+            time.sleep(2 * attempt)
+
+    print(f"{code} 查詢近期收盤價共嘗試{max_retries}次仍失敗")
+    return {}
+
+
+def compute_moving_average(closes_dict, window=RED_UP_TRACKER_MA_WINDOW):
+    """取收盤價dict裡最近window筆(依日期排序)算簡單移動平均，不足window筆回傳None"""
+    if len(closes_dict) < window:
+        return None
+    sorted_dates = sorted(closes_dict.keys())[-window:]
+    values = [closes_dict[d] for d in sorted_dates]
+    return sum(values) / len(values)
+
+
+def update_red_up_tracker(pool, today, combined_rows, marks):
+    """
+    維護紅▲事件的測試紀錄表：
+      1. 這次新觸發紅▲的股票，加入一筆新紀錄(狀態:持有中)
+      2. 既有「持有中」的紀錄，查今日收盤價(從combined_rows，全市場當日資料)，
+         再向FinMind查該股近期收盤價算20MA(每次都問FinMind要最新窗口，
+         不用自己累積，也不受主資料庫20日滾動清理影響)
+      3. 若20MA可計算、且今日收盤價跌破20MA -> 標記為「已賣出」，並凍結當時的價差/百分比
+    這份紀錄表只會持續累積，不會自動清除，清除方式是使用者自行編輯data/stock_pool.json。
+    """
+    pool.setdefault("red_up_tracker", [])
+
+    # 步驟1：新觸發的紅▲事件，建立新紀錄
+    for code, mark_type in marks.items():
+        if mark_type != "red_up":
+            continue
+        close, market = find_close_in_combined_rows(combined_rows, code)
+        if close is None:
+            continue  # 找不到收盤價，這次無法建立紀錄(理論上不該發生，因為剛觸發紅▲代表今天有資料)
+        stock_name = pool["stocks"].get(code, {}).get("name", code)
+        pool["red_up_tracker"].append({
+            "code": code,
+            "name": stock_name,
+            "market": market,
+            "trigger_date": today,
+            "trigger_close": close,
+            "status": "holding",
+            "sell_date": None,
+            "frozen_diff": None,
+            "frozen_pct": None,
+        })
+
+    # 步驟2+3：更新既有「持有中」的紀錄(含這次剛建立的新紀錄，都會檢查一次)
+    for entry in pool["red_up_tracker"]:
+        if entry["status"] != "holding":
+            continue
+
+        close, _ = find_close_in_combined_rows(combined_rows, entry["code"])
+        if close is None:
+            continue  # 今天找不到這檔股票的資料(例如暫停交易)，先略過，明天再試
+
+        closes = fetch_stock_recent_closes(entry["code"], today)
+        ma20 = compute_moving_average(closes)
+
+        if ma20 is not None and close < ma20:
+            diff = close - entry["trigger_close"]
+            pct = round(diff / entry["trigger_close"] * 100, 2) if entry["trigger_close"] else None
+            entry["status"] = "sold"
+            entry["sell_date"] = today
+            entry["frozen_diff"] = round(diff, 2)
+            entry["frozen_pct"] = pct
+
+
+def compute_red_up_tracker_display(pool, today, combined_rows=None):
+    """
+    把red_up_tracker轉成給網頁顯示用的格式：
+    持有中的紀錄，用「今天」的收盤價即時算價差/百分比(從combined_rows查，若沒提供則無法更新持有中的即時價差)；
+    已賣出的紀錄，用賣出當時凍結的價差/百分比(不會再變動)。
+    """
+    display_list = []
+    for entry in pool.get("red_up_tracker", []):
+        if entry["status"] == "holding":
+            latest_close = None
+            if combined_rows is not None:
+                latest_close, _ = find_close_in_combined_rows(combined_rows, entry["code"])
+            if latest_close is not None and entry["trigger_close"]:
+                diff = round(latest_close - entry["trigger_close"], 2)
+                pct = round(diff / entry["trigger_close"] * 100, 2)
+            else:
+                diff, pct = None, None
+        else:
+            diff = entry["frozen_diff"]
+            pct = entry["frozen_pct"]
+
+        display_list.append({
+            "code": entry["code"],
+            "name": entry["name"],
+            "market": entry.get("market"),
+            "trigger_date": entry["trigger_date"],
+            "trigger_close": entry["trigger_close"],
+            "price_diff": diff,
+            "price_diff_pct": pct,
+            "sell_date": entry["sell_date"],
+            "status": entry["status"],
+        })
+
+    # 依觸發日期新到舊排序
+    display_list.sort(key=lambda x: x["trigger_date"], reverse=True)
+    return display_list
+
+
 # ---------- 主流程 ----------
 def main():
     override_date = os.environ.get("OVERRIDE_DATE", "").strip()
@@ -1486,6 +1652,11 @@ def main():
     for c in core2_list:
         c["mark"] = marks.get(c["code"])
 
+    update_red_up_tracker(pool, today, combined_rows, marks)
+    red_up_count = sum(1 for e in pool.get("red_up_tracker", []) if e["status"] == "holding")
+    sold_count = sum(1 for e in pool.get("red_up_tracker", []) if e["status"] == "sold")
+    print(f"紅▲測試紀錄表：持有中{red_up_count}筆，已賣出{sold_count}筆")
+
     theme_mapping = load_theme_mapping()
     industry_mapping = get_industry_mapping(today)
     enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
@@ -1534,11 +1705,14 @@ def main():
 
     save_pool(pool)
 
+    red_up_tracker_display = compute_red_up_tracker_display(pool, today, combined_rows)
+
     result = {
         "update_date": today,
         "market_summary": market_summary,
         "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
         "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
+        "red_up_tracker": red_up_tracker_display,
     }
     save_result(result)
 
