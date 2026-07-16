@@ -63,7 +63,7 @@ CORE2_HEAT_LABELS = {
 }
 
 # ---------- 建議資金水位：把短線/中期燈號換算成核心1/核心2的持股上限(檔數) ----------
-CORE1_CAP_BY_HEAT_LEVEL = {5: 4, 4: 4, 3: 3, 2: 2, 1: 2}
+CORE1_CAP_BY_HEAT_LEVEL = {5: 3, 4: 3, 3: 2, 2: 1, 1: 0}
 CORE2_CAP_BY_HEAT_LEVEL = {5: 2, 4: 2, 3: 1, 2: 0, 1: 0}
 CAPITAL_PCT_PER_SLOT = 20  # 每一檔持股上限，換算成資金水位的百分比
 MAX_TOTAL_SLOTS = 5  # 滿倉檔數上限，核心1+核心2上限加總不會超過這個數字(對應100%資金水位)
