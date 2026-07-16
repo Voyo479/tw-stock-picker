@@ -491,6 +491,74 @@
     line-height: 1.7;
   }
 
+  /* ---------- Red-up Tracker ---------- */
+  .tracker-section {
+    margin-top: 32px;
+    margin-bottom: 24px;
+  }
+
+  .tracker-title {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .tracker-desc {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .tracker-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .tracker-table th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    padding: 10px 14px;
+    background: var(--panel-alt);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .tracker-table td {
+    padding: 10px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .tracker-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .tracker-status {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  .tracker-status.holding {
+    background: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  .tracker-status.sold {
+    background: rgba(139, 147, 167, 0.15);
+    color: var(--text-muted);
+  }
+
   /* ---------- Footer ---------- */
   footer {
     margin-top: 28px;
@@ -552,6 +620,14 @@
 
   </div>
 
+  <div class="tracker-section">
+    <div class="tracker-title">紅▲ 觸發測試紀錄表</div>
+    <div class="tracker-desc">每次個股觸發紅▲（核心2升上核心1）事件時自動記錄一筆。賣出條件：跌破20日均線（跌破當天的價差/漲跌幅會凍結，之後不再變動）。此表僅持續累積，不會自動清除。</div>
+    <div id="red-up-tracker-table">
+      <div class="loading-state">讀取資料中...</div>
+    </div>
+  </div>
+
   <footer>
     <div><strong>紅色▲</strong>：上次歸類為核心2、本次升上核心1　　<strong>綠色▼</strong>：上次歸類為核心1、本次降至核心2</div>
     <div><strong>金色標籤</strong>：第一個標籤為 TWSE 官方產業別（程式自動抓取，每週更新），其餘為選填補充標籤（由 data/theme_mapping.json 人工維護），未收錄的股票顯示「未分類」。</div>
@@ -583,6 +659,45 @@
     const suffix = market === '上櫃' ? '.TWO' : '.TW';
     return `https://tw.stock.yahoo.com/quote/${encodeURIComponent(code)}${suffix}/technical-analysis`;
   };
+
+  function renderRedUpTracker(list) {
+    const container = document.getElementById('red-up-tracker-table');
+    if (!list || list.length === 0) {
+      container.innerHTML = '<div class="empty-state">尚無觸發紀錄</div>';
+      return;
+    }
+
+    const fmtDiff = (diff, pct) => {
+      if (typeof diff !== 'number' || typeof pct !== 'number') return '<span class="pct-flat">--</span>';
+      const cls = diff > 0 ? 'pct-up' : (diff < 0 ? 'pct-down' : 'pct-flat');
+      const sign = diff > 0 ? '+' : '';
+      return `<span class="${cls} mono">${sign}${diff.toFixed(2)}（${sign}${pct.toFixed(2)}%）</span>`;
+    };
+
+    const rows = list.map((e) => `
+      <tr>
+        <td><a class="code mono code-link" href="${yahooStockUrl(e.code, e.market)}" target="_blank" rel="noopener" title="查看K線技術圖(Yahoo股市)">${escapeHtml(e.code)}</a></td>
+        <td>${escapeHtml(e.name)}</td>
+        <td class="mono">${e.trigger_date}</td>
+        <td class="mono">$${fmtPrice(e.trigger_close)}</td>
+        <td>${fmtDiff(e.price_diff, e.price_diff_pct)}</td>
+        <td class="mono">${e.sell_date || '--'}</td>
+        <td><span class="tracker-status ${e.status}">${e.status === 'holding' ? '持有中' : '已賣出'}</span></td>
+      </tr>
+    `).join('');
+
+    container.innerHTML = `
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th>代號</th><th>名稱</th><th>觸發日期</th><th>觸發收盤價</th>
+            <th>價差／百分比</th><th>賣出日期</th><th>狀態</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
 
   const fmtPrice = (p) => (typeof p === 'number' ? p.toFixed(2) : '--');
   const fmtPctChange = (p) => {
@@ -803,6 +918,7 @@
       renderHeat('core2-heat', data.core2 && data.core2.heat);
       renderSectors('core1-sectors', data.core1 && data.core1.sector_summary);
       renderSectors('core2-sectors', data.core2 && data.core2.sector_summary);
+      renderRedUpTracker(data.red_up_tracker);
     })
     .catch((err) => {
       document.getElementById('update-time').textContent = '尚無資料';
@@ -818,6 +934,8 @@
       ['core1-heat', 'core2-heat', 'core1-sectors', 'core2-sectors'].forEach((id) => {
         document.getElementById(id).innerHTML = '';
       });
+      document.getElementById('red-up-tracker-table').innerHTML =
+        '<div class="error-state">尚未產生資料。</div>';
     });
 })();
 </script>
