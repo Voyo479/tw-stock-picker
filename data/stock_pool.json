@@ -721,15 +721,7 @@
   },
   "red_up_tracker": [
     {
-      "code": "2301",
-      "name": "光寶科",
-      "market": "上市",
-      "trigger_date": "2026-07-17",
-      "trigger_close": 218.0,
-      "status": "holding",
-      "sell_date": null,
-      "frozen_diff": null,
-      "frozen_pct": null
+    
     }
   ]
 }
