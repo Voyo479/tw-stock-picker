@@ -589,30 +589,6 @@ def fetch_stock_day_all(max_retries=3):
 RWD_STOCK_DAY_ALL_URL = "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY_ALL"
 
 
-def convert_rwd_row_to_dict(row):
-    """
-    把RWD備援端點回傳的單筆資料(array格式，欄位順序跟openapi版STOCK_DAY_ALL一致)
-    轉成跟 fetch_stock_day_all() 回傳格式相同的dict，這樣下游的
-    is_new_trading_day()、normalize_twse_rows() 完全不用修改就能直接沿用。
-
-    欄位順序(依實測參考): 0代號 1名稱 2成交股數 3成交金額 4開盤價 5最高價 6最低價 7收盤價 8漲跌 9成交筆數
-    """
-    if not isinstance(row, list) or len(row) < 10:
-        return None
-    return {
-        "Code": str(row[0]).strip(),
-        "Name": str(row[1]).strip(),
-        "TradeVolume": row[2],
-        "TradeValue": row[3],
-        "OpeningPrice": row[4],
-        "HighestPrice": row[5],
-        "LowestPrice": row[6],
-        "ClosingPrice": row[7],
-        "Change": row[8],
-        "Transaction": row[9],
-    }
-
-
 def fetch_stock_day_all_rwd_fallback(today, max_retries=2):
     """
     備援資料源：當 openapi.twse.com.tw/STOCK_DAY_ALL 疑似回傳「沒有變化」的舊快照時
@@ -623,19 +599,25 @@ def fetch_stock_day_all_rwd_fallback(today, max_retries=2):
     所以這裡的重試次數刻意設得比較保守(預設2次)，失敗就直接放棄、回傳None，
     讓上層退回原本「非交易日/資料未更新」的判斷，不會卡住整個流程。
 
+    注意：這支端點實測回傳的是「CSV格式」的純文字(不是JSON)，即使請求時帶
+    response=json 參數也一樣。欄位順序(依實測表頭)：
+    日期,證券代號,證券名稱,成交股數,成交金額,開盤價,最高價,最低價,收盤價,漲跌價差,成交筆數
+
     回傳值：
       - list：轉換成統一dict格式的資料(可以直接餵給is_new_trading_day/normalize_twse_rows)
       - None：抓取失敗或解析不到有效資料
     """
     import time
+    import csv
+    import io
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                       "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Accept": "application/json, text/plain, */*",
+        "Accept": "text/csv, application/json, text/plain, */*",
         "Referer": "https://www.twse.com.tw/zh/trading/historical/mi-index.html",
     }
-    params = {"response": "json", "date": to_compact_date(today)}
+    params = {"response": "csv", "date": to_compact_date(today)}
 
     last_error = None
     for attempt in range(1, max_retries + 1):
@@ -644,24 +626,36 @@ def fetch_stock_day_all_rwd_fallback(today, max_retries=2):
             resp = requests.get(RWD_STOCK_DAY_ALL_URL, params=params, headers=headers, timeout=30)
             print(f"RWD備援(STOCK_DAY_ALL) 狀態碼：{resp.status_code}（第{attempt}次嘗試）")
             resp.raise_for_status()
-            try:
-                payload = resp.json()
-            except Exception as je:
-                print(f"警告：RWD備援回應不是合法JSON（{je}），回應前200字：{resp.text[:200]!r}")
-                last_error = je
+
+            text = resp.text.strip()
+            if not text:
+                print("警告：RWD備援回應是空的")
+                last_error = ValueError("empty response")
                 time.sleep(2 * attempt)
                 continue
 
-            rows = payload.get("data")
-            if not rows:
-                print(f"警告：RWD備援回傳無data或空資料，stat={payload.get('stat')!r}")
-                last_error = ValueError("empty data")
-                time.sleep(2 * attempt)
-                continue
+            reader = csv.DictReader(io.StringIO(text))
+            converted = []
+            for row in reader:
+                code = (row.get("證券代號") or "").strip()
+                if not re.match(r"^\d{4}$", code):
+                    continue  # 只取4位數一般股票代號，排除ETF/權證等特殊代號
 
-            converted = [d for d in (convert_rwd_row_to_dict(r) for r in rows) if d is not None]
+                converted.append({
+                    "Code": code,
+                    "Name": (row.get("證券名稱") or "").strip(),
+                    "TradeVolume": row.get("成交股數"),
+                    "TradeValue": row.get("成交金額"),
+                    "OpeningPrice": row.get("開盤價"),
+                    "HighestPrice": row.get("最高價"),
+                    "LowestPrice": row.get("最低價"),
+                    "ClosingPrice": row.get("收盤價"),
+                    "Change": row.get("漲跌價差"),
+                    "Transaction": row.get("成交筆數"),
+                })
+
             if not converted:
-                print("警告：RWD備援資料格式無法解析(欄位數不足或格式異常)")
+                print(f"警告：RWD備援資料解析後沒有有效股票，回應前200字：{text[:200]!r}")
                 last_error = ValueError("no valid rows")
                 time.sleep(2 * attempt)
                 continue
