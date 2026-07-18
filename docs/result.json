@@ -2,27 +2,27 @@
   "update_date": "2026-07-17",
   "market_summary": {
     "taiex": {
-      "close": 45624.98,
-      "pct_change": -0.01
+      "close": 42671.27,
+      "pct_change": -6.47
     },
     "breadth": {
-      "up_count": 20,
+      "up_count": 2,
       "top_n": 50
     },
     "amount_stats": {
-      "today_amount": 1122208019502.0,
-      "day_over_day_pct": -8.07,
-      "five_day_pct": 309.3,
+      "today_amount": 1527536236428.0,
+      "day_over_day_pct": 25.14,
+      "five_day_pct": 341.06,
       "twenty_day_pct": null
     },
     "capital_guidance": {
-      "core1_cap_slots": 2,
+      "core1_cap_slots": 1,
       "core2_cap_slots": 1,
-      "base_cap_slots": 3,
+      "base_cap_slots": 2,
       "weakness_streak_days": 0,
       "override_cap_slots": null,
-      "final_cap_slots": 3,
-      "suggested_capital_pct": 60
+      "final_cap_slots": 2,
+      "suggested_capital_pct": 40
     }
   },
   "core1": {
@@ -43,7 +43,7 @@
         "themes": [
           "塑膠工業"
         ],
-        "relative_strength": 8.34,
+        "relative_strength": 14.8,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -58,7 +58,7 @@
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 9.89,
+        "relative_strength": 16.35,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -73,7 +73,7 @@
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": 9.7,
+        "relative_strength": 16.16,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -88,7 +88,7 @@
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": 9.87,
+        "relative_strength": 16.33,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -103,7 +103,7 @@
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": 9.99,
+        "relative_strength": 16.45,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -118,7 +118,7 @@
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 7.38,
+        "relative_strength": 13.84,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -134,7 +134,7 @@
           "電子零組件業",
           "AI伺服器供應鏈"
         ],
-        "relative_strength": 7.1,
+        "relative_strength": 13.56,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -150,7 +150,7 @@
           "半導體業",
           "AI伺服器供應鏈"
         ],
-        "relative_strength": 1.24,
+        "relative_strength": 7.7,
         "volume_ratio": 0.88,
         "volume_drop_warning": false
       },
@@ -165,7 +165,7 @@
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 0.54,
+        "relative_strength": 7.0,
         "volume_ratio": 2.58,
         "volume_drop_warning": false
       },
@@ -180,7 +180,7 @@
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 9.94,
+        "relative_strength": 16.4,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -195,7 +195,7 @@
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 9.74,
+        "relative_strength": 16.2,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -211,22 +211,7 @@
           "半導體業",
           "半導體業"
         ],
-        "relative_strength": 9.87,
-        "volume_ratio": null,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "6505",
-        "name": "台塑化",
-        "score": 7.1341,
-        "mark": null,
-        "price": 80.0,
-        "pct_change": 9.89010989010989,
-        "market": "上市",
-        "themes": [
-          "油電燃氣業"
-        ],
-        "relative_strength": 9.9,
+        "relative_strength": 16.33,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -234,14 +219,14 @@
         "code": "2301",
         "name": "光寶科",
         "score": 5.9183,
-        "mark": "red_up",
+        "mark": null,
         "price": 222.0,
         "pct_change": 3.9812646370023423,
         "market": "上市",
         "themes": [
           "電腦及週邊設備業"
         ],
-        "relative_strength": 3.99,
+        "relative_strength": 10.45,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -256,15 +241,30 @@
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 7.47,
+        "relative_strength": 13.93,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3711",
+        "name": "日月光投控",
+        "score": 5.0279,
+        "mark": "red_up",
+        "price": 683.0,
+        "pct_change": 6.5522620904836195,
+        "market": "上市",
+        "themes": [
+          "半導體業"
+        ],
+        "relative_strength": 13.02,
         "volume_ratio": null,
         "volume_drop_warning": false
       }
     ],
     "heat": {
-      "average": 22.4,
-      "level": 3,
-      "label": "短線市場震盪",
+      "average": 18.8,
+      "level": 2,
+      "label": "短線市場走弱",
       "sample_days": 5,
       "top_n": 50,
       "range": {
@@ -276,8 +276,8 @@
     "sector_summary": [
       {
         "sector": "半導體業",
-        "count": 8,
-        "percentage": 53.3
+        "count": 9,
+        "percentage": 60.0
       },
       {
         "sector": "電子零組件業",
@@ -303,7 +303,7 @@
         "name": "環球晶",
         "discounted_slope": 8611208875.768503,
         "appearance_count": 3,
-        "mark": "green_down",
+        "mark": null,
         "price": 1515.0,
         "pct_change": 2.0202020202020203,
         "market": "上櫃",
@@ -311,7 +311,7 @@
           "半導體業",
           "半導體業"
         ],
-        "relative_strength": 2.03,
+        "relative_strength": 8.49,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -328,7 +328,7 @@
           "電腦及週邊設備業",
           "AI伺服器供應鏈"
         ],
-        "relative_strength": 0.01,
+        "relative_strength": 6.47,
         "volume_ratio": 1.23,
         "volume_drop_warning": false
       },
@@ -344,7 +344,7 @@
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": 2.58,
+        "relative_strength": 9.04,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -353,14 +353,14 @@
         "name": "旺宏",
         "discounted_slope": 2331723145.0466475,
         "appearance_count": 2,
-        "mark": "green_down",
+        "mark": null,
         "price": 148.5,
         "pct_change": 6.451612903225806,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 6.46,
+        "relative_strength": 12.92,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -374,7 +374,7 @@
         "pct_change": 1.8199233716475096,
         "market": "上市",
         "themes": [],
-        "relative_strength": 1.83,
+        "relative_strength": 8.29,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -391,7 +391,7 @@
           "電子零組件業",
           "AI伺服器供應鏈"
         ],
-        "relative_strength": 0.8,
+        "relative_strength": 7.26,
         "volume_ratio": 0.93,
         "volume_drop_warning": false
       },
@@ -408,23 +408,7 @@
           "半導體業",
           "半導體業"
         ],
-        "relative_strength": 2.69,
-        "volume_ratio": null,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "3711",
-        "name": "日月光投控",
-        "discounted_slope": 866185128.1428294,
-        "appearance_count": 2,
-        "mark": "green_down",
-        "price": 683.0,
-        "pct_change": 6.5522620904836195,
-        "market": "上市",
-        "themes": [
-          "半導體業"
-        ],
-        "relative_strength": 6.56,
+        "relative_strength": 9.15,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -441,7 +425,7 @@
           "其他電子業",
           "AI伺服器組裝"
         ],
-        "relative_strength": 1.47,
+        "relative_strength": 7.93,
         "volume_ratio": 0.98,
         "volume_drop_warning": false
       },
@@ -455,13 +439,13 @@
         "pct_change": 0.2175095160413268,
         "market": "上市",
         "themes": [],
-        "relative_strength": 0.23,
+        "relative_strength": 6.69,
         "volume_ratio": null,
         "volume_drop_warning": false
       }
     ],
     "heat": {
-      "average": 23.8,
+      "average": 20.8,
       "level": 3,
       "label": "中期市場震盪",
       "sample_days": 6,
@@ -475,32 +459,32 @@
     "sector_summary": [
       {
         "sector": "半導體業",
-        "count": 4,
-        "percentage": 40.0
+        "count": 3,
+        "percentage": 33.3
       },
       {
         "sector": "電子零組件業",
         "count": 2,
-        "percentage": 20.0
+        "percentage": 22.2
       },
       {
         "sector": "未分類",
         "count": 2,
-        "percentage": 20.0
+        "percentage": 22.2
       }
     ]
   },
   "red_up_tracker": [
     {
-      "code": "2301",
-      "name": "光寶科",
+      "code": "3711",
+      "name": "日月光投控",
       "market": "上市",
       "trigger_date": "2026-07-17",
-      "trigger_close": 218.0,
+      "trigger_close": 614.0,
       "price_diff": 0.0,
       "price_diff_pct": 0.0,
-      "sell_date": null,
-      "status": "holding"
+      "sell_date": "2026-07-17",
+      "status": "sold"
     }
   ]
 }
