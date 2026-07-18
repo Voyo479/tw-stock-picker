@@ -733,17 +733,5 @@
     "2026-07-16": 2.0,
     "2026-07-17": -6.47
   },
-  "red_up_tracker": [
-    {
-      "code": "3711",
-      "name": "日月光投控",
-      "market": "上市",
-      "trigger_date": "2026-07-17",
-      "trigger_close": 614.0,
-      "status": "sold",
-      "sell_date": "2026-07-17",
-      "frozen_diff": 0.0,
-      "frozen_pct": 0.0
-    }
-  ]
+  "red_up_tracker": []
 }
