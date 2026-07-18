@@ -19,7 +19,7 @@ import json
 import os
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import requests
@@ -1562,18 +1562,19 @@ def main():
 
     force = os.environ.get("FORCE_UPDATE", "").lower() == "true" or bool(override_date) or is_bootstrap
 
-    # 安全閥：不管reference_check有沒有基準值可比對，週六日一律直接跳過。
-    # 這是為了防止「reference_check剛好是空的(例如資料庫被重置過)+ TWSE API
-    # 剛好回傳前一交易日的舊資料」這種組合，被誤判成「今天(週末)的新交易日」。
-    # 但如果資料庫「完全是空的」(第一次啟動，還沒有任何一筆紀錄)，就自動放行，
-    # 讓系統至少能抓到第一筆資料當作起點；之後只要有了第一筆正確資料，
-    # 這道安全閥就會照常對之後的每一次執行生效，不會有反覆誤判的風險。
     weekday = datetime.fromisoformat(today).weekday()  # 0=Mon ... 5=Sat, 6=Sun
-    if weekday >= 5 and not force:
-        print(f"{today} 是週末（星期{'六' if weekday == 5 else '日'}），直接跳過，不處理")
-        return
-    if weekday >= 5 and is_bootstrap:
+    is_weekend = weekday >= 5
+
+    # 安全閥：只有在「資料庫完全空白(第一次啟動)」時，才需要特別放行週末執行，
+    # 讓系統至少能抓到第一筆資料當起點。
+    if is_weekend and is_bootstrap:
         print(f"{today} 是週末，但資料庫目前完全空白（第一次啟動），允許抓取第一筆資料當起點")
+
+    # 資料庫已經有正常資料時，週末不再無條件跳過，改成跟平日一樣走正常的
+    # 「抓資料→比對是否有變化」邏輯。這是因為TWSE資料曾經出現過「隔天才就緒」
+    # 的延遲狀況：如果週末無條件跳過，遇到「週五的資料延遲到週六才就緒」這種情況，
+    # 會永遠補不回來(週六被安全閥擋掉，等到週一時可能又被判定成"跟上次一樣"而略過)。
+    # 讓比對邏輯自己去判斷「有沒有變化」，不管平日週末都一視同仁，比較不會漏資料。
 
     raw_rows = fetch_stock_day_all()
 
@@ -1607,9 +1608,20 @@ def main():
         save_pool(pool)  # 基準值可能有更新，還是存一下
         return
 
+    # 日期自動校正：如果今天是週末、但確實判定為有效的新交易日資料(代表資料延遲就緒)，
+    # 把日期標記自動往前校正到最近的平日(週六→前1天週五，週日→前2天週五)，
+    # 避免把資料誤標記成「週末」這種不可能是交易日的日期。
+    # 手動指定OVERRIDE_DATE時代表使用者已經明確選好日期，不做自動校正。
+    if is_weekend and not override_date:
+        correction_days = 1 if weekday == 5 else 2
+        corrected_today = (datetime.fromisoformat(today) - timedelta(days=correction_days)).date().isoformat()
+        print(f"{today} 是週末，但偵測到有效的新資料(可能是資料延遲就緒)，"
+              f"自動校正日期標記為 {corrected_today}（最近的平日）")
+        today = corrected_today
+
     if force:
         reason = "資料庫為空白(第一次啟動)" if is_bootstrap else "FORCE_UPDATE 或 OVERRIDE_DATE 生效中"
-        print(f"{today} 略過假日/重複資料/週末判斷（{reason}）")
+        print(f"{today} 略過假日/重複資料判斷（{reason}）")
 
     print(f"{today} 判定為交易日，開始處理")
 
