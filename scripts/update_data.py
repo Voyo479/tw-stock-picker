@@ -1482,7 +1482,10 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
 
     # 步驟2+3：更新既有「持有中」的紀錄(含這次剛建立的新紀錄，都會檢查一次)
     for entry in pool["red_up_tracker"]:
-        if entry["status"] != "holding":
+        if not isinstance(entry, dict) or "code" not in entry or "status" not in entry:
+            print(f"警告：red_up_tracker裡有一筆格式不完整的紀錄，已略過：{entry!r}")
+            continue
+        if entry.get("status") != "holding":
             continue
 
         close, _ = find_close_in_combined_rows(combined_rows, entry["code"])
@@ -1492,9 +1495,10 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
         closes = fetch_stock_recent_closes(entry["code"], today)
         ma20 = compute_moving_average(closes)
 
-        if ma20 is not None and close < ma20:
-            diff = close - entry["trigger_close"]
-            pct = round(diff / entry["trigger_close"] * 100, 2) if entry["trigger_close"] else None
+        trigger_close = entry.get("trigger_close")
+        if ma20 is not None and trigger_close is not None and close < ma20:
+            diff = close - trigger_close
+            pct = round(diff / trigger_close * 100, 2) if trigger_close else None
             entry["status"] = "sold"
             entry["sell_date"] = today
             entry["frozen_diff"] = round(diff, 2)
@@ -1509,29 +1513,33 @@ def compute_red_up_tracker_display(pool, today, combined_rows=None):
     """
     display_list = []
     for entry in pool.get("red_up_tracker", []):
-        if entry["status"] == "holding":
+        if not isinstance(entry, dict) or "code" not in entry or "status" not in entry:
+            continue  # 格式不完整的紀錄，顯示時直接略過(不影響其他正常紀錄)
+
+        if entry.get("status") == "holding":
             latest_close = None
             if combined_rows is not None:
                 latest_close, _ = find_close_in_combined_rows(combined_rows, entry["code"])
-            if latest_close is not None and entry["trigger_close"]:
-                diff = round(latest_close - entry["trigger_close"], 2)
-                pct = round(diff / entry["trigger_close"] * 100, 2)
+            trigger_close = entry.get("trigger_close")
+            if latest_close is not None and trigger_close:
+                diff = round(latest_close - trigger_close, 2)
+                pct = round(diff / trigger_close * 100, 2)
             else:
                 diff, pct = None, None
         else:
-            diff = entry["frozen_diff"]
-            pct = entry["frozen_pct"]
+            diff = entry.get("frozen_diff")
+            pct = entry.get("frozen_pct")
 
         display_list.append({
             "code": entry["code"],
-            "name": entry["name"],
+            "name": entry.get("name", entry["code"]),
             "market": entry.get("market"),
-            "trigger_date": entry["trigger_date"],
-            "trigger_close": entry["trigger_close"],
+            "trigger_date": entry.get("trigger_date"),
+            "trigger_close": entry.get("trigger_close"),
             "price_diff": diff,
             "price_diff_pct": pct,
-            "sell_date": entry["sell_date"],
-            "status": entry["status"],
+            "sell_date": entry.get("sell_date"),
+            "status": entry.get("status"),
         })
 
     # 依觸發日期新到舊排序
@@ -1646,10 +1654,13 @@ def main():
     for c in core2_list:
         c["mark"] = marks.get(c["code"])
 
-    update_red_up_tracker(pool, today, combined_rows, marks)
-    red_up_count = sum(1 for e in pool.get("red_up_tracker", []) if e["status"] == "holding")
-    sold_count = sum(1 for e in pool.get("red_up_tracker", []) if e["status"] == "sold")
-    print(f"紅▲測試紀錄表：持有中{red_up_count}筆，已賣出{sold_count}筆")
+    try:
+        update_red_up_tracker(pool, today, combined_rows, marks)
+        red_up_count = sum(1 for e in pool.get("red_up_tracker", []) if isinstance(e, dict) and e.get("status") == "holding")
+        sold_count = sum(1 for e in pool.get("red_up_tracker", []) if isinstance(e, dict) and e.get("status") == "sold")
+        print(f"紅▲測試紀錄表：持有中{red_up_count}筆，已賣出{sold_count}筆")
+    except Exception as e:
+        print(f"警告：紅▲測試紀錄表更新時發生未預期的錯誤，本次跳過此功能，不影響核心1/核心2的正常處理：{e}")
 
     theme_mapping = load_theme_mapping()
     industry_mapping = get_industry_mapping(today)
@@ -1699,7 +1710,11 @@ def main():
 
     save_pool(pool)
 
-    red_up_tracker_display = compute_red_up_tracker_display(pool, today, combined_rows)
+    try:
+        red_up_tracker_display = compute_red_up_tracker_display(pool, today, combined_rows)
+    except Exception as e:
+        print(f"警告：紅▲測試紀錄表顯示格式轉換發生錯誤，本次顯示為空清單，不影響其他功能：{e}")
+        red_up_tracker_display = []
 
     result = {
         "update_date": today,
