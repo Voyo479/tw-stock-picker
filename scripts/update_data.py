@@ -1451,7 +1451,9 @@ def compute_moving_average(closes_dict, window=RED_UP_TRACKER_MA_WINDOW):
 def update_red_up_tracker(pool, today, combined_rows, marks):
     """
     維護紅▲事件的測試紀錄表：
-      1. 這次新觸發紅▲的股票，加入一筆新紀錄(狀態:持有中)
+      1. 這次新觸發紅▲的股票，先檢查今日收盤價是否已經跌破20MA：
+         已跌破 -> 不建立追蹤紀錄(不觸發買進，因為進場當下均線位階已經不對)
+         未跌破(或資料不足無法判斷) -> 建立新紀錄(狀態:持有中)
       2. 既有「持有中」的紀錄，查今日收盤價(從combined_rows，全市場當日資料)，
          再向FinMind查該股近期收盤價算20MA(每次都問FinMind要最新窗口，
          不用自己累積，也不受主資料庫20日滾動清理影響)
@@ -1460,13 +1462,21 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
     """
     pool.setdefault("red_up_tracker", [])
 
-    # 步驟1：新觸發的紅▲事件，建立新紀錄
+    # 步驟1：新觸發的紅▲事件，先檢查是否已經跌破20MA，跌破就不建立紀錄(不觸發買進)
     for code, mark_type in marks.items():
         if mark_type != "red_up":
             continue
         close, market = find_close_in_combined_rows(combined_rows, code)
         if close is None:
             continue  # 找不到收盤價，這次無法建立紀錄(理論上不該發生，因為剛觸發紅▲代表今天有資料)
+
+        closes = fetch_stock_recent_closes(code, today)
+        ma20 = compute_moving_average(closes)
+        if ma20 is not None and close < ma20:
+            print(f"{code} 觸發紅▲，但今日收盤價({close})已低於20日均線({ma20:.2f})，"
+                  f"不建立追蹤紀錄(不觸發買進)")
+            continue
+
         stock_name = pool["stocks"].get(code, {}).get("name", code)
         pool["red_up_tracker"].append({
             "code": code,
@@ -1480,13 +1490,16 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
             "frozen_pct": None,
         })
 
-    # 步驟2+3：更新既有「持有中」的紀錄(含這次剛建立的新紀錄，都會檢查一次)
+    # 步驟2+3：更新既有「持有中」的紀錄(這次剛建立的新紀錄，進場當下已經確認未跌破，
+    # 不需要在這一輪重複檢查同一天)
     for entry in pool["red_up_tracker"]:
         if not isinstance(entry, dict) or "code" not in entry or "status" not in entry:
             print(f"警告：red_up_tracker裡有一筆格式不完整的紀錄，已略過：{entry!r}")
             continue
         if entry.get("status") != "holding":
             continue
+        if entry.get("trigger_date") == today:
+            continue  # 今天剛建立的新紀錄，進場前已經檢查過，不用同一天再檢查一次
 
         close, _ = find_close_in_combined_rows(combined_rows, entry["code"])
         if close is None:
