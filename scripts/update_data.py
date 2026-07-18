@@ -1375,15 +1375,16 @@ def compute_marks_and_update_classification(pool, core1_list, core2_list):
 
 # ---------- 紅▲事件測試紀錄表 ----------
 RED_UP_TRACKER_MA_WINDOW = 20  # 賣出條件用的均線天數
+RED_UP_TRACKER_MA5_WINDOW = 5  # 進場前額外檢查的短天期均線天數
 RED_UP_TRACKER_LOOKBACK_DAYS = 45  # 向FinMind查詢的日曆天回溯範圍(確保能湊到20個交易日)
 
 
 def find_close_in_combined_rows(combined_rows, code):
-    """從當日全市場資料(combined_rows，篩選前的完整清單)裡找出指定股票的收盤價與市場別"""
+    """從當日全市場資料(combined_rows，篩選前的完整清單)裡找出指定股票的收盤價、市場別與漲跌價"""
     for row in combined_rows:
         if row.get("code") == code:
-            return row.get("close"), row.get("market")
-    return None, None
+            return row.get("close"), row.get("market"), row.get("change")
+    return None, None, None
 
 
 def fetch_stock_recent_closes(code, today, lookback_days=RED_UP_TRACKER_LOOKBACK_DAYS, max_retries=3):
@@ -1462,16 +1463,29 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
     """
     pool.setdefault("red_up_tracker", [])
 
-    # 步驟1：新觸發的紅▲事件，先檢查是否已經跌破20MA，跌破就不建立紀錄(不觸發買進)
+    # 步驟1：新觸發的紅▲事件，進場前依序檢查三個條件，任一不符合就不建立紀錄(不觸發買進)：
+    #   1. 當天漲幅必須為正(不能是平盤或下跌)
+    #   2. 收盤價不能低於5日均線
+    #   3. 收盤價不能低於20日均線
     for code, mark_type in marks.items():
         if mark_type != "red_up":
             continue
-        close, market = find_close_in_combined_rows(combined_rows, code)
+        close, market, change = find_close_in_combined_rows(combined_rows, code)
         if close is None:
             continue  # 找不到收盤價，這次無法建立紀錄(理論上不該發生，因為剛觸發紅▲代表今天有資料)
 
+        if change is None or change <= 0:
+            print(f"{code} 觸發紅▲，但今日漲跌價({change})不是正漲幅，不建立追蹤紀錄(不觸發買進)")
+            continue
+
         closes = fetch_stock_recent_closes(code, today)
-        ma20 = compute_moving_average(closes)
+        ma5 = compute_moving_average(closes, window=RED_UP_TRACKER_MA5_WINDOW)
+        if ma5 is not None and close < ma5:
+            print(f"{code} 觸發紅▲，但今日收盤價({close})已低於5日均線({ma5:.2f})，"
+                  f"不建立追蹤紀錄(不觸發買進)")
+            continue
+
+        ma20 = compute_moving_average(closes, window=RED_UP_TRACKER_MA_WINDOW)
         if ma20 is not None and close < ma20:
             print(f"{code} 觸發紅▲，但今日收盤價({close})已低於20日均線({ma20:.2f})，"
                   f"不建立追蹤紀錄(不觸發買進)")
@@ -1501,7 +1515,7 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
         if entry.get("trigger_date") == today:
             continue  # 今天剛建立的新紀錄，進場前已經檢查過，不用同一天再檢查一次
 
-        close, _ = find_close_in_combined_rows(combined_rows, entry["code"])
+        close, _, _ = find_close_in_combined_rows(combined_rows, entry["code"])
         if close is None:
             continue  # 今天找不到這檔股票的資料(例如暫停交易)，先略過，明天再試
 
@@ -1532,7 +1546,7 @@ def compute_red_up_tracker_display(pool, today, combined_rows=None):
         if entry.get("status") == "holding":
             latest_close = None
             if combined_rows is not None:
-                latest_close, _ = find_close_in_combined_rows(combined_rows, entry["code"])
+                latest_close, _, _ = find_close_in_combined_rows(combined_rows, entry["code"])
             trigger_close = entry.get("trigger_close")
             if latest_close is not None and trigger_close:
                 diff = round(latest_close - trigger_close, 2)
