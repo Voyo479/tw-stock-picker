@@ -68,6 +68,7 @@ def main():
     filled_count = 0
     skipped_holiday = 0
     skipped_failed = 0
+    candidates = []  # 安全預設值：避免迴圈完全沒有執行任何一天時，這個變數未定義
 
     for date_str in candidate_dates:
         if filled_count >= BACKFILL_TARGET_TRADING_DAYS:
@@ -145,6 +146,9 @@ def main():
     ud.enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
     ud.enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
 
+    ud.enrich_candidates_with_themes(candidates, theme_mapping, industry_mapping)
+    market_movers = sorted(candidates, key=lambda c: c.get("pct_change", 0), reverse=True)
+
     # 回補情境沒有「歷史大盤指數」資料可用，相對大盤強度先留空(None)；
     # 量能異常倍數則可以正常計算，因為trade_value_history在回補過程中已經累積
     latest_trading_days = pool.get("trading_days", [])
@@ -182,6 +186,7 @@ def main():
     result = {
         "update_date": latest_date,
         "market_summary": market_summary,
+        "market_movers": market_movers,
         "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
         "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
         "red_up_tracker": red_up_tracker_display,
