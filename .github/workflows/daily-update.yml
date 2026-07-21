@@ -12,6 +12,10 @@ on:
         description: '強制執行（略過假日/重複資料判斷，測試用）'
         type: boolean
         default: false
+      regenerate_only:
+        description: '只重新產生網頁資料（不抓取任何新資料，用現有資料庫重新計算，測試網頁/邏輯改動用）'
+        type: boolean
+        default: false
 
 # 讓這個排程有權限把結果commit回repo
 permissions:
@@ -36,6 +40,7 @@ jobs:
       - name: 執行選股程式
         env:
           FORCE_UPDATE: ${{ inputs.force_update }}
+          REGENERATE_ONLY: ${{ inputs.regenerate_only }}
           FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
         run: python scripts/update_data.py
 
