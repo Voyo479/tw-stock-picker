@@ -1,10 +1,7 @@
 {
   "update_date": "2026-07-21",
   "market_summary": {
-    "taiex": {
-      "close": 42449.7,
-      "pct_change": -0.52
-    },
+    "taiex": null,
     "breadth": {
       "up_count": 11,
       "top_n": 50
@@ -25,6 +22,71 @@
       "suggested_capital_pct": 20
     }
   },
+  "market_movers": [
+    {
+      "code": "6488",
+      "name": "環球晶",
+      "close": 1265.0,
+      "pct_change": 2.0161290322580645,
+      "market": "上櫃",
+      "themes": [
+        "半導體業",
+        "半導體業"
+      ]
+    },
+    {
+      "code": "6505",
+      "name": "台塑化",
+      "close": 81.3,
+      "pct_change": 1.625,
+      "market": "上市",
+      "themes": [
+        "油電燃氣業"
+      ]
+    },
+    {
+      "code": "2330",
+      "name": "台積電",
+      "close": 2320.0,
+      "pct_change": 1.3100436681222707,
+      "market": "上市",
+      "themes": [
+        "半導體業",
+        "AI伺服器供應鏈"
+      ]
+    },
+    {
+      "code": "6213",
+      "name": "聯茂",
+      "close": 322.5,
+      "pct_change": 1.09717868338558,
+      "market": "上市",
+      "themes": [
+        "電子零組件業"
+      ]
+    },
+    {
+      "code": "8039",
+      "name": "台虹",
+      "close": 193.0,
+      "pct_change": 0.2597402597402597,
+      "market": "上市",
+      "themes": [
+        "電子零組件業"
+      ]
+    },
+    {
+      "code": "2317",
+      "name": "鴻海",
+      "close": 234.5,
+      "pct_change": 0.2136752136752137,
+      "market": "上市",
+      "themes": [
+        "其他電子業",
+        "AI伺服器組裝"
+      ]
+    }
+  ],
   "core1": {
     "range": {
       "start": "2026-07-15",
