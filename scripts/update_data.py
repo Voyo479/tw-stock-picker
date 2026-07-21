@@ -1592,8 +1592,108 @@ def compute_red_up_tracker_display(pool, today, combined_rows=None):
     return display_list
 
 
+def regenerate_result_only(pool):
+    """
+    只用資料庫「現有」的資料，重新計算並產生 docs/result.json，
+    完全不對外發送任何抓取新資料的請求(STOCK_DAY_ALL/TPEx/RWD備援都不會呼叫)。
+    用途：想測試網頁顯示/計算邏輯的改動時，不用等到真的有新交易日資料才能看到效果。
+    不會修改 data/stock_pool.json(不寫入任何新資料，只是重新產生顯示用的result.json)。
+
+    這個模式下的已知限制(都是為了完全不對外抓取資料而做的取捨)：
+      - 「今天」直接沿用資料庫裡「最新一筆」的日期，不是執行當下的實際日期
+      - 大盤指數(taiex)無法取得即時數字，這個欄位會顯示為抓取失敗
+      - 紅色▲/綠色▼升降標記不會重新判斷(不會改變last_classification狀態，
+        因為這不是真的發生了升降，只是重新整理顯示畫面)
+      - 紅▲測試紀錄表裡「持有中」的即時股價無法更新，價差會維持上次成功執行時的數字
+    """
+    trading_days = pool.get("trading_days", [])
+    if not trading_days:
+        print("資料庫是空的，沒有任何資料可以重新產生，結束")
+        return
+    today = trading_days[-1]
+    print(f"=== 只重新產生網頁資料模式，使用資料庫現有最新日期：{today}（不抓取任何新資料）===")
+
+    core1_list, core1_range = compute_core1(pool)
+    core1_codes = {c["code"] for c in core1_list}
+    core2_list, core2_range = compute_core2(pool, core1_codes)
+
+    # 這個模式不是真的發生升降，不重新判斷/更新分類狀態，標記一律不顯示
+    for c in core1_list:
+        c["mark"] = None
+    for c in core2_list:
+        c["mark"] = None
+
+    theme_mapping = load_theme_mapping()
+    industry_mapping = get_industry_mapping(today)
+    enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
+    enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
+
+    # 重建market_movers：用「最新日期有被記錄」的股票(last_seen==today)重建當日候選清單
+    market_movers = []
+    for code, stock in pool.get("stocks", {}).items():
+        if stock.get("last_seen") != today:
+            continue
+        market_movers.append({
+            "code": code,
+            "name": stock.get("name", code),
+            "close": stock.get("last_close"),
+            "pct_change": stock.get("last_pct_change"),
+            "market": stock.get("market"),
+        })
+    enrich_candidates_with_themes(market_movers, theme_mapping, industry_mapping)
+    market_movers.sort(key=lambda c: c.get("pct_change") or 0, reverse=True)
+
+    breadth_count = pool.get("market_breadth", {}).get(today)
+    market_amount_stats = compute_market_amount_stats(pool, today)
+
+    trading_days_snapshot = pool.get("trading_days", [])
+    stored_taiex_pct = pool.get("market_index_pct_change", {}).get(today)
+    enrich_with_optimization_metrics(core1_list, pool, stored_taiex_pct, today, trading_days_snapshot)
+    enrich_with_optimization_metrics(core2_list, pool, stored_taiex_pct, today, trading_days_snapshot)
+
+    market_summary = {
+        "taiex": None,  # 這個模式不會重新取得大盤指數即時資料
+        "breadth": {"up_count": breadth_count, "top_n": HEAT_BREADTH_TOP_N},
+        "amount_stats": market_amount_stats,
+    }
+
+    core1_heat = compute_heat_index(pool, CORE1_DAYS, CORE1_HEAT_LABELS)
+    core2_heat = compute_heat_index(pool, CORE2_DAYS, CORE2_HEAT_LABELS)
+
+    core1_sectors = compute_sector_summary(core1_list, top_n=3)
+    core2_sectors = compute_sector_summary(core2_list, top_n=3)
+
+    capital_guidance = None
+    if core1_heat and core2_heat:
+        capital_guidance = compute_suggested_capital_level(pool, today, core1_heat["level"], core2_heat["level"])
+    market_summary["capital_guidance"] = capital_guidance
+
+    try:
+        red_up_tracker_display = compute_red_up_tracker_display(pool, today, combined_rows=None)
+    except Exception as e:
+        print(f"警告：紅▲測試紀錄表顯示格式轉換發生錯誤，本次顯示為空清單：{e}")
+        red_up_tracker_display = []
+
+    result = {
+        "update_date": today,
+        "market_summary": market_summary,
+        "market_movers": market_movers,
+        "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
+        "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
+        "red_up_tracker": red_up_tracker_display,
+    }
+    save_result(result)
+    print(f"只重新產生網頁資料完成：核心1 {len(core1_list)} 檔，核心2 {len(core2_list)} 檔")
+    print("（注意：本次未抓取任何新資料，也沒有寫入data/stock_pool.json，只重新產生了docs/result.json）")
+
+
 # ---------- 主流程 ----------
 def main():
+    if os.environ.get("REGENERATE_ONLY", "").lower() == "true":
+        pool = load_pool()
+        regenerate_result_only(pool)
+        return
+
     override_date = os.environ.get("OVERRIDE_DATE", "").strip()
     if override_date:
         today = override_date
