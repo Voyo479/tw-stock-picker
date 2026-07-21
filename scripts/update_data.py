@@ -1269,6 +1269,24 @@ def enrich_with_extra_fields(entries, pool, theme_mapping, industry_mapping):
     return entries
 
 
+def enrich_candidates_with_themes(candidates, theme_mapping, industry_mapping):
+    """
+    給「今日候選清單」(成交金額前30大+漲跌>=0，也就是核心1/核心2共用的候選池)
+    補上產業標籤。跟enrich_with_extra_fields不同的是，candidates本身在這個時間點
+    已經有當天的price/pct_change/market(來自今天的原始抓取)，不需要再從pool回查，
+    只需要額外補上themes欄位。
+    """
+    for c in candidates:
+        industry = industry_mapping.get(c["code"])
+        extra_tags = theme_mapping.get(c["code"], [])
+        themes = []
+        if industry:
+            themes.append(industry)
+        themes.extend(extra_tags)
+        c["themes"] = themes
+    return candidates
+
+
 def compute_sector_summary(entries, top_n=3):
     """
     依entries(核心1或核心2最終清單)裡每檔股票的官方產業別(themes的第一個標籤，
@@ -1706,6 +1724,9 @@ def main():
     enrich_with_extra_fields(core1_list, pool, theme_mapping, industry_mapping)
     enrich_with_extra_fields(core2_list, pool, theme_mapping, industry_mapping)
 
+    enrich_candidates_with_themes(candidates, theme_mapping, industry_mapping)
+    market_movers = sorted(candidates, key=lambda c: c["pct_change"], reverse=True)
+
     taiex_data = fetch_taiex_index()
     taiex_pct_change = taiex_data["pct_change"] if taiex_data else None
     if taiex_data is not None:
@@ -1758,6 +1779,7 @@ def main():
     result = {
         "update_date": today,
         "market_summary": market_summary,
+        "market_movers": market_movers,
         "core1": {"range": core1_range, "list": core1_list, "heat": core1_heat, "sector_summary": core1_sectors},
         "core2": {"range": core2_range, "list": core2_list, "heat": core2_heat, "sector_summary": core2_sectors},
         "red_up_tracker": red_up_tracker_display,
