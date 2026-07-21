@@ -588,6 +588,14 @@
     <div class="loading-state">讀取大盤資料中...</div>
   </div>
 
+  <div class="tracker-section">
+    <div class="tracker-title">今日平盤及上漲股</div>
+    <div class="tracker-desc">成交金額前30大候選池中，今日漲跌≥0的個股，依漲幅由高到低排序。</div>
+    <div id="market-movers-table">
+      <div class="loading-state">讀取資料中...</div>
+    </div>
+  </div>
+
   <div class="boards">
 
     <div class="board core1">
@@ -659,6 +667,35 @@
     const suffix = market === '上櫃' ? '.TWO' : '.TW';
     return `https://tw.stock.yahoo.com/quote/${encodeURIComponent(code)}${suffix}/technical-analysis`;
   };
+
+  function renderMarketMovers(list) {
+    const container = document.getElementById('market-movers-table');
+    if (!list || list.length === 0) {
+      container.innerHTML = '<div class="empty-state">今日暫無漲跌≥0的候選股</div>';
+      return;
+    }
+
+    const rows = list.map((item) => `
+      <tr>
+        <td><a class="code mono code-link" href="${yahooStockUrl(item.code, item.market)}" target="_blank" rel="noopener" title="查看K線技術圖(Yahoo股市)">${escapeHtml(item.code)}</a></td>
+        <td>${escapeHtml(item.name)}</td>
+        <td class="mono">$${fmtPrice(item.close)}</td>
+        <td>${fmtPctChange(item.pct_change)}</td>
+        <td>${themeTags(item.themes)}</td>
+      </tr>
+    `).join('');
+
+    container.innerHTML = `
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th>代號</th><th>名稱</th><th>價位</th><th>今日漲幅</th><th>產業類別</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
 
   function renderRedUpTracker(list) {
     const container = document.getElementById('red-up-tracker-table');
@@ -910,6 +947,7 @@
     .then((data) => {
       document.getElementById('update-time').textContent = `更新於 ${data.update_date}`;
       renderMarketOverview(data.market_summary);
+      renderMarketMovers(data.market_movers);
       document.getElementById('core1-range').textContent = fmtRange(data.core1 && data.core1.range);
       document.getElementById('core2-range').textContent = fmtRange(data.core2 && data.core2.range);
       renderCore1(data.core1 && data.core1.list);
@@ -924,6 +962,8 @@
       document.getElementById('update-time').textContent = '尚無資料';
       document.getElementById('market-overview').innerHTML =
         '<div class="empty-state">尚未產生資料。請確認 GitHub Actions 排程是否已成功執行過一次。</div>';
+      document.getElementById('market-movers-table').innerHTML =
+        '<div class="error-state">尚未產生資料。</div>';
       ['core1-rows', 'core2-rows'].forEach((id) => {
         document.getElementById(id).innerHTML =
           '<div class="error-state">尚未產生資料。請確認 GitHub Actions 排程是否已成功執行過一次。</div>';
