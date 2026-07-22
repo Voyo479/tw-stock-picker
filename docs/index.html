@@ -554,6 +554,11 @@
     color: var(--gold);
   }
 
+  .tracker-status.pending {
+    background: rgba(139, 147, 167, 0.12);
+    color: var(--text-faint);
+  }
+
   .tracker-status.sold {
     background: rgba(139, 147, 167, 0.15);
     color: var(--text-muted);
@@ -630,7 +635,7 @@
 
   <div class="tracker-section">
     <div class="tracker-title">紅▲ 觸發測試紀錄表</div>
-    <div class="tracker-desc">每次個股觸發紅▲（核心2升上核心1）事件時，先依序檢查三項進場條件：①當天漲跌須為正漲幅　②收盤價不能低於5日均線　③收盤價不能低於20日均線——任一不符合就不記錄（不觸發買進）；三項皆符合才記錄一筆。賣出條件：之後跌破20日均線（跌破當天的價差/漲跌幅會凍結，之後不再變動）。此表僅持續累積，不會自動清除。</div>
+    <div class="tracker-desc">每次個股觸發紅▲（核心2升上核心1）事件時，給予「觸發當天+往後2個交易日」共3天的觀察窗，期間內只要有任一天同時符合三項條件：①當天漲跌須為正漲幅　②收盤價不能低於5日均線　③收盤價不能低於20日均線，就正式記錄一筆（用符合當天的收盤價當進場價）；觀察窗3天內都不符合就放棄此次訊號。賣出條件：進場後跌破20日均線（跌破當天的價差/漲跌幅會凍結，之後不再變動）。此表僅持續累積，不會自動清除。</div>
     <div id="red-up-tracker-table">
       <div class="loading-state">讀取資料中...</div>
     </div>
@@ -711,15 +716,21 @@
       return `<span class="${cls} mono">${sign}${diff.toFixed(2)}（${sign}${pct.toFixed(2)}%）</span>`;
     };
 
+    const statusLabel = (status) => {
+      if (status === 'holding') return '持有中';
+      if (status === 'pending') return '觀察中';
+      return '已賣出';
+    };
+
     const rows = list.map((e) => `
       <tr>
         <td><a class="code mono code-link" href="${yahooStockUrl(e.code, e.market)}" target="_blank" rel="noopener" title="查看K線技術圖(Yahoo股市)">${escapeHtml(e.code)}</a></td>
         <td>${escapeHtml(e.name)}</td>
         <td class="mono">${e.trigger_date}</td>
-        <td class="mono">$${fmtPrice(e.trigger_close)}</td>
-        <td>${fmtDiff(e.price_diff, e.price_diff_pct)}</td>
+        <td class="mono">${e.status === 'pending' ? '--' : `$${fmtPrice(e.trigger_close)}`}</td>
+        <td>${e.status === 'pending' ? `<span class="pct-flat">尚無資料，剩餘${e.checks_remaining}個交易日觀察</span>` : fmtDiff(e.price_diff, e.price_diff_pct)}</td>
         <td class="mono">${e.sell_date || '--'}</td>
-        <td><span class="tracker-status ${e.status}">${e.status === 'holding' ? '持有中' : '已賣出'}</span></td>
+        <td><span class="tracker-status ${e.status}">${statusLabel(e.status)}</span></td>
       </tr>
     `).join('');
 
