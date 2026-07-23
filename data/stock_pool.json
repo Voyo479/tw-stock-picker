@@ -1063,27 +1063,6 @@
       "frozen_diff": null,
       "frozen_pct": null
     },
-    {
-      "code": "6505",
-      "name": "台塑化",
-      "market": "上市",
-      "trigger_date": "2026-07-23",
-      "trigger_close": 93.2,
-      "status": "holding",
-      "sell_date": null,
-      "frozen_diff": null,
-      "frozen_pct": null
-    },
-    {
-      "code": "3665",
-      "name": "貿聯-KY",
-      "market": "上市",
-      "trigger_date": "2026-07-23",
-      "trigger_close": 2285.0,
-      "status": "holding",
-      "sell_date": null,
-      "frozen_diff": null,
-      "frozen_pct": null
-    }
+   
   ]
 }
