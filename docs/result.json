@@ -1,10 +1,7 @@
 {
   "update_date": "2026-07-24",
   "market_summary": {
-    "taiex": {
-      "close": 44850.81,
-      "pct_change": 0.06
-    },
+    "taiex": null,
     "breadth": {
       "up_count": 27,
       "top_n": 50
@@ -30,12 +27,8 @@
       "code": "8039",
       "name": "台虹",
       "close": 256.0,
-      "change": 23.0,
-      "trade_value": 11689852980.0,
-      "market": "上市",
       "pct_change": 9.871244635193133,
-      "market_share_pct": 1.0638,
-      "score": 7.229,
+      "market": "上市",
       "themes": [
         "電子零組件業"
       ]
@@ -44,12 +37,8 @@
       "code": "6505",
       "name": "台塑化",
       "close": 93.2,
-      "change": 8.1,
-      "trade_value": 8852530889.0,
-      "market": "上市",
       "pct_change": 9.518213866039952,
-      "market_share_pct": 0.8056,
-      "score": 6.9044,
+      "market": "上市",
       "themes": [
         "油電燃氣業"
       ]
@@ -58,12 +47,8 @@
       "code": "3665",
       "name": "貿聯-KY",
       "close": 2285.0,
-      "change": 170.0,
-      "trade_value": 14148525105.0,
-      "market": "上市",
       "pct_change": 8.037825059101655,
-      "market_share_pct": 1.2875,
-      "score": 6.0127,
+      "market": "上市",
       "themes": [
         "其他電子業"
       ]
@@ -72,12 +57,8 @@
       "code": "3017",
       "name": "奇鋐",
       "close": 2440.0,
-      "change": 175.0,
-      "trade_value": 17555109085.0,
-      "market": "上市",
       "pct_change": 7.72626931567329,
-      "market_share_pct": 1.5975,
-      "score": 5.8877,
+      "market": "上市",
       "themes": [
         "電腦及週邊設備業"
       ]
@@ -86,12 +67,8 @@
       "code": "3231",
       "name": "緯創",
       "close": 173.5,
-      "change": 9.5,
-      "trade_value": 37999830284.0,
-      "market": "上市",
       "pct_change": 5.7926829268292686,
-      "market_share_pct": 3.4581,
-      "score": 5.0923,
+      "market": "上市",
       "themes": [
         "電腦及週邊設備業",
         "AI伺服器供應鏈"
@@ -101,12 +78,8 @@
       "code": "1301",
       "name": "台塑",
       "close": 66.2,
-      "change": 2.7,
-      "trade_value": 11083602494.0,
-      "market": "上市",
       "pct_change": 4.251968503937007,
-      "market_share_pct": 1.0086,
-      "score": 3.279,
+      "market": "上市",
       "themes": [
         "塑膠工業"
       ]
@@ -115,12 +88,8 @@
       "code": "2313",
       "name": "華通",
       "close": 214.0,
-      "change": 6.0,
-      "trade_value": 8594529272.0,
-      "market": "上市",
       "pct_change": 2.8846153846153846,
-      "market_share_pct": 0.7821,
-      "score": 2.2539,
+      "market": "上市",
       "themes": [
         "電子零組件業"
       ]
@@ -129,12 +98,8 @@
       "code": "2317",
       "name": "鴻海",
       "close": 257.5,
-      "change": 6.0,
-      "trade_value": 16358184879.0,
-      "market": "上市",
       "pct_change": 2.3856858846918487,
-      "market_share_pct": 1.4886,
-      "score": 2.1166,
+      "market": "上市",
       "themes": [
         "其他電子業",
         "AI伺服器組裝"
@@ -144,12 +109,8 @@
       "code": "1326",
       "name": "台化",
       "close": 71.7,
-      "change": 1.1,
-      "trade_value": 11983467583.0,
-      "market": "上市",
       "pct_change": 1.5580736543909348,
-      "market_share_pct": 1.0905,
-      "score": 1.4178,
+      "market": "上市",
       "themes": [
         "塑膠工業"
       ]
@@ -158,12 +119,8 @@
       "code": "2454",
       "name": "聯發科",
       "close": 3875.0,
-      "change": 25.0,
-      "trade_value": 33587878595.0,
-      "market": "上市",
       "pct_change": 0.6493506493506493,
-      "market_share_pct": 3.0566,
-      "score": 1.3715,
+      "market": "上市",
       "themes": [
         "半導體業",
         "AI概念"
@@ -173,12 +130,8 @@
       "code": "2330",
       "name": "台積電",
       "close": 2405.0,
-      "change": 5.0,
-      "trade_value": 66833713878.0,
-      "market": "上市",
       "pct_change": 0.20833333333333334,
-      "market_share_pct": 6.082,
-      "score": 1.9704,
+      "market": "上市",
       "themes": [
         "半導體業",
         "AI伺服器供應鏈"
@@ -188,12 +141,8 @@
       "code": "2308",
       "name": "台達電",
       "close": 1880.0,
-      "change": 0.0,
-      "trade_value": 11498662450.0,
-      "market": "上市",
       "pct_change": 0.0,
-      "market_share_pct": 1.0464,
-      "score": 0.3139,
+      "market": "上市",
       "themes": [
         "電子零組件業",
         "AI伺服器供應鏈"
@@ -288,7 +237,7 @@
         "code": "8039",
         "name": "台虹",
         "score": 15.361999999999998,
-        "mark": "red_up",
+        "mark": null,
         "price": 256.0,
         "pct_change": 9.871244635193133,
         "market": "上市",
@@ -478,7 +427,7 @@
         "name": "國巨*",
         "discounted_slope": 3362263203.930646,
         "appearance_count": 4,
-        "mark": "green_down",
+        "mark": null,
         "price": 703.0,
         "pct_change": 4.925373134328359,
         "market": "上市",
@@ -765,21 +714,9 @@
       "market": "上櫃",
       "trigger_date": "2026-07-23",
       "trigger_close": 418.0,
-      "price_diff": -15.0,
+      "price_diff": null,
       "checks_remaining": null,
-      "price_diff_pct": -3.59,
-      "sell_date": null,
-      "status": "holding"
-    },
-    {
-      "code": "6505",
-      "name": "台塑化",
-      "market": "上市",
-      "trigger_date": "2026-07-23",
-      "trigger_close": 93.2,
-      "price_diff": 0.0,
-      "checks_remaining": null,
-      "price_diff_pct": 0.0,
+      "price_diff_pct": null,
       "sell_date": null,
       "status": "holding"
     },
@@ -789,9 +726,9 @@
       "market": "上市",
       "trigger_date": "2026-07-23",
       "trigger_close": 2285.0,
-      "price_diff": 0.0,
+      "price_diff": null,
       "checks_remaining": null,
-      "price_diff_pct": 0.0,
+      "price_diff_pct": null,
       "sell_date": null,
       "status": "holding"
     }
