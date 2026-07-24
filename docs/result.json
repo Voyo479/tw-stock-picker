@@ -1,64 +1,41 @@
 {
   "update_date": "2026-07-24",
   "market_summary": {
-    "taiex": null,
+    "taiex": {
+      "close": 44850.81,
+      "pct_change": 0.06
+    },
     "breadth": {
-      "up_count": 27,
+      "up_count": 9,
       "top_n": 50
     },
     "amount_stats": {
-      "today_amount": 1098877553475.0,
-      "day_over_day_pct": 4.31,
-      "five_day_pct": 290.88,
+      "today_amount": 944998581191.0,
+      "day_over_day_pct": -10.3,
+      "five_day_pct": 277.51,
       "twenty_day_pct": null
     },
     "capital_guidance": {
-      "core1_cap_slots": 2,
+      "core1_cap_slots": 1,
       "core2_cap_slots": 1,
-      "base_cap_slots": 3,
-      "weakness_streak_days": 0,
+      "base_cap_slots": 2,
+      "weakness_streak_days": 1,
       "override_cap_slots": null,
-      "final_cap_slots": 3,
-      "suggested_capital_pct": 60
+      "final_cap_slots": 2,
+      "suggested_capital_pct": 40
     }
   },
   "market_movers": [
     {
-      "code": "8039",
-      "name": "台虹",
-      "close": 256.0,
-      "pct_change": 9.871244635193133,
+      "code": "6669",
+      "name": "緯穎",
+      "close": 5730.0,
+      "change": 260.0,
+      "trade_value": 17270977515.0,
       "market": "上市",
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "6505",
-      "name": "台塑化",
-      "close": 93.2,
-      "pct_change": 9.518213866039952,
-      "market": "上市",
-      "themes": [
-        "油電燃氣業"
-      ]
-    },
-    {
-      "code": "3665",
-      "name": "貿聯-KY",
-      "close": 2285.0,
-      "pct_change": 8.037825059101655,
-      "market": "上市",
-      "themes": [
-        "其他電子業"
-      ]
-    },
-    {
-      "code": "3017",
-      "name": "奇鋐",
-      "close": 2440.0,
-      "pct_change": 7.72626931567329,
-      "market": "上市",
+      "pct_change": 4.753199268738574,
+      "market_share_pct": 1.8276,
+      "score": 3.8755,
       "themes": [
         "電腦及週邊設備業"
       ]
@@ -66,86 +43,30 @@
     {
       "code": "3231",
       "name": "緯創",
-      "close": 173.5,
-      "pct_change": 5.7926829268292686,
+      "close": 179.0,
+      "change": 5.5,
+      "trade_value": 32336958893.0,
       "market": "上市",
+      "pct_change": 3.170028818443804,
+      "market_share_pct": 3.4219,
+      "score": 3.2456,
       "themes": [
         "電腦及週邊設備業",
         "AI伺服器供應鏈"
       ]
     },
     {
-      "code": "1301",
-      "name": "台塑",
-      "close": 66.2,
-      "pct_change": 4.251968503937007,
-      "market": "上市",
+      "code": "3105",
+      "name": "穩懋",
+      "close": 364.5,
+      "change": 5.5,
+      "trade_value": 8214944986.0,
+      "market": "上櫃",
+      "pct_change": 1.532033426183844,
+      "market_share_pct": 0.8693,
+      "score": 1.3332,
       "themes": [
-        "塑膠工業"
-      ]
-    },
-    {
-      "code": "2313",
-      "name": "華通",
-      "close": 214.0,
-      "pct_change": 2.8846153846153846,
-      "market": "上市",
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "2317",
-      "name": "鴻海",
-      "close": 257.5,
-      "pct_change": 2.3856858846918487,
-      "market": "上市",
-      "themes": [
-        "其他電子業",
-        "AI伺服器組裝"
-      ]
-    },
-    {
-      "code": "1326",
-      "name": "台化",
-      "close": 71.7,
-      "pct_change": 1.5580736543909348,
-      "market": "上市",
-      "themes": [
-        "塑膠工業"
-      ]
-    },
-    {
-      "code": "2454",
-      "name": "聯發科",
-      "close": 3875.0,
-      "pct_change": 0.6493506493506493,
-      "market": "上市",
-      "themes": [
-        "半導體業",
-        "AI概念"
-      ]
-    },
-    {
-      "code": "2330",
-      "name": "台積電",
-      "close": 2405.0,
-      "pct_change": 0.20833333333333334,
-      "market": "上市",
-      "themes": [
-        "半導體業",
-        "AI伺服器供應鏈"
-      ]
-    },
-    {
-      "code": "2308",
-      "name": "台達電",
-      "close": 1880.0,
-      "pct_change": 0.0,
-      "market": "上市",
-      "themes": [
-        "電子零組件業",
-        "AI伺服器供應鏈"
+        "半導體業"
       ]
     }
   ],
@@ -156,6 +77,21 @@
       "days": 5
     },
     "list": [
+      {
+        "code": "6669",
+        "name": "緯穎",
+        "score": 18.9585,
+        "mark": null,
+        "price": 5730.0,
+        "pct_change": 4.753199268738574,
+        "market": "上市",
+        "themes": [
+          "電腦及週邊設備業"
+        ],
+        "relative_strength": 4.69,
+        "volume_ratio": 0.82,
+        "volume_drop_warning": false
+      },
       {
         "code": "3017",
         "name": "奇鋐",
@@ -169,22 +105,6 @@
         ],
         "relative_strength": 7.67,
         "volume_ratio": 1.49,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "3231",
-        "name": "緯創",
-        "score": 17.4304,
-        "mark": null,
-        "price": 173.5,
-        "pct_change": 5.7926829268292686,
-        "market": "上市",
-        "themes": [
-          "電腦及週邊設備業",
-          "AI伺服器供應鏈"
-        ],
-        "relative_strength": 5.73,
-        "volume_ratio": 1.42,
         "volume_drop_warning": false
       },
       {
@@ -216,6 +136,22 @@
         ],
         "relative_strength": 7.98,
         "volume_ratio": 1.15,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3231",
+        "name": "緯創",
+        "score": 15.5837,
+        "mark": null,
+        "price": 179.0,
+        "pct_change": 3.170028818443804,
+        "market": "上市",
+        "themes": [
+          "電腦及週邊設備業",
+          "AI伺服器供應鏈"
+        ],
+        "relative_strength": 3.11,
+        "volume_ratio": 1.21,
         "volume_drop_warning": false
       },
       {
@@ -261,21 +197,6 @@
         ],
         "relative_strength": 9.46,
         "volume_ratio": 0.75,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "6669",
-        "name": "緯穎",
-        "score": 15.083,
-        "mark": null,
-        "price": 5500.0,
-        "pct_change": 10.0,
-        "market": "上市",
-        "themes": [
-          "電腦及週邊設備業"
-        ],
-        "relative_strength": 9.94,
-        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
@@ -386,9 +307,9 @@
       }
     ],
     "heat": {
-      "average": 23.2,
-      "level": 3,
-      "label": "短線市場震盪",
+      "average": 19.6,
+      "level": 2,
+      "label": "短線市場走弱",
       "sample_days": 5,
       "top_n": 50,
       "range": {
@@ -666,7 +587,7 @@
       }
     ],
     "heat": {
-      "average": 21.9,
+      "average": 20.3,
       "level": 3,
       "label": "中期市場震盪",
       "sample_days": 11,
@@ -703,7 +624,7 @@
       "trigger_date": "2026-07-24",
       "trigger_close": null,
       "price_diff": null,
-      "checks_remaining": 2,
+      "checks_remaining": 1,
       "price_diff_pct": null,
       "sell_date": null,
       "status": "pending"
@@ -714,9 +635,9 @@
       "market": "上櫃",
       "trigger_date": "2026-07-23",
       "trigger_close": 418.0,
-      "price_diff": null,
+      "price_diff": -15.0,
       "checks_remaining": null,
-      "price_diff_pct": null,
+      "price_diff_pct": -3.59,
       "sell_date": null,
       "status": "holding"
     },
@@ -726,9 +647,9 @@
       "market": "上市",
       "trigger_date": "2026-07-23",
       "trigger_close": 2285.0,
-      "price_diff": null,
+      "price_diff": -80.0,
       "checks_remaining": null,
-      "price_diff_pct": null,
+      "price_diff_pct": -3.5,
       "sell_date": null,
       "status": "holding"
     }
