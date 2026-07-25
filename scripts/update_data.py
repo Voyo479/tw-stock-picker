@@ -933,6 +933,39 @@ def compute_daily_scores(candidates, market_total_trade_value):
 
 
 # ---------- 更新滾動資料庫 ----------
+def refresh_tracked_stocks_latest_price(pool, combined_rows, today):
+    """
+    修正一個問題：candidates只保留漲跌>=0的股票，如果只更新candidates裡的股票，
+    那些「今天實際上是下跌，但因為前幾天的分數還在5日/20日窗口內、依然留在核心1/核心2
+    名單」的股票，畫面上顯示的股價/漲跌幅會停留在「上次上榜(上漲)那天」的舊資料，
+    造成使用者看到「明明今天下跌，卻顯示正漲幅」的誤導。
+
+    這個函式每天都會對「已經在追蹤名單裡」的所有股票，不論今天有沒有擠進候選清單，
+    都用今天全市場的原始資料(combined_rows)，更新它們的「目前股價/今日漲跌幅/市場別」
+    這幾個顯示用欄位。
+
+    注意：只更新last_close/last_pct_change/market這幾個「顯示用」欄位，
+    不會動到history/trade_value_history/last_seen這些「核心1/核心2計分」相關的欄位，
+    不影響既有的排名邏輯。
+    """
+    row_map = {row["code"]: row for row in combined_rows}
+    for code, stock in pool.get("stocks", {}).items():
+        row = row_map.get(code)
+        if row is None:
+            continue  # 今天完全查無這檔股票的資料(例如暫停交易)，維持原樣不更新
+        close = row.get("close")
+        change = row.get("change")
+        market = row.get("market")
+        if close is None or change is None:
+            continue
+        prev_close = close - change
+        pct_change = (change / prev_close * 100) if prev_close and prev_close > 0 else 0.0
+        stock["last_close"] = close
+        stock["last_pct_change"] = round(pct_change, 4)
+        if market:
+            stock["market"] = market
+
+
 def update_pool_with_today(pool, today, candidates):
     pool.setdefault("trading_days", [])
     pool.setdefault("stocks", {})
@@ -1857,6 +1890,9 @@ def main():
 
     update_pool_with_today(pool, today, candidates)
     update_market_total_trade_value_history(pool, today, market_total_trade_value)
+
+    refresh_tracked_stocks_latest_price(pool, combined_rows, today)
+    print("已刷新所有追蹤中股票的最新股價/漲跌幅顯示欄位(不受候選清單漲跌篩選限制)")
 
     breadth_count = compute_market_breadth_count(combined_rows)
     update_market_breadth(pool, today, breadth_count)
