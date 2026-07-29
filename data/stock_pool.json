@@ -2,7 +2,7 @@
   "reference_check": {
     "2330": {
       "close": 2200.0,
-      "volume": 65899191.0
+      "volume": 68139691.0
     },
     "2454": {
       "close": 3150.0,
@@ -23,7 +23,8 @@
     "2026-07-24",
     "2026-07-27",
     "2026-07-28",
-    "2026-07-29"
+    "2026-07-29",
+    "2026-07-30"
   ],
   "stocks": {
     "2327": {
@@ -133,7 +134,7 @@
         "2026-07-23": 21731597030.0
       },
       "last_seen": "2026-07-23",
-      "last_classification": "core1",
+      "last_classification": "core2",
       "last_close": 879.0,
       "last_pct_change": -9.9385,
       "market": "上市"
@@ -217,7 +218,7 @@
         "2026-07-23": 24976092557.0
       },
       "last_seen": "2026-07-23",
-      "last_classification": "core1",
+      "last_classification": "core2",
       "last_close": 404.5,
       "last_pct_change": -5.3801,
       "market": "上市"
@@ -305,7 +306,7 @@
         "2026-07-27": 8967672916.0
       },
       "last_seen": "2026-07-27",
-      "last_classification": "core2",
+      "last_classification": "core1",
       "last_close": 237.0,
       "last_pct_change": -0.4202,
       "market": "上市"
@@ -533,7 +534,7 @@
         "2026-07-23": 13812739311.0
       },
       "last_seen": "2026-07-23",
-      "last_classification": "core1",
+      "last_classification": "core2",
       "last_close": 279.5,
       "last_pct_change": -9.9839,
       "market": "上櫃"
@@ -564,8 +565,8 @@
       },
       "last_seen": "2026-07-14",
       "last_classification": "core2",
-      "last_close": 30.6,
-      "last_pct_change": -8.7657,
+      "last_close": 28.53,
+      "last_pct_change": -6.7647,
       "market": "上市"
     },
     "0050": {
@@ -779,7 +780,7 @@
         "2026-07-27": 8920385345.0
       },
       "last_seen": "2026-07-27",
-      "last_classification": null,
+      "last_classification": "core1",
       "last_close": 3850.0,
       "last_pct_change": -1.2821,
       "market": "上市"
@@ -1069,7 +1070,7 @@
         "2026-07-27": 12890075289.0
       },
       "last_seen": "2026-07-27",
-      "last_classification": "core2",
+      "last_classification": "core1",
       "last_close": 291.0,
       "last_pct_change": -9.9071,
       "market": "上櫃"
@@ -1107,13 +1108,15 @@
     "3260": {
       "name": "威剛",
       "history": {
-        "2026-07-29": 5.032
+        "2026-07-29": 5.032,
+        "2026-07-30": 5.0038
       },
       "trade_value_history": {
-        "2026-07-29": 11610215414.0
+        "2026-07-29": 11610215414.0,
+        "2026-07-30": 11610215414.0
       },
-      "last_seen": "2026-07-29",
-      "last_classification": null,
+      "last_seen": "2026-07-30",
+      "last_classification": "core1",
       "last_close": 394.0,
       "last_pct_change": 6.7751,
       "market": "上櫃"
@@ -1133,7 +1136,8 @@
     "2026-07-24": 1009667857591.0,
     "2026-07-27": 864991584480.0,
     "2026-07-28": 928997614528.0,
-    "2026-07-29": 1203519335120.0
+    "2026-07-29": 1203519335120.0,
+    "2026-07-30": 1333063309731.0
   },
   "market_breadth": {
     "2026-07-09": 31,
@@ -1149,7 +1153,8 @@
     "2026-07-24": 5,
     "2026-07-27": 26,
     "2026-07-28": 3,
-    "2026-07-29": 3
+    "2026-07-29": 3,
+    "2026-07-30": 2
   },
   "market_index_pct_change": {
     "2026-07-09": -0.83,
@@ -1165,7 +1170,8 @@
     "2026-07-24": -2.67,
     "2026-07-27": -2.67,
     "2026-07-28": -0.05,
-    "2026-07-29": -4.65
+    "2026-07-29": -4.65,
+    "2026-07-30": -3.76
   },
   "red_up_tracker": [
     {
@@ -1191,20 +1197,20 @@
       "frozen_pct": null
     },
     {
-      "code": "4979",
-      "name": "華星光",
+      "code": "3105",
+      "name": "穩懋",
       "market": "上櫃",
-      "mark_date": "2026-07-29",
+      "mark_date": "2026-07-30",
       "status": "pending",
-      "checks_remaining": 1
+      "checks_remaining": 2
     },
     {
-      "code": "1301",
-      "name": "台塑",
+      "code": "2317",
+      "name": "鴻海",
       "market": "上市",
-      "mark_date": "2026-07-29",
+      "mark_date": "2026-07-30",
       "status": "pending",
-      "checks_remaining": 1
+      "checks_remaining": 2
     }
   ]
 }
