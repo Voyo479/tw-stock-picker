@@ -1,12 +1,12 @@
 {
   "reference_check": {
     "2330": {
-      "close": 2280.0,
-      "volume": 45333029.0
+      "close": 2200.0,
+      "volume": 65899191.0
     },
     "2454": {
-      "close": 3315.0,
-      "volume": 11958794.0
+      "close": 3150.0,
+      "volume": 16174122.0
     }
   },
   "trading_days": [
@@ -42,8 +42,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 563.0,
-      "last_pct_change": -9.92,
+      "last_close": 507.0,
+      "last_pct_change": -9.9467,
       "market": "上市"
     },
     "2408": {
@@ -66,8 +66,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core1",
-      "last_close": 392.5,
-      "last_pct_change": -9.9771,
+      "last_close": 353.5,
+      "last_pct_change": -9.9363,
       "market": "上市"
     },
     "6182": {
@@ -82,8 +82,8 @@
       },
       "last_seen": "2026-07-13",
       "last_classification": "core1",
-      "last_close": 104.5,
-      "last_pct_change": -9.9138,
+      "last_close": 94.1,
+      "last_pct_change": -9.9522,
       "market": "上櫃"
     },
     "3037": {
@@ -108,8 +108,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core1",
-      "last_close": 764.0,
-      "last_pct_change": -9.9057,
+      "last_close": 688.0,
+      "last_pct_change": -9.9476,
       "market": "上市"
     },
     "8046": {
@@ -134,8 +134,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core1",
-      "last_close": 976.0,
-      "last_pct_change": -9.2093,
+      "last_close": 879.0,
+      "last_pct_change": -9.9385,
       "market": "上市"
     },
     "2344": {
@@ -156,8 +156,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core1",
-      "last_close": 144.0,
-      "last_pct_change": -10.0,
+      "last_close": 130.0,
+      "last_pct_change": -9.7222,
       "market": "上市"
     },
     "3481": {
@@ -176,8 +176,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 45.0,
-      "last_pct_change": -4.963,
+      "last_close": 41.8,
+      "last_pct_change": -7.1111,
       "market": "上市"
     },
     "3711": {
@@ -196,8 +196,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 554.0,
-      "last_pct_change": -8.8816,
+      "last_close": 499.0,
+      "last_pct_change": -9.9278,
       "market": "上市"
     },
     "4958": {
@@ -218,8 +218,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core1",
-      "last_close": 427.5,
-      "last_pct_change": -9.1392,
+      "last_close": 404.5,
+      "last_pct_change": -5.3801,
       "market": "上市"
     },
     "3026": {
@@ -236,8 +236,8 @@
       },
       "last_seen": "2026-07-22",
       "last_classification": "core2",
-      "last_close": 527.0,
-      "last_pct_change": -9.9145,
+      "last_close": 474.5,
+      "last_pct_change": -9.962,
       "market": "上市"
     },
     "2409": {
@@ -250,8 +250,8 @@
       },
       "last_seen": "2026-07-09",
       "last_classification": "core1",
-      "last_close": 23.9,
-      "last_pct_change": 0.0,
+      "last_close": 23.65,
+      "last_pct_change": -1.046,
       "market": "上市"
     },
     "3211": {
@@ -264,8 +264,8 @@
       },
       "last_seen": "2026-07-09",
       "last_classification": "core1",
-      "last_close": 337.0,
-      "last_pct_change": -9.893,
+      "last_close": 308.0,
+      "last_pct_change": -8.6053,
       "market": "上櫃"
     },
     "2356": {
@@ -278,8 +278,8 @@
       },
       "last_seen": "2026-07-09",
       "last_classification": "core1",
-      "last_close": 58.8,
-      "last_pct_change": -7.837,
+      "last_close": 60.3,
+      "last_pct_change": 2.551,
       "market": "上市"
     },
     "2317": {
@@ -306,8 +306,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core2",
-      "last_close": 238.0,
-      "last_pct_change": -5.9289,
+      "last_close": 237.0,
+      "last_pct_change": -0.4202,
       "market": "上市"
     },
     "6488": {
@@ -330,8 +330,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 959.0,
-      "last_pct_change": -9.9531,
+      "last_close": 864.0,
+      "last_pct_change": -9.9062,
       "market": "上櫃"
     },
     "6147": {
@@ -344,8 +344,8 @@
       },
       "last_seen": "2026-07-09",
       "last_classification": "core1",
-      "last_close": 139.5,
-      "last_pct_change": -10.0,
+      "last_close": 126.0,
+      "last_pct_change": -9.6774,
       "market": "上櫃"
     },
     "2337": {
@@ -360,8 +360,8 @@
       },
       "last_seen": "2026-07-16",
       "last_classification": "core2",
-      "last_close": 113.0,
-      "last_pct_change": -9.9602,
+      "last_close": 102.0,
+      "last_pct_change": -9.7345,
       "market": "上市"
     },
     "5483": {
@@ -380,8 +380,8 @@
       },
       "last_seen": "2026-07-16",
       "last_classification": "core2",
-      "last_close": 185.0,
-      "last_pct_change": -9.3137,
+      "last_close": 166.5,
+      "last_pct_change": -10.0,
       "market": "上櫃"
     },
     "8299": {
@@ -396,8 +396,8 @@
       },
       "last_seen": "2026-07-16",
       "last_classification": "core2",
-      "last_close": 1650.0,
-      "last_pct_change": -9.3407,
+      "last_close": 1515.0,
+      "last_pct_change": -8.1818,
       "market": "上櫃"
     },
     "6446": {
@@ -410,8 +410,8 @@
       },
       "last_seen": "2026-07-09",
       "last_classification": "core2",
-      "last_close": 1115.0,
-      "last_pct_change": -6.6946,
+      "last_close": 1080.0,
+      "last_pct_change": -3.139,
       "market": "上市"
     },
     "2330": {
@@ -442,8 +442,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core1",
-      "last_close": 2280.0,
-      "last_pct_change": -2.9787,
+      "last_close": 2200.0,
+      "last_pct_change": -3.5088,
       "market": "上市"
     },
     "2308": {
@@ -468,8 +468,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core2",
-      "last_close": 1580.0,
-      "last_pct_change": -9.9715,
+      "last_close": 1495.0,
+      "last_pct_change": -5.3797,
       "market": "上市"
     },
     "1303": {
@@ -492,8 +492,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 157.0,
-      "last_pct_change": -9.7701,
+      "last_close": 141.5,
+      "last_pct_change": -9.8726,
       "market": "上市"
     },
     "2313": {
@@ -514,8 +514,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core2",
-      "last_close": 182.0,
-      "last_pct_change": -8.7719,
+      "last_close": 171.0,
+      "last_pct_change": -6.044,
       "market": "上市"
     },
     "3374": {
@@ -534,8 +534,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core1",
-      "last_close": 310.5,
-      "last_pct_change": -10.0,
+      "last_close": 279.5,
+      "last_pct_change": -9.9839,
       "market": "上櫃"
     },
     "5351": {
@@ -548,8 +548,8 @@
       },
       "last_seen": "2026-07-13",
       "last_classification": null,
-      "last_close": 75.3,
-      "last_pct_change": -9.9282,
+      "last_close": 70.1,
+      "last_pct_change": -6.9057,
       "market": "上櫃"
     },
     "00631L": {
@@ -586,8 +586,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 97.15,
-      "last_pct_change": -4.2385,
+      "last_close": 93.7,
+      "last_pct_change": -3.5512,
       "market": "上市"
     },
     "2301": {
@@ -602,8 +602,8 @@
       },
       "last_seen": "2026-07-14",
       "last_classification": "core2",
-      "last_close": 194.0,
-      "last_pct_change": -8.4906,
+      "last_close": 185.0,
+      "last_pct_change": -4.6392,
       "market": "上市"
     },
     "6770": {
@@ -624,8 +624,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core1",
-      "last_close": 55.8,
-      "last_pct_change": -9.8546,
+      "last_close": 50.4,
+      "last_pct_change": -9.6774,
       "market": "上市"
     },
     "2454": {
@@ -644,8 +644,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core2",
-      "last_close": 3315.0,
-      "last_pct_change": -9.9185,
+      "last_close": 3150.0,
+      "last_pct_change": -4.9774,
       "market": "上市"
     },
     "2303": {
@@ -662,8 +662,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 113.5,
-      "last_pct_change": -9.9206,
+      "last_close": 102.5,
+      "last_pct_change": -9.6916,
       "market": "上市"
     },
     "3661": {
@@ -676,8 +676,8 @@
       },
       "last_seen": "2026-07-16",
       "last_classification": null,
-      "last_close": 3115.0,
-      "last_pct_change": -9.9711,
+      "last_close": 2805.0,
+      "last_pct_change": -9.9518,
       "market": "上市"
     },
     "1301": {
@@ -694,8 +694,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core1",
-      "last_close": 57.5,
-      "last_pct_change": -6.8071,
+      "last_close": 56.2,
+      "last_pct_change": -2.2609,
       "market": "上市"
     },
     "2382": {
@@ -712,8 +712,8 @@
       },
       "last_seen": "2026-07-22",
       "last_classification": "core2",
-      "last_close": 313.5,
-      "last_pct_change": -2.6398,
+      "last_close": 309.5,
+      "last_pct_change": -1.2759,
       "market": "上市"
     },
     "1326": {
@@ -730,8 +730,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core2",
-      "last_close": 60.9,
-      "last_pct_change": -6.3077,
+      "last_close": 58.5,
+      "last_pct_change": -3.9409,
       "market": "上市"
     },
     "6274": {
@@ -746,8 +746,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": null,
-      "last_close": 1130.0,
-      "last_pct_change": -9.9602,
+      "last_close": 1020.0,
+      "last_pct_change": -9.7345,
       "market": "上櫃"
     },
     "8150": {
@@ -762,8 +762,8 @@
       },
       "last_seen": "2026-07-22",
       "last_classification": "core1",
-      "last_close": 81.0,
-      "last_pct_change": -9.8999,
+      "last_close": 72.9,
+      "last_pct_change": -10.0,
       "market": "上市"
     },
     "3008": {
@@ -780,8 +780,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": null,
-      "last_close": 3900.0,
-      "last_pct_change": -4.6455,
+      "last_close": 3850.0,
+      "last_pct_change": -1.2821,
       "market": "上市"
     },
     "2449": {
@@ -794,8 +794,8 @@
       },
       "last_seen": "2026-07-17",
       "last_classification": null,
-      "last_close": 236.0,
-      "last_pct_change": 0.0,
+      "last_close": 212.5,
+      "last_pct_change": -9.9576,
       "market": "上市"
     },
     "3017": {
@@ -814,8 +814,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core1",
-      "last_close": 2240.0,
-      "last_pct_change": -6.6667,
+      "last_close": 2095.0,
+      "last_pct_change": -6.4732,
       "market": "上市"
     },
     "6505": {
@@ -834,8 +834,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core1",
-      "last_close": 74.6,
-      "last_pct_change": -4.2362,
+      "last_close": 74.8,
+      "last_pct_change": 0.2681,
       "market": "上市"
     },
     "3491": {
@@ -848,8 +848,8 @@
       },
       "last_seen": "2026-07-17",
       "last_classification": null,
-      "last_close": 1090.0,
-      "last_pct_change": -5.6277,
+      "last_close": 1025.0,
+      "last_pct_change": -5.9633,
       "market": "上櫃"
     },
     "6213": {
@@ -868,8 +868,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 276.5,
-      "last_pct_change": -9.9349,
+      "last_close": 249.0,
+      "last_pct_change": -9.9458,
       "market": "上市"
     },
     "8039": {
@@ -888,8 +888,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core1",
-      "last_close": 194.5,
-      "last_pct_change": -9.9537,
+      "last_close": 175.5,
+      "last_pct_change": -9.7686,
       "market": "上市"
     },
     "2383": {
@@ -906,8 +906,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core1",
-      "last_close": 4410.0,
-      "last_pct_change": -8.4112,
+      "last_close": 4100.0,
+      "last_pct_change": -7.0295,
       "market": "上市"
     },
     "6223": {
@@ -920,8 +920,8 @@
       },
       "last_seen": "2026-07-22",
       "last_classification": null,
-      "last_close": 5165.0,
-      "last_pct_change": -9.7028,
+      "last_close": 4790.0,
+      "last_pct_change": -7.2604,
       "market": "上櫃"
     },
     "2059": {
@@ -934,8 +934,8 @@
       },
       "last_seen": "2026-07-22",
       "last_classification": null,
-      "last_close": 7450.0,
-      "last_pct_change": -9.9698,
+      "last_close": 7145.0,
+      "last_pct_change": -4.094,
       "market": "上市"
     },
     "5274": {
@@ -948,8 +948,8 @@
       },
       "last_seen": "2026-07-22",
       "last_classification": null,
-      "last_close": 13230.0,
-      "last_pct_change": -9.9694,
+      "last_close": 12910.0,
+      "last_pct_change": -2.4187,
       "market": "上櫃"
     },
     "3653": {
@@ -962,8 +962,8 @@
       },
       "last_seen": "2026-07-22",
       "last_classification": null,
-      "last_close": 3370.0,
-      "last_pct_change": -4.3972,
+      "last_close": 3310.0,
+      "last_pct_change": -1.7804,
       "market": "上市"
     },
     "6669": {
@@ -982,8 +982,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core1",
-      "last_close": 5315.0,
-      "last_pct_change": -7.4848,
+      "last_close": 5135.0,
+      "last_pct_change": -3.3866,
       "market": "上市"
     },
     "3189": {
@@ -998,8 +998,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 639.0,
-      "last_pct_change": -10.0,
+      "last_close": 576.0,
+      "last_pct_change": -9.8592,
       "market": "上市"
     },
     "3231": {
@@ -1016,8 +1016,8 @@
       },
       "last_seen": "2026-07-24",
       "last_classification": "core1",
-      "last_close": 170.0,
-      "last_pct_change": -3.9548,
+      "last_close": 169.5,
+      "last_pct_change": -0.2941,
       "market": "上市"
     },
     "3443": {
@@ -1032,8 +1032,8 @@
       },
       "last_seen": "2026-07-23",
       "last_classification": "core2",
-      "last_close": 3660.0,
-      "last_pct_change": -9.6296,
+      "last_close": 3295.0,
+      "last_pct_change": -9.9727,
       "market": "上市"
     },
     "3665": {
@@ -1054,8 +1054,8 @@
       },
       "last_seen": "2026-07-29",
       "last_classification": "core1",
-      "last_close": 2215.0,
-      "last_pct_change": 3.0233,
+      "last_close": 2090.0,
+      "last_pct_change": -5.6433,
       "market": "上市"
     },
     "3105": {
@@ -1070,8 +1070,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core2",
-      "last_close": 323.0,
-      "last_pct_change": -9.0141,
+      "last_close": 291.0,
+      "last_pct_change": -9.9071,
       "market": "上櫃"
     },
     "4979": {
@@ -1086,8 +1086,8 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": "core1",
-      "last_close": 427.0,
-      "last_pct_change": -4.7938,
+      "last_close": 384.5,
+      "last_pct_change": -9.9532,
       "market": "上櫃"
     },
     "3081": {
@@ -1100,8 +1100,22 @@
       },
       "last_seen": "2026-07-27",
       "last_classification": null,
-      "last_close": 1710.0,
-      "last_pct_change": -5.2632,
+      "last_close": 1540.0,
+      "last_pct_change": -9.9415,
+      "market": "上櫃"
+    },
+    "3260": {
+      "name": "威剛",
+      "history": {
+        "2026-07-29": 5.032
+      },
+      "trade_value_history": {
+        "2026-07-29": 11610215414.0
+      },
+      "last_seen": "2026-07-29",
+      "last_classification": null,
+      "last_close": 394.0,
+      "last_pct_change": 6.7751,
       "market": "上櫃"
     }
   },
@@ -1119,7 +1133,7 @@
     "2026-07-24": 1009667857591.0,
     "2026-07-27": 864991584480.0,
     "2026-07-28": 928997614528.0,
-    "2026-07-29": 1026020330944.0
+    "2026-07-29": 1203519335120.0
   },
   "market_breadth": {
     "2026-07-09": 31,
@@ -1182,7 +1196,7 @@
       "market": "上櫃",
       "mark_date": "2026-07-29",
       "status": "pending",
-      "checks_remaining": 2
+      "checks_remaining": 1
     },
     {
       "code": "1301",
@@ -1190,7 +1204,7 @@
       "market": "上市",
       "mark_date": "2026-07-29",
       "status": "pending",
-      "checks_remaining": 2
+      "checks_remaining": 1
     }
   ]
 }
