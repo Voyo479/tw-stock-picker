@@ -1361,7 +1361,7 @@
       "trigger_date": "2026-07-23",
       "trigger_close": 418.0,
       "status": "holding",
-       "sell_date": null,
+      "sell_date": null,
       "frozen_diff": null,
       "frozen_pct": null
     },
