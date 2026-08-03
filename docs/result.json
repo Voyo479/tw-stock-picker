@@ -6,13 +6,13 @@
       "pct_change": 7.98
     },
     "breadth": {
-      "up_count": 45,
+      "up_count": 41,
       "top_n": 50
     },
     "amount_stats": {
-      "today_amount": 1016167493955.0,
-      "day_over_day_pct": 12.94,
-      "five_day_pct": 368.57,
+      "today_amount": 940112371607.0,
+      "day_over_day_pct": 4.49,
+      "five_day_pct": 360.38,
       "twenty_day_pct": null
     },
     "capital_guidance": {
@@ -27,305 +27,145 @@
   },
   "market_movers": [
     {
-      "code": "00631L",
-      "name": "元大台灣50正2",
-      "close": 33.7,
-      "change": 5.32,
-      "trade_value": 18596483158.0,
-      "market": "上市",
-      "pct_change": 18.745595489781536,
-      "market_share_pct": 1.8301,
-      "score": 13.6709,
-      "themes": []
-    },
-    {
-      "code": "00685L",
-      "name": "群益臺灣加權正2",
-      "close": 10.83,
-      "change": 1.67,
-      "trade_value": 6386386651.0,
-      "market": "上市",
-      "pct_change": 18.23144104803493,
-      "market_share_pct": 0.6285,
-      "score": 12.9506,
-      "themes": []
-    },
-    {
-      "code": "0050",
-      "name": "元大台灣50",
-      "close": 102.85,
-      "change": 9.35,
-      "trade_value": 35123786635.0,
+      "code": "2344",
+      "name": "華邦電",
+      "close": 143.0,
+      "change": 13.0,
+      "trade_value": 10840912416.0,
       "market": "上市",
       "pct_change": 10.0,
-      "market_share_pct": 3.4565,
-      "score": 8.0369,
-      "themes": []
-    },
-    {
-      "code": "3231",
-      "name": "緯創",
-      "close": 176.0,
-      "change": 16.0,
-      "trade_value": 23937749417.0,
-      "market": "上市",
-      "pct_change": 10.0,
-      "market_share_pct": 2.3557,
-      "score": 7.7067,
-      "themes": [
-        "電腦及週邊設備業",
-        "AI伺服器供應鏈"
-      ]
-    },
-    {
-      "code": "6669",
-      "name": "緯穎",
-      "close": 5390.0,
-      "change": 490.0,
-      "trade_value": 7851495325.0,
-      "market": "上市",
-      "pct_change": 10.0,
-      "market_share_pct": 0.7727,
-      "score": 7.2318,
-      "themes": [
-        "電腦及週邊設備業"
-      ]
-    },
-    {
-      "code": "2303",
-      "name": "聯電",
-      "close": 121.0,
-      "change": 11.0,
-      "trade_value": 5501150897.0,
-      "market": "上市",
-      "pct_change": 10.0,
-      "market_share_pct": 0.5414,
-      "score": 7.1624,
+      "market_share_pct": 1.1532,
+      "score": 7.3459,
       "themes": [
         "半導體業"
       ]
     },
     {
-      "code": "00991A",
-      "name": "主動復華未來50",
-      "close": 15.41,
-      "change": 1.4,
-      "trade_value": 12153049302.0,
+      "code": "2408",
+      "name": "南亞科",
+      "close": 396.5,
+      "change": 36.0,
+      "trade_value": 22908677815.0,
       "market": "上市",
-      "pct_change": 9.992862241256246,
-      "market_share_pct": 1.196,
-      "score": 7.3538,
-      "themes": []
-    },
-    {
-      "code": "2330",
-      "name": "台積電",
-      "close": 2425.0,
-      "change": 220.0,
-      "trade_value": 166661984712.0,
-      "market": "上市",
-      "pct_change": 9.977324263038549,
-      "market_share_pct": 16.401,
-      "score": 11.9044,
+      "pct_change": 9.986130374479888,
+      "market_share_pct": 2.4368,
+      "score": 7.7213,
       "themes": [
-        "半導體業",
-        "AI伺服器供應鏈"
-      ]
-    },
-    {
-      "code": "00981A",
-      "name": "主動統一台股增長",
-      "close": 26.13,
-      "change": 2.37,
-      "trade_value": 22774713110.0,
-      "market": "上市",
-      "pct_change": 9.974747474747476,
-      "market_share_pct": 2.2412,
-      "score": 7.6547,
-      "themes": []
-    },
-    {
-      "code": "4958",
-      "name": "臻鼎-KY",
-      "close": 413.5,
-      "change": 37.5,
-      "trade_value": 6408729818.0,
-      "market": "上市",
-      "pct_change": 9.97340425531915,
-      "market_share_pct": 0.6307,
-      "score": 7.1706,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "2383",
-      "name": "台光電",
-      "close": 4745.0,
-      "change": 430.0,
-      "trade_value": 6732775400.0,
-      "market": "上市",
-      "pct_change": 9.965237543453071,
-      "market_share_pct": 0.6626,
-      "score": 7.1744,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "3017",
-      "name": "奇鋐",
-      "close": 2320.0,
-      "change": 210.0,
-      "trade_value": 5777964465.0,
-      "market": "上市",
-      "pct_change": 9.95260663507109,
-      "market_share_pct": 0.5686,
-      "score": 7.1374,
-      "themes": [
-        "電腦及週邊設備業"
-      ]
-    },
-    {
-      "code": "2360",
-      "name": "致茂",
-      "close": 2100.0,
-      "change": 190.0,
-      "trade_value": 12606194080.0,
-      "market": "上市",
-      "pct_change": 9.947643979057592,
-      "market_share_pct": 1.2406,
-      "score": 7.3355,
-      "themes": [
-        "其他電子業"
-      ]
-    },
-    {
-      "code": "3665",
-      "name": "貿聯-KY",
-      "close": 2100.0,
-      "change": 190.0,
-      "trade_value": 5080375735.0,
-      "market": "上市",
-      "pct_change": 9.947643979057592,
-      "market_share_pct": 0.5,
-      "score": 7.1133,
-      "themes": [
-        "其他電子業"
-      ]
-    },
-    {
-      "code": "2357",
-      "name": "華碩",
-      "close": 810.0,
-      "change": 73.0,
-      "trade_value": 7704879443.0,
-      "market": "上市",
-      "pct_change": 9.905020352781547,
-      "market_share_pct": 0.7582,
-      "score": 7.161,
-      "themes": [
-        "電腦及週邊設備業"
-      ]
-    },
-    {
-      "code": "3481",
-      "name": "群創",
-      "close": 45.5,
-      "change": 4.1,
-      "trade_value": 16455954771.0,
-      "market": "上市",
-      "pct_change": 9.903381642512077,
-      "market_share_pct": 1.6194,
-      "score": 7.4182,
-      "themes": [
-        "光電業"
+        "半導體業"
       ]
     },
     {
       "code": "2454",
       "name": "聯發科",
-      "close": 3555.0,
-      "change": 320.0,
-      "trade_value": 14337364770.0,
+      "close": 3910.0,
+      "change": 355.0,
+      "trade_value": 29287630390.0,
       "market": "上市",
-      "pct_change": 9.891808346213292,
-      "market_share_pct": 1.4109,
-      "score": 7.3475,
+      "pct_change": 9.985935302390999,
+      "market_share_pct": 3.1153,
+      "score": 7.9248,
       "themes": [
         "半導體業",
         "AI概念"
       ]
     },
     {
-      "code": "3661",
-      "name": "世芯-KY",
-      "close": 3060.0,
-      "change": 275.0,
-      "trade_value": 9855512685.0,
+      "code": "2327",
+      "name": "國巨*",
+      "close": 552.0,
+      "change": 50.0,
+      "trade_value": 12160960784.0,
       "market": "上市",
-      "pct_change": 9.874326750448834,
-      "market_share_pct": 0.9699,
-      "score": 7.203,
-      "themes": [
-        "半導體業"
-      ]
-    },
-    {
-      "code": "8039",
-      "name": "台虹",
-      "close": 173.5,
-      "change": 15.5,
-      "trade_value": 5500817689.0,
-      "market": "上市",
-      "pct_change": 9.81012658227848,
-      "market_share_pct": 0.5413,
-      "score": 7.0295,
+      "pct_change": 9.9601593625498,
+      "market_share_pct": 1.2936,
+      "score": 7.3602,
       "themes": [
         "電子零組件業"
       ]
     },
     {
-      "code": "6239",
-      "name": "力成",
-      "close": 235.5,
-      "change": 21.0,
-      "trade_value": 5301720787.0,
+      "code": "6669",
+      "name": "緯穎",
+      "close": 5925.0,
+      "change": 535.0,
+      "trade_value": 19512006185.0,
       "market": "上市",
-      "pct_change": 9.79020979020979,
-      "market_share_pct": 0.5217,
-      "score": 7.0097,
+      "pct_change": 9.925788497217068,
+      "market_share_pct": 2.0755,
+      "score": 7.5707,
+      "themes": [
+        "電腦及週邊設備業"
+      ]
+    },
+    {
+      "code": "3017",
+      "name": "奇鋐",
+      "close": 2550.0,
+      "change": 230.0,
+      "trade_value": 11388751630.0,
+      "market": "上市",
+      "pct_change": 9.913793103448276,
+      "market_share_pct": 1.2114,
+      "score": 7.3031,
+      "themes": [
+        "電腦及週邊設備業"
+      ]
+    },
+    {
+      "code": "3037",
+      "name": "欣興",
+      "close": 865.0,
+      "change": 78.0,
+      "trade_value": 19358717389.0,
+      "market": "上市",
+      "pct_change": 9.91105463786531,
+      "market_share_pct": 2.0592,
+      "score": 7.5555,
+      "themes": [
+        "電子零組件業",
+        "AI伺服器供應鏈"
+      ]
+    },
+    {
+      "code": "3711",
+      "name": "日月光投控",
+      "close": 610.0,
+      "change": 55.0,
+      "trade_value": 10339260120.0,
+      "market": "上市",
+      "pct_change": 9.90990990990991,
+      "market_share_pct": 1.0998,
+      "score": 7.2669,
       "themes": [
         "半導體業"
       ]
     },
     {
-      "code": "2317",
-      "name": "鴻海",
-      "close": 250.5,
-      "change": 21.0,
-      "trade_value": 24664339053.0,
+      "code": "2345",
+      "name": "智邦",
+      "close": 2335.0,
+      "change": 210.0,
+      "trade_value": 8569943725.0,
       "market": "上市",
-      "pct_change": 9.15032679738562,
-      "market_share_pct": 2.4272,
-      "score": 7.1334,
+      "pct_change": 9.88235294117647,
+      "market_share_pct": 0.9116,
+      "score": 7.1911,
       "themes": [
-        "其他電子業",
-        "AI伺服器組裝"
+        "通信網路業"
       ]
     },
     {
-      "code": "3008",
-      "name": "大立光",
-      "close": 4035.0,
-      "change": 320.0,
-      "trade_value": 11861331570.0,
+      "code": "3653",
+      "name": "健策",
+      "close": 3770.0,
+      "change": 325.0,
+      "trade_value": 6857545765.0,
       "market": "上市",
-      "pct_change": 8.613728129205922,
-      "market_share_pct": 1.1673,
-      "score": 6.3798,
+      "pct_change": 9.433962264150944,
+      "market_share_pct": 0.7294,
+      "score": 6.8226,
       "themes": [
-        "光電業"
+        "電子零組件業"
       ]
     },
     {
@@ -336,70 +176,125 @@
       "trade_value": 10757327100.0,
       "market": "上櫃",
       "pct_change": 7.317073170731707,
-      "market_share_pct": 1.0586,
-      "score": 5.4395,
+      "market_share_pct": 1.1443,
+      "score": 5.4652,
       "themes": [
         "半導體業",
         "半導體業"
       ]
     },
     {
-      "code": "2308",
-      "name": "台達電",
-      "close": 1640.0,
-      "change": 110.0,
-      "trade_value": 51858884287.0,
+      "code": "3661",
+      "name": "世芯-KY",
+      "close": 3250.0,
+      "change": 190.0,
+      "trade_value": 6326838285.0,
       "market": "上市",
-      "pct_change": 7.18954248366013,
-      "market_share_pct": 5.1034,
-      "score": 6.5637,
-      "themes": [
-        "電子零組件業",
-        "AI伺服器供應鏈"
-      ]
-    },
-    {
-      "code": "3105",
-      "name": "穩懋",
-      "close": 311.0,
-      "change": 16.5,
-      "trade_value": 5750297835.0,
-      "market": "上櫃",
-      "pct_change": 5.602716468590832,
-      "market_share_pct": 0.5659,
-      "score": 4.0917,
+      "pct_change": 6.209150326797386,
+      "market_share_pct": 0.673,
+      "score": 4.5483,
       "themes": [
         "半導體業"
       ]
     },
     {
-      "code": "2382",
-      "name": "廣達",
-      "close": 291.5,
-      "change": 12.5,
-      "trade_value": 14357724541.0,
+      "code": "3231",
+      "name": "緯創",
+      "close": 186.0,
+      "change": 10.0,
+      "trade_value": 29618233645.0,
       "market": "上市",
-      "pct_change": 4.480286738351254,
-      "market_share_pct": 1.4129,
-      "score": 3.5601,
+      "pct_change": 5.681818181818182,
+      "market_share_pct": 3.1505,
+      "score": 4.9224,
       "themes": [
         "電腦及週邊設備業",
         "AI伺服器供應鏈"
       ]
     },
     {
-      "code": "6147",
-      "name": "頎邦",
-      "close": 135.5,
-      "change": 5.5,
-      "trade_value": 5682297111.0,
-      "market": "上櫃",
-      "pct_change": 4.230769230769231,
-      "market_share_pct": 0.5592,
-      "score": 3.1293,
+      "code": "2383",
+      "name": "台光電",
+      "close": 4980.0,
+      "change": 235.0,
+      "trade_value": 21241674925.0,
+      "market": "上市",
+      "pct_change": 4.952581664910432,
+      "market_share_pct": 2.2595,
+      "score": 4.1447,
       "themes": [
-        "半導體業",
+        "電子零組件業"
+      ]
+    },
+    {
+      "code": "2449",
+      "name": "京元電子",
+      "close": 233.5,
+      "change": 10.0,
+      "trade_value": 7468737672.0,
+      "market": "上市",
+      "pct_change": 4.47427293064877,
+      "market_share_pct": 0.7945,
+      "score": 3.3703,
+      "themes": [
         "半導體業"
+      ]
+    },
+    {
+      "code": "7769",
+      "name": "鴻勁",
+      "close": 6425.0,
+      "change": 245.0,
+      "trade_value": 13065213805.0,
+      "market": "上市",
+      "pct_change": 3.9644012944983817,
+      "market_share_pct": 1.3898,
+      "score": 3.192,
+      "themes": [
+        "半導體業"
+      ]
+    },
+    {
+      "code": "1303",
+      "name": "南亞",
+      "close": 165.0,
+      "change": 5.5,
+      "trade_value": 24409586290.0,
+      "market": "上市",
+      "pct_change": 3.4482758620689653,
+      "market_share_pct": 2.5965,
+      "score": 3.1927,
+      "themes": [
+        "塑膠工業"
+      ]
+    },
+    {
+      "code": "4958",
+      "name": "臻鼎-KY",
+      "close": 421.5,
+      "change": 8.0,
+      "trade_value": 23620644439.0,
+      "market": "上市",
+      "pct_change": 1.9347037484885126,
+      "market_share_pct": 2.5125,
+      "score": 2.1081,
+      "themes": [
+        "電子零組件業"
+      ]
+    },
+    {
+      "code": "2382",
+      "name": "廣達",
+      "close": 296.5,
+      "change": 5.0,
+      "trade_value": 8667039259.0,
+      "market": "上市",
+      "pct_change": 1.7152658662092626,
+      "market_share_pct": 0.9219,
+      "score": 1.4773,
+      "themes": [
+        "電腦及週邊設備業",
+        "AI伺服器供應鏈"
       ]
     },
     {
@@ -410,10 +305,53 @@
       "trade_value": 13694379870.0,
       "market": "上櫃",
       "pct_change": 1.2865497076023393,
-      "market_share_pct": 1.3476,
-      "score": 1.3049,
+      "market_share_pct": 1.4567,
+      "score": 1.3376,
       "themes": [
         "半導體業",
+        "半導體業"
+      ]
+    },
+    {
+      "code": "2317",
+      "name": "鴻海",
+      "close": 253.0,
+      "change": 2.5,
+      "trade_value": 13128239101.0,
+      "market": "上市",
+      "pct_change": 0.998003992015968,
+      "market_share_pct": 1.3965,
+      "score": 1.1175,
+      "themes": [
+        "其他電子業",
+        "AI伺服器組裝"
+      ]
+    },
+    {
+      "code": "3481",
+      "name": "群創",
+      "close": 45.8,
+      "change": 0.3,
+      "trade_value": 17201598502.0,
+      "market": "上市",
+      "pct_change": 0.6593406593406593,
+      "market_share_pct": 1.8297,
+      "score": 1.0105,
+      "themes": [
+        "光電業"
+      ]
+    },
+    {
+      "code": "6770",
+      "name": "力積電",
+      "close": 54.7,
+      "change": 0.2,
+      "trade_value": 11461857097.0,
+      "market": "上市",
+      "pct_change": 0.3669724770642202,
+      "market_share_pct": 1.2192,
+      "score": 0.6226,
+      "themes": [
         "半導體業"
       ]
     }
@@ -426,236 +364,238 @@
     },
     "list": [
       {
-        "code": "2330",
-        "name": "台積電",
-        "score": 27.1583,
-        "mark": null,
-        "price": 2425.0,
-        "pct_change": 9.9773,
-        "market": "上市",
-        "themes": [
-          "半導體業",
-          "AI伺服器供應鏈"
-        ],
-        "relative_strength": 2.0,
-        "volume_ratio": 1.77,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "2303",
-        "name": "聯電",
-        "score": 20.484699999999997,
-        "mark": null,
-        "price": 121.0,
-        "pct_change": 10.0,
-        "market": "上市",
-        "themes": [
-          "半導體業"
-        ],
-        "relative_strength": 2.02,
-        "volume_ratio": 0.24,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "3665",
-        "name": "貿聯-KY",
-        "score": 19.013299999999997,
-        "mark": null,
-        "price": 2100.0,
-        "pct_change": 9.9476,
-        "market": "上市",
-        "themes": [
-          "其他電子業"
-        ],
-        "relative_strength": 1.97,
-        "volume_ratio": 0.5,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "2383",
-        "name": "台光電",
-        "score": 18.592,
-        "mark": null,
-        "price": 4745.0,
-        "pct_change": 9.9652,
-        "market": "上市",
-        "themes": [
-          "電子零組件業"
-        ],
-        "relative_strength": 1.99,
-        "volume_ratio": 0.56,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "2360",
-        "name": "致茂",
-        "score": 17.823,
-        "mark": null,
-        "price": 2100.0,
-        "pct_change": 9.9476,
-        "market": "上市",
-        "themes": [
-          "其他電子業"
-        ],
-        "relative_strength": 1.97,
-        "volume_ratio": 1.12,
-        "volume_drop_warning": false
-      },
-      {
         "code": "2454",
         "name": "聯發科",
-        "score": 17.7561,
+        "score": 18.3334,
         "mark": null,
-        "price": 3555.0,
-        "pct_change": 9.8918,
+        "price": 3910.0,
+        "pct_change": 9.9859,
         "market": "上市",
         "themes": [
           "半導體業",
           "AI概念"
         ],
-        "relative_strength": 1.91,
-        "volume_ratio": 0.41,
+        "relative_strength": 2.01,
+        "volume_ratio": 0.84,
         "volume_drop_warning": false
       },
       {
-        "code": "0050",
-        "name": "元大台灣50",
-        "score": 16.2081,
+        "code": "2383",
+        "name": "台光電",
+        "score": 15.5623,
         "mark": null,
-        "price": 102.85,
-        "pct_change": 10.0,
-        "market": "上市",
-        "themes": [],
-        "relative_strength": 2.02,
-        "volume_ratio": 2.49,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "2308",
-        "name": "台達電",
-        "score": 15.810500000000001,
-        "mark": null,
-        "price": 1640.0,
-        "pct_change": 7.1895,
+        "price": 4980.0,
+        "pct_change": 4.9526,
         "market": "上市",
         "themes": [
-          "電子零組件業",
-          "AI伺服器供應鏈"
+          "電子零組件業"
         ],
-        "relative_strength": -0.79,
-        "volume_ratio": 2.33,
+        "relative_strength": -3.03,
+        "volume_ratio": 1.78,
         "volume_drop_warning": false
       },
       {
-        "code": "3231",
-        "name": "緯創",
-        "score": 15.5049,
+        "code": "2330",
+        "name": "台積電",
+        "score": 15.2539,
         "mark": null,
-        "price": 176.0,
-        "pct_change": 10.0,
+        "price": 2370.0,
+        "pct_change": -2.268,
         "market": "上市",
         "themes": [
-          "電腦及週邊設備業",
+          "半導體業",
           "AI伺服器供應鏈"
         ],
-        "relative_strength": 2.02,
-        "volume_ratio": 0.87,
+        "relative_strength": -10.25,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
         "code": "3017",
         "name": "奇鋐",
-        "score": 15.0294,
+        "score": 15.1951,
         "mark": null,
-        "price": 2320.0,
-        "pct_change": 9.9526,
+        "price": 2550.0,
+        "pct_change": 9.9138,
         "market": "上市",
         "themes": [
           "電腦及週邊設備業"
         ],
-        "relative_strength": 1.97,
-        "volume_ratio": 0.51,
+        "relative_strength": 1.93,
+        "volume_ratio": 1.0,
         "volume_drop_warning": false
       },
       {
-        "code": "3481",
-        "name": "群創",
-        "score": 14.8993,
-        "mark": "red_up",
-        "price": 45.5,
-        "pct_change": 9.9034,
+        "code": "3037",
+        "name": "欣興",
+        "score": 15.0044,
+        "mark": null,
+        "price": 865.0,
+        "pct_change": 9.9111,
         "market": "上市",
         "themes": [
-          "光電業"
+          "電子零組件業",
+          "AI伺服器供應鏈"
         ],
-        "relative_strength": 1.92,
-        "volume_ratio": 0.94,
+        "relative_strength": 1.93,
+        "volume_ratio": 0.68,
         "volume_drop_warning": false
       },
       {
         "code": "6669",
         "name": "緯穎",
-        "score": 14.4936,
+        "score": 14.8325,
         "mark": null,
-        "price": 5390.0,
-        "pct_change": 10.0,
+        "price": 5925.0,
+        "pct_change": 9.9258,
         "market": "上市",
         "themes": [
           "電腦及週邊設備業"
         ],
-        "relative_strength": 2.02,
-        "volume_ratio": 0.51,
+        "relative_strength": 1.95,
+        "volume_ratio": 1.26,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3260",
+        "name": "威剛",
+        "score": 14.0842,
+        "mark": null,
+        "price": 391.5,
+        "pct_change": -1.7566,
+        "market": "上櫃",
+        "themes": [
+          "半導體業"
+        ],
+        "relative_strength": -9.74,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "2303",
+        "name": "聯電",
+        "score": 13.322299999999998,
+        "mark": null,
+        "price": 118.0,
+        "pct_change": -2.4793,
+        "market": "上市",
+        "themes": [
+          "半導體業"
+        ],
+        "relative_strength": -10.46,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3231",
+        "name": "緯創",
+        "score": 12.7206,
+        "mark": null,
+        "price": 186.0,
+        "pct_change": 5.6818,
+        "market": "上市",
+        "themes": [
+          "電腦及週邊設備業",
+          "AI伺服器供應鏈"
+        ],
+        "relative_strength": -2.3,
+        "volume_ratio": 1.08,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3665",
+        "name": "貿聯-KY",
+        "score": 11.899999999999999,
+        "mark": null,
+        "price": 2095.0,
+        "pct_change": -0.2381,
+        "market": "上市",
+        "themes": [
+          "其他電子業"
+        ],
+        "relative_strength": -8.22,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
         "code": "3661",
         "name": "世芯-KY",
-        "score": 14.4437,
+        "score": 11.789000000000001,
         "mark": "red_up",
-        "price": 3060.0,
-        "pct_change": 9.8743,
+        "price": 3250.0,
+        "pct_change": 6.2092,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 1.89,
-        "volume_ratio": 0.98,
+        "relative_strength": -1.77,
+        "volume_ratio": 0.63,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "2360",
+        "name": "致茂",
+        "score": 10.4875,
+        "mark": null,
+        "price": 1960.0,
+        "pct_change": -6.6667,
+        "market": "上市",
+        "themes": [
+          "其他電子業"
+        ],
+        "relative_strength": -14.65,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3711",
+        "name": "日月光投控",
+        "score": 9.6828,
+        "mark": "red_up",
+        "price": 610.0,
+        "pct_change": 9.9099,
+        "market": "上市",
+        "themes": [
+          "半導體業"
+        ],
+        "relative_strength": 1.93,
+        "volume_ratio": 0.62,
         "volume_drop_warning": false
       },
       {
         "code": "4958",
         "name": "臻鼎-KY",
-        "score": 14.3657,
+        "score": 9.3032,
         "mark": "red_up",
-        "price": 413.5,
-        "pct_change": 9.9734,
+        "price": 421.5,
+        "pct_change": 1.9347,
         "market": "上市",
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": 1.99,
-        "volume_ratio": 0.23,
+        "relative_strength": -6.05,
+        "volume_ratio": 0.84,
         "volume_drop_warning": false
       },
       {
-        "code": "2317",
-        "name": "鴻海",
-        "score": 14.361,
+        "code": "2308",
+        "name": "台達電",
+        "score": 9.2468,
         "mark": null,
-        "price": 250.5,
-        "pct_change": 9.1503,
+        "price": 1580.0,
+        "pct_change": -3.6585,
         "market": "上市",
         "themes": [
-          "其他電子業",
-          "AI伺服器組裝"
+          "電子零組件業",
+          "AI伺服器供應鏈"
         ],
-        "relative_strength": 1.17,
-        "volume_ratio": 1.77,
+        "relative_strength": -11.64,
+        "volume_ratio": null,
         "volume_drop_warning": false
       }
     ],
     "heat": {
-      "average": 23.6,
+      "average": 22.8,
       "level": 3,
       "label": "短線市場震盪",
       "sample_days": 5,
@@ -669,16 +609,16 @@
     "sector_summary": [
       {
         "sector": "半導體業",
+        "count": 6,
+        "percentage": 40.0
+      },
+      {
+        "sector": "電子零組件業",
         "count": 4,
         "percentage": 26.7
       },
       {
-        "sector": "其他電子業",
-        "count": 3,
-        "percentage": 20.0
-      },
-      {
-        "sector": "電子零組件業",
+        "sector": "電腦及週邊設備業",
         "count": 3,
         "percentage": 20.0
       }
@@ -708,50 +648,65 @@
         "volume_drop_warning": false
       },
       {
-        "code": "2327",
-        "name": "國巨*",
-        "discounted_slope": 1786844519.3601067,
-        "appearance_count": 4,
+        "code": "3105",
+        "name": "穩懋",
+        "discounted_slope": 3245701979.0967846,
+        "appearance_count": 2,
         "mark": null,
-        "price": 502.0,
-        "pct_change": 9.9671,
-        "market": "上市",
+        "price": 311.0,
+        "pct_change": 5.6027,
+        "market": "上櫃",
         "themes": [
-          "電子零組件業"
+          "半導體業"
         ],
-        "relative_strength": 1.99,
+        "relative_strength": -2.38,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "3037",
-        "name": "欣興",
-        "discounted_slope": 1519496970.095178,
-        "appearance_count": 9,
+        "code": "7769",
+        "name": "鴻勁",
+        "discounted_slope": 3019580230.85,
+        "appearance_count": 2,
+        "mark": null,
+        "price": 6425.0,
+        "pct_change": 3.9644,
+        "market": "上市",
+        "themes": [
+          "半導體業"
+        ],
+        "relative_strength": -4.02,
+        "volume_ratio": 1.51,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "0050",
+        "name": "元大台灣50",
+        "discounted_slope": 1924437538.4463658,
+        "appearance_count": 6,
         "mark": "green_down",
-        "price": 787.0,
-        "pct_change": 9.9162,
-        "market": "上市",
-        "themes": [
-          "電子零組件業",
-          "AI伺服器供應鏈"
-        ],
-        "relative_strength": 1.94,
-        "volume_ratio": null,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "00631L",
-        "name": "元大台灣50正2",
-        "discounted_slope": 1164607174.891546,
-        "appearance_count": 3,
-        "mark": null,
-        "price": 33.7,
-        "pct_change": 18.7456,
+        "price": 102.0,
+        "pct_change": -0.8264,
         "market": "上市",
         "themes": [],
-        "relative_strength": 10.77,
-        "volume_ratio": 2.44,
+        "relative_strength": -8.81,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "1303",
+        "name": "南亞",
+        "discounted_slope": 1120621495.1426945,
+        "appearance_count": 9,
+        "mark": null,
+        "price": 165.0,
+        "pct_change": 3.4483,
+        "market": "上市",
+        "themes": [
+          "塑膠工業"
+        ],
+        "relative_strength": -4.53,
+        "volume_ratio": 1.03,
         "volume_drop_warning": false
       },
       {
@@ -760,79 +715,47 @@
         "discounted_slope": 1066982014.4068428,
         "appearance_count": 4,
         "mark": null,
-        "price": 635.0,
-        "pct_change": 9.8616,
+        "price": 698.0,
+        "pct_change": 9.9213,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 1.88,
+        "relative_strength": 1.94,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "2382",
-        "name": "廣達",
-        "discounted_slope": 996963759.9497539,
-        "appearance_count": 5,
-        "mark": null,
-        "price": 291.5,
-        "pct_change": 4.4803,
-        "market": "上市",
-        "themes": [
-          "電腦及週邊設備業",
-          "AI伺服器供應鏈"
-        ],
-        "relative_strength": -3.5,
-        "volume_ratio": 1.34,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "1303",
-        "name": "南亞",
-        "discounted_slope": 962971836.1317103,
-        "appearance_count": 8,
-        "mark": null,
-        "price": 159.5,
-        "pct_change": 10.0,
-        "market": "上市",
-        "themes": [
-          "塑膠工業"
-        ],
-        "relative_strength": 2.02,
-        "volume_ratio": null,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "2357",
-        "name": "華碩",
-        "discounted_slope": 770487944.3000002,
-        "appearance_count": 2,
-        "mark": null,
-        "price": 810.0,
-        "pct_change": 9.905,
-        "market": "上市",
-        "themes": [
-          "電腦及週邊設備業"
-        ],
-        "relative_strength": 1.92,
-        "volume_ratio": 1.0,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "3008",
-        "name": "大立光",
-        "discounted_slope": 767614024.2615986,
-        "appearance_count": 5,
+        "code": "2317",
+        "name": "鴻海",
+        "discounted_slope": 1057299989.8578624,
+        "appearance_count": 10,
         "mark": "green_down",
-        "price": 4035.0,
-        "pct_change": 8.6137,
+        "price": 253.0,
+        "pct_change": 0.998,
+        "market": "上市",
+        "themes": [
+          "其他電子業",
+          "AI伺服器組裝"
+        ],
+        "relative_strength": -6.98,
+        "volume_ratio": 0.94,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3481",
+        "name": "群創",
+        "discounted_slope": 820923982.572125,
+        "appearance_count": 6,
+        "mark": null,
+        "price": 45.8,
+        "pct_change": 0.6593,
         "market": "上市",
         "themes": [
           "光電業"
         ],
-        "relative_strength": 0.63,
-        "volume_ratio": 1.11,
+        "relative_strength": -7.32,
+        "volume_ratio": 0.98,
         "volume_drop_warning": false
       },
       {
@@ -841,13 +764,13 @@
         "discounted_slope": 731719430.0639383,
         "appearance_count": 2,
         "mark": null,
-        "price": 100.5,
-        "pct_change": 9.4771,
+        "price": 110.5,
+        "pct_change": 9.9502,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 1.5,
+        "relative_strength": 1.97,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -868,19 +791,36 @@
         "volume_drop_warning": false
       },
       {
-        "code": "3711",
-        "name": "日月光投控",
-        "discounted_slope": 680065930.0376648,
-        "appearance_count": 6,
+        "code": "2408",
+        "name": "南亞科",
+        "discounted_slope": 722150072.9555655,
+        "appearance_count": 7,
         "mark": null,
-        "price": 555.0,
-        "pct_change": 9.901,
+        "price": 396.5,
+        "pct_change": 9.9861,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 1.92,
-        "volume_ratio": null,
+        "relative_strength": 2.01,
+        "volume_ratio": 0.54,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "2382",
+        "name": "廣達",
+        "discounted_slope": 706066109.7516708,
+        "appearance_count": 5,
+        "mark": null,
+        "price": 296.5,
+        "pct_change": 1.7153,
+        "market": "上市",
+        "themes": [
+          "電腦及週邊設備業",
+          "AI伺服器供應鏈"
+        ],
+        "relative_strength": -6.26,
+        "volume_ratio": 0.81,
         "volume_drop_warning": false
       },
       {
@@ -889,13 +829,29 @@
         "discounted_slope": 677597510.52295,
         "appearance_count": 4,
         "mark": null,
-        "price": 3805.0,
-        "pct_change": 9.9711,
+        "price": 4185.0,
+        "pct_change": 9.9869,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 1.99,
+        "relative_strength": 2.01,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3008",
+        "name": "大立光",
+        "discounted_slope": 667996890.2602018,
+        "appearance_count": 4,
+        "mark": "green_down",
+        "price": 3960.0,
+        "pct_change": -1.8587,
+        "market": "上市",
+        "themes": [
+          "光電業"
+        ],
+        "relative_strength": -9.84,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
@@ -905,35 +861,19 @@
         "discounted_slope": 652208720.7572929,
         "appearance_count": 3,
         "mark": null,
-        "price": 57.4,
-        "pct_change": 1.773,
+        "price": 56.3,
+        "pct_change": -1.9164,
         "market": "上市",
         "themes": [
           "塑膠工業"
         ],
-        "relative_strength": -6.21,
-        "volume_ratio": null,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "2408",
-        "name": "南亞科",
-        "discounted_slope": 610969235.3303485,
-        "appearance_count": 6,
-        "mark": null,
-        "price": 360.5,
-        "pct_change": 9.9085,
-        "market": "上市",
-        "themes": [
-          "半導體業"
-        ],
-        "relative_strength": 1.93,
+        "relative_strength": -9.9,
         "volume_ratio": null,
         "volume_drop_warning": false
       }
     ],
     "heat": {
-      "average": 21.4,
+      "average": 21.1,
       "level": 3,
       "label": "中期市場震盪",
       "sample_days": 17,
@@ -947,16 +887,16 @@
     "sector_summary": [
       {
         "sector": "半導體業",
-        "count": 6,
-        "percentage": 40.0
+        "count": 7,
+        "percentage": 46.7
       },
       {
-        "sector": "電子零組件業",
+        "sector": "塑膠工業",
         "count": 2,
         "percentage": 13.3
       },
       {
-        "sector": "電腦及週邊設備業",
+        "sector": "光電業",
         "count": 2,
         "percentage": 13.3
       }
@@ -964,32 +904,8 @@
   },
   "red_up_tracker": [
     {
-      "code": "0050",
-      "name": "元大台灣50",
-      "market": "上市",
-      "trigger_date": "2026-08-03",
-      "trigger_close": 102.85,
-      "price_diff": 0.0,
-      "checks_remaining": 2,
-      "price_diff_pct": 0.0,
-      "sell_date": null,
-      "status": "holding"
-    },
-    {
-      "code": "3481",
-      "name": "群創",
-      "market": "上市",
-      "trigger_date": "2026-08-03",
-      "trigger_close": null,
-      "price_diff": null,
-      "checks_remaining": 2,
-      "price_diff_pct": null,
-      "sell_date": null,
-      "status": "pending"
-    },
-    {
-      "code": "3661",
-      "name": "世芯-KY",
+      "code": "3711",
+      "name": "日月光投控",
       "market": "上市",
       "trigger_date": "2026-08-03",
       "trigger_close": null,
@@ -1002,6 +918,18 @@
     {
       "code": "4958",
       "name": "臻鼎-KY",
+      "market": "上市",
+      "trigger_date": "2026-08-03",
+      "trigger_close": null,
+      "price_diff": null,
+      "checks_remaining": 2,
+      "price_diff_pct": null,
+      "sell_date": null,
+      "status": "pending"
+    },
+    {
+      "code": "3661",
+      "name": "世芯-KY",
       "market": "上市",
       "trigger_date": "2026-08-03",
       "trigger_close": null,
@@ -1029,15 +957,27 @@
       "market": "上市",
       "trigger_date": "2026-07-31",
       "trigger_close": 250.5,
-      "price_diff": 0.0,
+      "price_diff": 2.5,
       "checks_remaining": null,
-      "price_diff_pct": 0.0,
+      "price_diff_pct": 1.0,
       "sell_date": null,
       "status": "holding"
     },
     {
       "code": "3017",
       "name": "奇鋐",
+      "market": "上市",
+      "trigger_date": "2026-07-31",
+      "trigger_close": null,
+      "price_diff": null,
+      "checks_remaining": 1,
+      "price_diff_pct": null,
+      "sell_date": null,
+      "status": "pending"
+    },
+    {
+      "code": "0050",
+      "name": "元大台灣50",
       "market": "上市",
       "trigger_date": "2026-07-31",
       "trigger_close": null,
@@ -1065,9 +1005,9 @@
       "market": "上市",
       "trigger_date": "2026-07-23",
       "trigger_close": 2285.0,
-      "price_diff": -185.0,
+      "price_diff": -190.0,
       "checks_remaining": null,
-      "price_diff_pct": -8.1,
+      "price_diff_pct": -8.32,
       "sell_date": null,
       "status": "holding"
     }
