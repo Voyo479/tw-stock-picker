@@ -1360,10 +1360,10 @@
       "market": "上櫃",
       "trigger_date": "2026-07-23",
       "trigger_close": 418.0,
-      "status": "sold",
-      "sell_date": "2026-07-27",
-      "frozen_diff": -73.0,
-      "frozen_pct": -17.46
+      "status": "holding",
+       "sell_date": null,
+      "frozen_diff": null,
+      "frozen_pct": null
     },
     {
       "code": "3665",
@@ -1371,10 +1371,10 @@
       "market": "上市",
       "trigger_date": "2026-07-23",
       "trigger_close": 2285.0,
-      "status": "sold",
-      "sell_date": "2026-07-30",
-      "frozen_diff": -375.0,
-      "frozen_pct": -16.41
+      "status": "holding",
+      "sell_date": null,
+      "frozen_diff": null,
+      "frozen_pct": null
     },
     {
       "code": "2308",
