@@ -1456,10 +1456,10 @@
       "market": "上櫃",
       "trigger_date": "2026-07-23",
       "trigger_close": 418.0,
-      "status": "sold",
-      "sell_date": "2026-08-03",
-      "frozen_diff": -113.5,
-      "frozen_pct": -27.15
+      "status": "holding",
+      "sell_date": null,
+      "frozen_diff": null,
+      "frozen_pct": null
     },
     {
       "code": "3665",
