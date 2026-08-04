@@ -1432,10 +1432,10 @@
       "market": "上櫃",
       "trigger_date": "2026-07-23",
       "trigger_close": 418.0,
-      "status": "holding",
-      "sell_date": null,
-      "frozen_diff": null,
-      "frozen_pct": null
+      "status": "sold",
+      "sell_date": "2026-08-04",
+      "frozen_diff": -113.5,
+      "frozen_pct": -27.15
     },
     {
       "code": "3665",
@@ -1449,14 +1449,6 @@
       "frozen_pct": null
     },
     {
-      "code": "3231",
-      "name": "緯創",
-      "market": "上市",
-      "mark_date": "2026-07-31",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
       "code": "2317",
       "name": "鴻海",
       "market": "上市",
@@ -1468,28 +1460,12 @@
       "frozen_pct": null
     },
     {
-      "code": "3017",
-      "name": "奇鋐",
-      "market": "上市",
-      "mark_date": "2026-07-31",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
-      "code": "0050",
-      "name": "元大台灣50",
-      "market": "上市",
-      "mark_date": "2026-07-31",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
       "code": "6488",
       "name": "環球晶",
       "market": "上櫃",
       "mark_date": "2026-08-04",
       "status": "pending",
-      "checks_remaining": 2
+      "checks_remaining": 1
     },
     {
       "code": "3711",
@@ -1497,7 +1473,7 @@
       "market": "上市",
       "mark_date": "2026-08-04",
       "status": "pending",
-      "checks_remaining": 2
+      "checks_remaining": 1
     },
     {
       "code": "4958",
@@ -1505,7 +1481,7 @@
       "market": "上市",
       "mark_date": "2026-08-04",
       "status": "pending",
-      "checks_remaining": 2
+      "checks_remaining": 1
     }
   ]
 }
