@@ -1432,10 +1432,10 @@
       "market": "上櫃",
       "trigger_date": "2026-07-23",
       "trigger_close": 418.0,
-      "status": "holding",
-      "sell_date": null,
-      "frozen_diff": null,
-      "frozen_pct": null
+      "status": "sold",
+      "sell_date": "2026-08-04",
+      "frozen_diff": -113.5,
+      "frozen_pct": -27.15
     },
     {
       "code": "3665",
@@ -1458,30 +1458,6 @@
       "sell_date": null,
       "frozen_diff": null,
       "frozen_pct": null
-    },
-    {
-      "code": "6488",
-      "name": "環球晶",
-      "market": "上櫃",
-      "mark_date": "2026-08-04",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
-      "code": "3711",
-      "name": "日月光投控",
-      "market": "上市",
-      "mark_date": "2026-08-04",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
-      "code": "4958",
-      "name": "臻鼎-KY",
-      "market": "上市",
-      "mark_date": "2026-08-04",
-      "status": "pending",
-      "checks_remaining": 1
     }
   ]
 }

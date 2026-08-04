@@ -889,42 +889,6 @@
   },
   "red_up_tracker": [
     {
-      "code": "6488",
-      "name": "環球晶",
-      "market": "上櫃",
-      "trigger_date": "2026-08-04",
-      "trigger_close": null,
-      "price_diff": null,
-      "checks_remaining": 1,
-      "price_diff_pct": null,
-      "sell_date": null,
-      "status": "pending"
-    },
-    {
-      "code": "3711",
-      "name": "日月光投控",
-      "market": "上市",
-      "trigger_date": "2026-08-04",
-      "trigger_close": null,
-      "price_diff": null,
-      "checks_remaining": 1,
-      "price_diff_pct": null,
-      "sell_date": null,
-      "status": "pending"
-    },
-    {
-      "code": "4958",
-      "name": "臻鼎-KY",
-      "market": "上市",
-      "trigger_date": "2026-08-04",
-      "trigger_close": null,
-      "price_diff": null,
-      "checks_remaining": 1,
-      "price_diff_pct": null,
-      "sell_date": null,
-      "status": "pending"
-    },
-    {
       "code": "2317",
       "name": "鴻海",
       "market": "上市",
