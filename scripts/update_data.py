@@ -1546,7 +1546,8 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
       1. 「等待確認中」的舊紀錄，先用今天的資料再檢查一次四項進場條件：
          符合 -> 正式轉為「持有中」(用今天的收盤價當進場價)
          不符合 -> 觀察窗次數-1，次數用完還沒符合就放棄這次訊號(移除，不建立任何紀錄)
-      2. 這次新觸發紅▲的股票，立刻用今天的資料檢查一次四項進場條件：
+      2. 這次新觸發紅▲的股票，如果該股票已經有一筆「持有中/觀察中」的紀錄尚未結束，
+         直接略過(不重複追蹤同一部位)；否則立刻用今天的資料檢查一次四項進場條件：
          符合 -> 直接建立為「持有中」
          不符合 -> 建立為「等待確認中」，剩餘2次機會(往後2個交易日內持續觀察)
       3. 既有「持有中」的紀錄，檢查是否跌破20MA -> 符合就標記為「已賣出」，凍結價差/百分比
@@ -1586,9 +1587,19 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
     pool["red_up_tracker"] = still_pending
 
     # 步驟2：這次新觸發紅▲的股票，立刻檢查一次(這是觀察窗的第1次機會)
+    active_codes = {
+        e["code"] for e in pool["red_up_tracker"]
+        if isinstance(e, dict) and e.get("status") in ("holding", "pending")
+    }
     for code, mark_type in marks.items():
         if mark_type != "red_up":
             continue
+
+        if code in active_codes:
+            print(f"{code} 觸發紅▲，但已經有一筆「持有中/觀察中」的紀錄尚未結束，"
+                  f"不重複建立新紀錄(避免同一部位被追蹤兩次)")
+            continue
+
         _, market, _ = find_close_in_combined_rows(combined_rows, code)
         satisfied, close = check_entry_conditions(code, today, combined_rows, pool, trading_days)
         if close is None:
@@ -1607,6 +1618,7 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
                 "frozen_diff": None,
                 "frozen_pct": None,
             })
+            active_codes.add(code)
         else:
             print(f"{code} 觸發紅▲，但今日尚未同時符合四項進場條件，"
                   f"進入等待確認觀察窗(還有{RED_UP_TRACKER_CONFIRM_WINDOW - 1}個交易日機會)")
@@ -1618,6 +1630,7 @@ def update_red_up_tracker(pool, today, combined_rows, marks):
                 "status": "pending",
                 "checks_remaining": RED_UP_TRACKER_CONFIRM_WINDOW - 1,
             })
+            active_codes.add(code)
 
     # 步驟3：更新既有「持有中」的紀錄(這次剛建立/剛確認的新紀錄，進場當下已經確認符合條件，
     # 不需要在這一輪重複檢查同一天)
