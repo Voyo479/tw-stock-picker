@@ -1638,9 +1638,7 @@
       "code": "2408",
       "name": "南亞科",
       "market": "上市",
-      "mark_date": "2026-08-05",
       "status": "holding",
-      "checks_remaining": 2,
       "trigger_date": "2026-08-06",
       "trigger_close": 445.0,
       "sell_date": null,
@@ -1670,17 +1668,6 @@
       "mark_date": "2026-08-07",
       "status": "pending",
       "checks_remaining": 2
-    },
-    {
-      "code": "2317",
-      "name": "鴻海",
-      "market": "上市",
-      "trigger_date": "2026-08-07",
-      "trigger_close": 264.5,
-      "status": "holding",
-      "sell_date": null,
-      "frozen_diff": null,
-      "frozen_pct": null
     }
   ]
 }
