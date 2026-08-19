@@ -1876,18 +1876,7 @@
     "2026-08-19": -1.2
   },
   "red_up_tracker": [
-    {
-      "code": "3665",
-      "name": "貿聯-KY",
-      "market": "上市",
-      "trigger_date": "2026-07-23",
-      "trigger_close": 2285.0,
-      "status": "sold",
-      "sell_date": "2026-08-18",
-      "frozen_diff": -150.0,
-      "frozen_pct": -6.56
-    },
-    {
+      {
       "code": "2317",
       "name": "鴻海",
       "market": "上市",
