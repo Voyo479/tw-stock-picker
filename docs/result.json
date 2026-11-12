@@ -1,419 +1,111 @@
 {
-  "update_date": "2026-11-12",
+  "update_date": "2026-11-13",
   "market_summary": {
     "taiex": {
-      "close": 44257.15,
-      "pct_change": 3.62
+      "close": 43091.87,
+      "pct_change": -2.63
     },
     "breadth": {
-      "up_count": 47,
+      "up_count": 8,
       "top_n": 50
     },
     "amount_stats": {
-      "today_amount": 1075133532600.0,
-      "day_over_day_pct": -13.31,
-      "five_day_pct": 239.71,
-      "twenty_day_pct": 1623.83
+      "today_amount": 1329259510721.0,
+      "day_over_day_pct": 23.64,
+      "five_day_pct": 213.4,
+      "twenty_day_pct": 1789.99
     },
     "capital_guidance": {
-      "core1_cap_slots": 3,
+      "core1_cap_slots": 2,
       "core2_cap_slots": 1,
-      "base_cap_slots": 4,
+      "base_cap_slots": 3,
       "weakness_streak_days": 0,
       "override_cap_slots": null,
-      "final_cap_slots": 4,
-      "suggested_capital_pct": 80
+      "final_cap_slots": 3,
+      "suggested_capital_pct": 60
     }
   },
   "market_movers": [
     {
-      "code": "3026",
-      "name": "禾伸堂",
-      "close": 561.0,
-      "change": 51.0,
-      "trade_value": 11090774823.0,
-      "market": "上市",
-      "pct_change": 10.0,
-      "market_share_pct": 1.0316,
-      "score": 7.3095,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "3443",
-      "name": "創意",
-      "close": 7885.0,
-      "change": 715.0,
-      "trade_value": 17289927315.0,
-      "market": "上市",
-      "pct_change": 9.9721059972106,
-      "market_share_pct": 1.6082,
-      "score": 7.4629,
-      "themes": [
-        "半導體業"
-      ]
-    },
-    {
-      "code": "3374",
-      "name": "精材",
-      "close": 466.5,
-      "change": 42.0,
-      "trade_value": 10615536110.0,
-      "market": "上櫃",
-      "pct_change": 9.89399293286219,
-      "market_share_pct": 0.9874,
-      "score": 7.222,
-      "themes": [
-        "半導體業"
-      ]
-    },
-    {
       "code": "1802",
       "name": "台玻",
-      "close": 76.7,
-      "change": 6.9,
-      "trade_value": 19821086242.0,
+      "close": 81.7,
+      "change": 5.0,
+      "trade_value": 40093337178.0,
       "market": "上市",
-      "pct_change": 9.885386819484241,
-      "market_share_pct": 1.8436,
-      "score": 7.4728,
+      "pct_change": 6.51890482398957,
+      "market_share_pct": 3.0162,
+      "score": 5.4681,
       "themes": [
         "玻璃陶瓷"
       ]
     },
     {
-      "code": "1815",
-      "name": "富喬",
-      "close": 140.5,
-      "change": 12.5,
-      "trade_value": 16750576770.0,
+      "code": "6223",
+      "name": "旺矽",
+      "close": 4655.0,
+      "change": 175.0,
+      "trade_value": 12238285765.0,
       "market": "上櫃",
-      "pct_change": 9.765625,
-      "market_share_pct": 1.558,
-      "score": 7.3033,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "3017",
-      "name": "奇鋐",
-      "close": 3040.0,
-      "change": 250.0,
-      "trade_value": 11985793205.0,
-      "market": "上市",
-      "pct_change": 8.960573476702509,
-      "market_share_pct": 1.1148,
-      "score": 6.6068,
-      "themes": [
-        "電腦及週邊設備業"
-      ]
-    },
-    {
-      "code": "1303",
-      "name": "南亞",
-      "close": 313.0,
-      "change": 24.0,
-      "trade_value": 53005622423.0,
-      "market": "上市",
-      "pct_change": 8.304498269896193,
-      "market_share_pct": 4.9301,
-      "score": 7.2922,
-      "themes": [
-        "塑膠工業"
-      ]
-    },
-    {
-      "code": "6274",
-      "name": "台燿",
-      "close": 1060.0,
-      "change": 78.0,
-      "trade_value": 12768065344.0,
-      "market": "上櫃",
-      "pct_change": 7.942973523421588,
-      "market_share_pct": 1.1876,
-      "score": 5.9164,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "00631L",
-      "name": "元大台灣50正2",
-      "close": 32.53,
-      "change": 2.28,
-      "trade_value": 13069882392.0,
-      "market": "上市",
-      "pct_change": 7.537190082644628,
-      "market_share_pct": 1.2157,
-      "score": 5.6407,
-      "themes": []
-    },
-    {
-      "code": "3105",
-      "name": "穩懋",
-      "close": 521.0,
-      "change": 36.5,
-      "trade_value": 15726725583.0,
-      "market": "上櫃",
-      "pct_change": 7.533539731682147,
-      "market_share_pct": 1.4628,
-      "score": 5.7123,
+      "pct_change": 3.90625,
+      "market_share_pct": 0.9207,
+      "score": 3.0106,
       "themes": [
         "半導體業"
       ]
     },
     {
-      "code": "3653",
-      "name": "健策",
-      "close": 6225.0,
-      "change": 435.0,
-      "trade_value": 23168032205.0,
+      "code": "2409",
+      "name": "友達",
+      "close": 29.2,
+      "change": 0.55,
+      "trade_value": 12666799784.0,
       "market": "上市",
-      "pct_change": 7.512953367875648,
-      "market_share_pct": 2.1549,
-      "score": 5.9055,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "8046",
-      "name": "南電",
-      "close": 1080.0,
-      "change": 75.0,
-      "trade_value": 13295356241.0,
-      "market": "上市",
-      "pct_change": 7.462686567164178,
-      "market_share_pct": 1.2366,
-      "score": 5.5949,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "4958",
-      "name": "臻鼎-KY",
-      "close": 461.0,
-      "change": 30.5,
-      "trade_value": 13140397674.0,
-      "market": "上市",
-      "pct_change": 7.084785133565622,
-      "market_share_pct": 1.2222,
-      "score": 5.326,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "2368",
-      "name": "金像電",
-      "close": 1050.0,
-      "change": 67.0,
-      "trade_value": 14616927605.0,
-      "market": "上市",
-      "pct_change": 6.8158697863682605,
-      "market_share_pct": 1.3595,
-      "score": 5.179,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "3661",
-      "name": "世芯-KY",
-      "close": 3650.0,
-      "change": 230.0,
-      "trade_value": 14086410070.0,
-      "market": "上市",
-      "pct_change": 6.725146198830409,
-      "market_share_pct": 1.3102,
-      "score": 5.1007,
-      "themes": [
-        "半導體業"
-      ]
-    },
-    {
-      "code": "8358",
-      "name": "金居",
-      "close": 388.5,
-      "change": 22.5,
-      "trade_value": 8515131111.0,
-      "market": "上櫃",
-      "pct_change": 6.147540983606557,
-      "market_share_pct": 0.792,
-      "score": 4.5409,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "3008",
-      "name": "大立光",
-      "close": 5325.0,
-      "change": 260.0,
-      "trade_value": 9016949150.0,
-      "market": "上市",
-      "pct_change": 5.133267522211254,
-      "market_share_pct": 0.8387,
-      "score": 3.8449,
+      "pct_change": 1.9197207678883075,
+      "market_share_pct": 0.9529,
+      "score": 1.6297,
       "themes": [
         "光電業"
       ]
     },
     {
-      "code": "2330",
-      "name": "台積電",
-      "close": 2395.0,
-      "change": 110.0,
-      "trade_value": 77900786705.0,
-      "market": "上市",
-      "pct_change": 4.814004376367615,
-      "market_share_pct": 7.2457,
-      "score": 5.5435,
-      "themes": [
-        "半導體業",
-        "AI伺服器供應鏈"
-      ]
-    },
-    {
-      "code": "3037",
-      "name": "欣興",
-      "close": 864.0,
-      "change": 36.0,
-      "trade_value": 25311818545.0,
-      "market": "上市",
-      "pct_change": 4.3478260869565215,
-      "market_share_pct": 2.3543,
-      "score": 3.7498,
-      "themes": [
-        "電子零組件業",
-        "AI伺服器供應鏈"
-      ]
-    },
-    {
-      "code": "2454",
-      "name": "聯發科",
-      "close": 3990.0,
-      "change": 160.0,
-      "trade_value": 41817911522.0,
-      "market": "上市",
-      "pct_change": 4.177545691906006,
-      "market_share_pct": 3.8896,
-      "score": 4.0911,
-      "themes": [
-        "半導體業",
-        "AI概念"
-      ]
-    },
-    {
-      "code": "0050",
-      "name": "元大台灣50",
-      "close": 103.2,
+      "code": "2313",
+      "name": "華通",
+      "close": 196.0,
       "change": 3.5,
-      "trade_value": 12595528482.0,
+      "trade_value": 11780404881.0,
       "market": "上市",
-      "pct_change": 3.510531594784353,
-      "market_share_pct": 1.1715,
-      "score": 2.8088,
-      "themes": []
-    },
-    {
-      "code": "2303",
-      "name": "聯電",
-      "close": 104.0,
-      "change": 3.5,
-      "trade_value": 8725294515.0,
-      "market": "上市",
-      "pct_change": 3.482587064676617,
-      "market_share_pct": 0.8116,
-      "score": 2.6813,
-      "themes": [
-        "半導體業"
-      ]
-    },
-    {
-      "code": "2383",
-      "name": "台光電",
-      "close": 4500.0,
-      "change": 135.0,
-      "trade_value": 17555631705.0,
-      "market": "上市",
-      "pct_change": 3.0927835051546393,
-      "market_share_pct": 1.6329,
-      "score": 2.6548,
+      "pct_change": 1.8181818181818181,
+      "market_share_pct": 0.8862,
+      "score": 1.5386,
       "themes": [
         "電子零組件業"
       ]
     },
     {
-      "code": "2408",
-      "name": "南亞科",
-      "close": 394.0,
-      "change": 11.0,
-      "trade_value": 19097654341.0,
-      "market": "上市",
-      "pct_change": 2.8720626631853787,
-      "market_share_pct": 1.7763,
-      "score": 2.5433,
+      "code": "3374",
+      "name": "精材",
+      "close": 472.0,
+      "change": 5.5,
+      "trade_value": 15234205880.0,
+      "market": "上櫃",
+      "pct_change": 1.1789924973204717,
+      "market_share_pct": 1.1461,
+      "score": 1.1691,
       "themes": [
         "半導體業"
       ]
     },
     {
-      "code": "3711",
-      "name": "日月光投控",
-      "close": 617.0,
-      "change": 12.0,
-      "trade_value": 12023206719.0,
+      "code": "3661",
+      "name": "世芯-KY",
+      "close": 3675.0,
+      "change": 25.0,
+      "trade_value": 20285118575.0,
       "market": "上市",
-      "pct_change": 1.9834710743801653,
-      "market_share_pct": 1.1183,
-      "score": 1.7239,
-      "themes": [
-        "半導體業"
-      ]
-    },
-    {
-      "code": "2327",
-      "name": "國巨*",
-      "close": 424.5,
-      "change": 8.0,
-      "trade_value": 18889916491.0,
-      "market": "上市",
-      "pct_change": 1.9207683073229291,
-      "market_share_pct": 1.757,
-      "score": 1.8716,
-      "themes": [
-        "電子零組件業"
-      ]
-    },
-    {
-      "code": "2308",
-      "name": "台達電",
-      "close": 1295.0,
-      "change": 20.0,
-      "trade_value": 26119682575.0,
-      "market": "上市",
-      "pct_change": 1.5686274509803921,
-      "market_share_pct": 2.4294,
-      "score": 1.8269,
-      "themes": [
-        "電子零組件業",
-        "AI伺服器供應鏈"
-      ]
-    },
-    {
-      "code": "2344",
-      "name": "華邦電",
-      "close": 136.5,
-      "change": 1.5,
-      "trade_value": 9110851162.0,
-      "market": "上市",
-      "pct_change": 1.1111111111111112,
-      "market_share_pct": 0.8474,
-      "score": 1.032,
+      "pct_change": 0.684931506849315,
+      "market_share_pct": 1.526,
+      "score": 0.9373,
       "themes": [
         "半導體業"
       ]
@@ -421,54 +113,39 @@
   ],
   "core1": {
     "range": {
-      "start": "2026-11-05",
-      "end": "2026-11-12",
+      "start": "2026-11-06",
+      "end": "2026-11-13",
       "days": 5
     },
     "list": [
       {
         "code": "1303",
         "name": "南亞",
-        "score": 24.4264,
+        "score": 22.3166,
         "mark": null,
-        "price": 313.0,
-        "pct_change": 8.3045,
+        "price": 293.0,
+        "pct_change": -6.3898,
         "market": "上市",
         "themes": [
           "塑膠工業"
         ],
-        "relative_strength": 4.68,
-        "volume_ratio": 1.55,
+        "relative_strength": -3.76,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "3443",
-        "name": "創意",
-        "score": 23.4097,
+        "code": "1802",
+        "name": "台玻",
+        "score": 20.174599999999998,
         "mark": null,
-        "price": 7885.0,
-        "pct_change": 9.9721,
+        "price": 81.7,
+        "pct_change": 6.5189,
         "market": "上市",
         "themes": [
-          "半導體業"
+          "玻璃陶瓷"
         ],
-        "relative_strength": 6.35,
-        "volume_ratio": 0.85,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "3653",
-        "name": "健策",
-        "score": 19.6699,
-        "mark": null,
-        "price": 6225.0,
-        "pct_change": 7.513,
-        "market": "上市",
-        "themes": [
-          "電子零組件業"
-        ],
-        "relative_strength": 3.89,
-        "volume_ratio": 1.52,
+        "relative_strength": 9.15,
+        "volume_ratio": 2.77,
         "volume_drop_warning": false
       },
       {
@@ -476,60 +153,29 @@
         "name": "金像電",
         "score": 19.6205,
         "mark": null,
-        "price": 1050.0,
-        "pct_change": 6.8159,
+        "price": 975.0,
+        "pct_change": -7.1429,
         "market": "上市",
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": 3.2,
-        "volume_ratio": 1.04,
+        "relative_strength": -4.51,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "2454",
-        "name": "聯發科",
-        "score": 17.9261,
+        "code": "3443",
+        "name": "創意",
+        "score": 19.5294,
         "mark": null,
-        "price": 3990.0,
-        "pct_change": 4.1775,
+        "price": 7860.0,
+        "pct_change": -0.3171,
         "market": "上市",
         "themes": [
-          "半導體業",
-          "AI概念"
+          "半導體業"
         ],
-        "relative_strength": 0.56,
-        "volume_ratio": 0.86,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "8046",
-        "name": "南電",
-        "score": 17.2496,
-        "mark": null,
-        "price": 1080.0,
-        "pct_change": 7.4627,
-        "market": "上市",
-        "themes": [
-          "電子零組件業"
-        ],
-        "relative_strength": 3.84,
-        "volume_ratio": 1.07,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "1815",
-        "name": "富喬",
-        "score": 17.1335,
-        "mark": null,
-        "price": 140.5,
-        "pct_change": 9.7656,
-        "market": "上櫃",
-        "themes": [
-          "電子零組件業"
-        ],
-        "relative_strength": 6.15,
-        "volume_ratio": 0.91,
+        "relative_strength": 2.31,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
@@ -537,15 +183,15 @@
         "name": "台達電",
         "score": 16.8261,
         "mark": null,
-        "price": 1295.0,
-        "pct_change": 1.5686,
+        "price": 1240.0,
+        "pct_change": -4.2471,
         "market": "上市",
         "themes": [
           "電子零組件業",
           "AI伺服器供應鏈"
         ],
-        "relative_strength": -2.05,
-        "volume_ratio": 1.34,
+        "relative_strength": -1.62,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
@@ -553,27 +199,12 @@
         "name": "元大台灣50正2",
         "score": 16.6637,
         "mark": null,
-        "price": 32.53,
-        "pct_change": 7.5372,
+        "price": 30.99,
+        "pct_change": -4.7341,
         "market": "上市",
         "themes": [],
-        "relative_strength": 3.92,
-        "volume_ratio": 0.86,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "2383",
-        "name": "台光電",
-        "score": 16.642200000000003,
-        "mark": null,
-        "price": 4500.0,
-        "pct_change": 3.0928,
-        "market": "上市",
-        "themes": [
-          "電子零組件業"
-        ],
-        "relative_strength": -0.53,
-        "volume_ratio": 0.9,
+        "relative_strength": -2.1,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
@@ -581,14 +212,45 @@
         "name": "臻鼎-KY",
         "score": 16.3602,
         "mark": null,
-        "price": 461.0,
-        "pct_change": 7.0848,
+        "price": 430.0,
+        "pct_change": -6.7245,
         "market": "上市",
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": 3.46,
-        "volume_ratio": 0.91,
+        "relative_strength": -4.09,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "8046",
+        "name": "南電",
+        "score": 16.2848,
+        "mark": null,
+        "price": 972.0,
+        "pct_change": -10.0,
+        "market": "上市",
+        "themes": [
+          "電子零組件業"
+        ],
+        "relative_strength": -7.37,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "2454",
+        "name": "聯發科",
+        "score": 15.9131,
+        "mark": null,
+        "price": 3850.0,
+        "pct_change": -3.5088,
+        "market": "上市",
+        "themes": [
+          "半導體業",
+          "AI概念"
+        ],
+        "relative_strength": -0.88,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
@@ -596,15 +258,15 @@
         "name": "台積電",
         "score": 15.4522,
         "mark": null,
-        "price": 2395.0,
-        "pct_change": 4.814,
+        "price": 2340.0,
+        "pct_change": -2.2965,
         "market": "上市",
         "themes": [
           "半導體業",
           "AI伺服器供應鏈"
         ],
-        "relative_strength": 1.19,
-        "volume_ratio": 1.11,
+        "relative_strength": 0.33,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
@@ -612,65 +274,95 @@
         "name": "欣興",
         "score": 14.7246,
         "mark": null,
-        "price": 864.0,
-        "pct_change": 4.3478,
+        "price": 792.0,
+        "pct_change": -8.3333,
         "market": "上市",
         "themes": [
           "電子零組件業",
           "AI伺服器供應鏈"
         ],
-        "relative_strength": 0.73,
-        "volume_ratio": 1.15,
+        "relative_strength": -5.7,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "1802",
-        "name": "台玻",
-        "score": 14.7065,
+        "code": "3653",
+        "name": "健策",
+        "score": 14.4418,
         "mark": null,
-        "price": 76.7,
-        "pct_change": 9.8854,
+        "price": 5605.0,
+        "pct_change": -9.9598,
         "market": "上市",
         "themes": [
-          "玻璃陶瓷"
+          "電子零組件業"
         ],
-        "relative_strength": 6.27,
-        "volume_ratio": 1.48,
+        "relative_strength": -7.33,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "6274",
-        "name": "台燿",
-        "score": 14.683900000000001,
-        "mark": "red_up",
-        "price": 1060.0,
-        "pct_change": 7.943,
+        "code": "1815",
+        "name": "富喬",
+        "score": 14.419,
+        "mark": null,
+        "price": 137.0,
+        "pct_change": -2.4911,
         "market": "上櫃",
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": 4.32,
-        "volume_ratio": 0.8,
+        "relative_strength": 0.14,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3017",
+        "name": "奇鋐",
+        "score": 13.7839,
+        "mark": null,
+        "price": 2775.0,
+        "pct_change": -8.7171,
+        "market": "上市",
+        "themes": [
+          "電腦及週邊設備業"
+        ],
+        "relative_strength": -6.09,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "2383",
+        "name": "台光電",
+        "score": 13.5374,
+        "mark": null,
+        "price": 4105.0,
+        "pct_change": -8.7778,
+        "market": "上市",
+        "themes": [
+          "電子零組件業"
+        ],
+        "relative_strength": -6.15,
+        "volume_ratio": null,
         "volume_drop_warning": false
       }
     ],
     "heat": {
-      "average": 32.2,
-      "level": 4,
-      "label": "短線市場樂觀",
+      "average": 29.6,
+      "level": 3,
+      "label": "短線市場震盪",
       "sample_days": 5,
       "top_n": 50,
       "range": {
-        "start": "2026-11-05",
-        "end": "2026-11-12",
+        "start": "2026-11-06",
+        "end": "2026-11-13",
         "days": 5
       }
     },
     "sector_summary": [
       {
         "sector": "電子零組件業",
-        "count": 9,
-        "percentage": 60.0
+        "count": 8,
+        "percentage": 53.3
       },
       {
         "sector": "半導體業",
@@ -686,273 +378,272 @@
   },
   "core2": {
     "range": {
-      "start": "2026-10-08",
-      "end": "2026-11-12",
+      "start": "2026-10-09",
+      "end": "2026-11-13",
       "days": 20
     },
     "list": [
       {
         "code": "5274",
         "name": "信驊",
-        "discounted_slope": 2812655773.3499994,
+        "discounted_slope": 2531390196.0149994,
         "appearance_count": 2,
         "mark": null,
-        "price": 12555.0,
-        "pct_change": 5.1948,
+        "price": 11955.0,
+        "pct_change": -4.779,
         "market": "上櫃",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 1.57,
+        "relative_strength": -2.15,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "2603",
-        "name": "長榮",
-        "discounted_slope": 1295231014.8829255,
+        "code": "6213",
+        "name": "聯茂",
+        "discounted_slope": 2402032630.799008,
         "appearance_count": 2,
         "mark": null,
-        "price": 257.5,
-        "pct_change": 0.7828,
+        "price": 522.0,
+        "pct_change": -10.0,
         "market": "上市",
         "themes": [
-          "航運業"
+          "電子零組件業"
         ],
-        "relative_strength": -2.84,
+        "relative_strength": -7.37,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
         "code": "3189",
         "name": "景碩",
-        "discounted_slope": 1124738169.2870688,
-        "appearance_count": 7,
+        "discounted_slope": 1212434814.5571651,
+        "appearance_count": 6,
         "mark": null,
-        "price": 741.0,
-        "pct_change": -0.5369,
+        "price": 667.0,
+        "pct_change": -9.9865,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": -4.16,
+        "relative_strength": -7.36,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "2603",
+        "name": "長榮",
+        "discounted_slope": 1165707913.3946335,
+        "appearance_count": 2,
+        "mark": null,
+        "price": 251.5,
+        "pct_change": -2.3301,
+        "market": "上市",
+        "themes": [
+          "航運業"
+        ],
+        "relative_strength": 0.3,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
         "code": "0050",
         "name": "元大台灣50",
-        "discounted_slope": 1022947098.2139754,
+        "discounted_slope": 920652388.3925781,
         "appearance_count": 4,
         "mark": null,
-        "price": 103.2,
-        "pct_change": 3.5105,
+        "price": 100.95,
+        "pct_change": -2.1802,
         "market": "上市",
         "themes": [],
-        "relative_strength": -0.11,
-        "volume_ratio": 0.62,
+        "relative_strength": 0.45,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "6213",
-        "name": "聯茂",
-        "discounted_slope": 899648735.7927318,
-        "appearance_count": 3,
+        "code": "3374",
+        "name": "精材",
+        "discounted_slope": 838168787.6804943,
+        "appearance_count": 5,
         "mark": null,
-        "price": 580.0,
-        "pct_change": 9.8485,
-        "market": "上市",
+        "price": 472.0,
+        "pct_change": 1.179,
+        "market": "上櫃",
         "themes": [
-          "電子零組件業"
+          "半導體業"
         ],
-        "relative_strength": 6.23,
-        "volume_ratio": null,
+        "relative_strength": 3.81,
+        "volume_ratio": 1.14,
         "volume_drop_warning": false
       },
       {
         "code": "2408",
         "name": "南亞科",
-        "discounted_slope": 863087969.7428596,
+        "discounted_slope": 776779172.7685736,
         "appearance_count": 10,
         "mark": null,
-        "price": 394.0,
-        "pct_change": 2.8721,
+        "price": 379.5,
+        "pct_change": -3.6802,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": -0.75,
-        "volume_ratio": 0.89,
+        "relative_strength": -1.05,
+        "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "3105",
-        "name": "穩懋",
-        "discounted_slope": 801431901.1512681,
-        "appearance_count": 6,
+        "code": "2327",
+        "name": "國巨*",
+        "discounted_slope": 766131349.9983872,
+        "appearance_count": 8,
         "mark": null,
-        "price": 521.0,
-        "pct_change": 7.5335,
-        "market": "上櫃",
-        "themes": [
-          "半導體業"
-        ],
-        "relative_strength": 3.91,
-        "volume_ratio": 0.96,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "3711",
-        "name": "日月光投控",
-        "discounted_slope": 798228683.7873732,
-        "appearance_count": 9,
-        "mark": "green_down",
-        "price": 617.0,
-        "pct_change": 1.9835,
+        "price": 407.0,
+        "pct_change": -4.1225,
         "market": "上市",
         "themes": [
-          "半導體業"
+          "電子零組件業"
         ],
-        "relative_strength": -1.64,
-        "volume_ratio": 0.79,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "6770",
-        "name": "力積電",
-        "discounted_slope": 706536287.2619238,
-        "appearance_count": 2,
-        "mark": null,
-        "price": 58.5,
-        "pct_change": -1.1824,
-        "market": "上市",
-        "themes": [
-          "半導體業"
-        ],
-        "relative_strength": -4.8,
+        "relative_strength": -1.49,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
         "code": "3661",
         "name": "世芯-KY",
-        "discounted_slope": 659766984.9205899,
+        "discounted_slope": 739620100.3099512,
         "appearance_count": 5,
         "mark": null,
-        "price": 3650.0,
-        "pct_change": 6.7251,
+        "price": 3675.0,
+        "pct_change": 0.6849,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": 3.11,
-        "volume_ratio": 0.84,
+        "relative_strength": 3.31,
+        "volume_ratio": 1.25,
         "volume_drop_warning": false
       },
       {
-        "code": "2327",
-        "name": "國巨*",
-        "discounted_slope": 648075634.2107207,
+        "code": "3105",
+        "name": "穩懋",
+        "discounted_slope": 721288711.0361414,
+        "appearance_count": 6,
+        "mark": null,
+        "price": 517.0,
+        "pct_change": -0.7678,
+        "market": "上櫃",
+        "themes": [
+          "半導體業"
+        ],
+        "relative_strength": 1.86,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "3711",
+        "name": "日月光投控",
+        "discounted_slope": 718405815.408636,
         "appearance_count": 9,
         "mark": null,
-        "price": 424.5,
-        "pct_change": 1.9208,
+        "price": 586.0,
+        "pct_change": -5.0243,
         "market": "上市",
+        "themes": [
+          "半導體業"
+        ],
+        "relative_strength": -2.39,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "6274",
+        "name": "台燿",
+        "discounted_slope": 701094301.8613932,
+        "appearance_count": 9,
+        "mark": "green_down",
+        "price": 956.0,
+        "pct_change": -9.8113,
+        "market": "上櫃",
         "themes": [
           "電子零組件業"
         ],
-        "relative_strength": -1.7,
-        "volume_ratio": 0.78,
+        "relative_strength": -7.18,
+        "volume_ratio": null,
+        "volume_drop_warning": false
+      },
+      {
+        "code": "2409",
+        "name": "友達",
+        "discounted_slope": 655037030.5129955,
+        "appearance_count": 6,
+        "mark": "green_down",
+        "price": 29.2,
+        "pct_change": 1.9197,
+        "market": "上市",
+        "themes": [
+          "光電業"
+        ],
+        "relative_strength": 4.55,
+        "volume_ratio": 1.13,
         "volume_drop_warning": false
       },
       {
         "code": "2303",
         "name": "聯電",
-        "discounted_slope": 604193537.9926162,
-        "appearance_count": 7,
+        "discounted_slope": 651541399.8139886,
+        "appearance_count": 6,
         "mark": null,
-        "price": 104.0,
-        "pct_change": 3.4826,
+        "price": 101.0,
+        "pct_change": -2.8846,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": -0.14,
-        "volume_ratio": 0.51,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "3374",
-        "name": "精材",
-        "discounted_slope": 585106383.0686439,
-        "appearance_count": 4,
-        "mark": null,
-        "price": 466.5,
-        "pct_change": 9.894,
-        "market": "上櫃",
-        "themes": [
-          "半導體業"
-        ],
-        "relative_strength": 6.27,
-        "volume_ratio": 0.74,
-        "volume_drop_warning": false
-      },
-      {
-        "code": "2317",
-        "name": "鴻海",
-        "discounted_slope": 575992417.1517124,
-        "appearance_count": 7,
-        "mark": "green_down",
-        "price": 242.0,
-        "pct_change": 0.207,
-        "market": "上市",
-        "themes": [
-          "其他電子業",
-          "AI伺服器組裝"
-        ],
-        "relative_strength": -3.41,
+        "relative_strength": -0.25,
         "volume_ratio": null,
         "volume_drop_warning": false
       },
       {
-        "code": "2344",
-        "name": "華邦電",
-        "discounted_slope": 566426303.6048404,
-        "appearance_count": 5,
+        "code": "6770",
+        "name": "力積電",
+        "discounted_slope": 635882658.5357313,
+        "appearance_count": 2,
         "mark": null,
-        "price": 136.5,
-        "pct_change": 1.1111,
+        "price": 56.1,
+        "pct_change": -4.1026,
         "market": "上市",
         "themes": [
           "半導體業"
         ],
-        "relative_strength": -2.51,
-        "volume_ratio": 0.83,
+        "relative_strength": -1.47,
+        "volume_ratio": null,
         "volume_drop_warning": false
       }
     ],
     "heat": {
-      "average": 23.4,
+      "average": 22.6,
       "level": 3,
       "label": "中期市場震盪",
       "sample_days": 20,
       "top_n": 50,
       "range": {
-        "start": "2026-10-08",
-        "end": "2026-11-12",
+        "start": "2026-10-09",
+        "end": "2026-11-13",
         "days": 20
       }
     },
     "sector_summary": [
       {
         "sector": "半導體業",
-        "count": 10,
-        "percentage": 66.7
+        "count": 9,
+        "percentage": 60.0
       },
       {
         "sector": "電子零組件業",
-        "count": 2,
-        "percentage": 13.3
+        "count": 3,
+        "percentage": 20.0
       },
       {
         "sector": "航運業",
@@ -963,58 +654,22 @@
   },
   "red_up_tracker": [
     {
+      "code": "1802",
+      "name": "台玻",
+      "market": "上市",
+      "trigger_date": "2026-11-13",
+      "trigger_close": 81.7,
+      "price_diff": 0.0,
+      "checks_remaining": 1,
+      "price_diff_pct": 0.0,
+      "sell_date": null,
+      "status": "holding"
+    },
+    {
       "code": "6274",
       "name": "台燿",
       "market": "上櫃",
       "trigger_date": "2026-11-12",
-      "trigger_close": null,
-      "price_diff": null,
-      "checks_remaining": 2,
-      "price_diff_pct": null,
-      "sell_date": null,
-      "status": "pending"
-    },
-    {
-      "code": "8046",
-      "name": "南電",
-      "market": "上市",
-      "trigger_date": "2026-11-11",
-      "trigger_close": null,
-      "price_diff": null,
-      "checks_remaining": 1,
-      "price_diff_pct": null,
-      "sell_date": null,
-      "status": "pending"
-    },
-    {
-      "code": "3037",
-      "name": "欣興",
-      "market": "上市",
-      "trigger_date": "2026-11-11",
-      "trigger_close": null,
-      "price_diff": null,
-      "checks_remaining": 1,
-      "price_diff_pct": null,
-      "sell_date": null,
-      "status": "pending"
-    },
-    {
-      "code": "2330",
-      "name": "台積電",
-      "market": "上市",
-      "trigger_date": "2026-11-11",
-      "trigger_close": null,
-      "price_diff": null,
-      "checks_remaining": 1,
-      "price_diff_pct": null,
-      "sell_date": null,
-      "status": "pending"
-    },
-    {
-      "code": "1802",
-      "name": "台玻",
-      "market": "上市",
-      "trigger_date": "2026-11-11",
       "trigger_close": null,
       "price_diff": null,
       "checks_remaining": 1,
