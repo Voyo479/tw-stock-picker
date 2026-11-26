@@ -1,16 +1,15 @@
 {
   "reference_check": {
     "2330": {
-      "close": 2230.0,
-      "volume": 13213039.0
+      "close": 2150.0,
+      "volume": 84911914.0
     },
     "2454": {
-      "close": 4050.0,
-      "volume": 1381792.0
+      "close": 3645.0,
+      "volume": 23694057.0
     }
   },
   "trading_days": [
-    "2026-10-06",
     "2026-10-07",
     "2026-10-08",
     "2026-10-09",
@@ -39,13 +38,13 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-26"
   ],
   "stocks": {
     "2327": {
       "name": "國巨*",
       "history": {
-        "2026-10-06": 0.8459,
         "2026-10-08": 3.8978,
         "2026-10-13": 0.5568,
         "2026-10-15": 4.0086,
@@ -59,7 +58,6 @@
         "2026-11-24": 3.8336
       },
       "trade_value_history": {
-        "2026-10-06": 43058996053.0,
         "2026-10-08": 61232598759.0,
         "2026-10-13": 16527292385.0,
         "2026-10-15": 29451592481.0,
@@ -74,14 +72,13 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core2",
-      "last_close": 341.0,
-      "last_pct_change": 10.0,
+      "last_close": 309.0,
+      "last_pct_change": -9.3842,
       "market": "上市"
     },
     "2408": {
       "name": "南亞科",
       "history": {
-        "2026-10-06": 0.969,
         "2026-10-09": 3.3253,
         "2026-10-16": 1.8013,
         "2026-10-22": 2.7902,
@@ -95,7 +92,6 @@
         "2026-11-24": 4.837
       },
       "trade_value_history": {
-        "2026-10-06": 22229040725.0,
         "2026-10-09": 34277400374.0,
         "2026-10-16": 21292454327.0,
         "2026-10-22": 13925750403.0,
@@ -110,14 +106,13 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core2",
-      "last_close": 309.0,
-      "last_pct_change": 9.9644,
+      "last_close": 278.5,
+      "last_pct_change": -9.8706,
       "market": "上市"
     },
     "3037": {
       "name": "欣興",
       "history": {
-        "2026-10-06": 1.7984,
         "2026-10-15": 0.8019,
         "2026-10-16": 1.3843,
         "2026-10-20": 2.3051,
@@ -131,7 +126,6 @@
         "2026-11-24": 3.311
       },
       "trade_value_history": {
-        "2026-10-06": 36937724775.0,
         "2026-10-15": 20205012160.0,
         "2026-10-16": 16462165760.0,
         "2026-10-20": 13565771100.0,
@@ -146,14 +140,13 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core2",
-      "last_close": 613.0,
-      "last_pct_change": 9.8566,
+      "last_close": 585.0,
+      "last_pct_change": -4.5677,
       "market": "上市"
     },
     "8046": {
       "name": "南電",
       "history": {
-        "2026-10-06": 2.1247,
         "2026-10-07": 0.7358,
         "2026-10-16": 0.8318,
         "2026-10-20": 1.5864,
@@ -166,7 +159,6 @@
         "2026-11-24": 4.8853
       },
       "trade_value_history": {
-        "2026-10-06": 22733712050.0,
         "2026-10-07": 11587744108.0,
         "2026-10-16": 12577476535.0,
         "2026-10-20": 10568447285.0,
@@ -180,14 +172,13 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core2",
-      "last_close": 737.0,
-      "last_pct_change": 10.0,
+      "last_close": 665.0,
+      "last_pct_change": -9.7693,
       "market": "上市"
     },
     "2344": {
       "name": "華邦電",
       "history": {
-        "2026-10-06": 1.1009,
         "2026-10-15": 1.7504,
         "2026-10-28": 4.1214,
         "2026-10-29": 4.2585,
@@ -196,7 +187,6 @@
         "2026-11-24": 5.2018
       },
       "trade_value_history": {
-        "2026-10-06": 16225709097.0,
         "2026-10-15": 9333372910.0,
         "2026-10-28": 10855180025.0,
         "2026-10-29": 11938974340.0,
@@ -206,14 +196,13 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core2",
-      "last_close": 105.0,
-      "last_pct_change": 9.9476,
+      "last_close": 94.5,
+      "last_pct_change": -10.0,
       "market": "上市"
     },
     "3711": {
       "name": "日月光投控",
       "history": {
-        "2026-10-06": 3.1095,
         "2026-10-09": 1.4463,
         "2026-10-13": 2.0187,
         "2026-10-15": 0.9161,
@@ -229,7 +218,6 @@
         "2026-11-25": 7.1952
       },
       "trade_value_history": {
-        "2026-10-06": 13353811094.0,
         "2026-10-09": 11716900652.0,
         "2026-10-13": 12035039565.0,
         "2026-10-15": 10155876182.0,
@@ -246,14 +234,13 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 530.0,
-      "last_pct_change": 9.9585,
+      "last_close": 488.0,
+      "last_pct_change": -7.9245,
       "market": "上市"
     },
     "4958": {
       "name": "臻鼎-KY",
       "history": {
-        "2026-10-06": 2.5193,
         "2026-10-08": 3.0495,
         "2026-10-16": 5.5113,
         "2026-10-21": 0.497,
@@ -267,7 +254,6 @@
         "2026-11-24": 5.0709
       },
       "trade_value_history": {
-        "2026-10-06": 32967295514.0,
         "2026-10-08": 20860960795.0,
         "2026-10-16": 15593790437.0,
         "2026-10-21": 16664479049.0,
@@ -282,8 +268,8 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core1",
-      "last_close": 364.5,
-      "last_pct_change": 9.9548,
+      "last_close": 328.5,
+      "last_pct_change": -9.8765,
       "market": "上市"
     },
     "3026": {
@@ -306,8 +292,8 @@
       },
       "last_seen": "2026-11-12",
       "last_classification": "core1",
-      "last_close": 363.0,
-      "last_pct_change": 10.0,
+      "last_close": 331.0,
+      "last_pct_change": -8.8154,
       "market": "上市"
     },
     "2409": {
@@ -332,14 +318,13 @@
       },
       "last_seen": "2026-11-13",
       "last_classification": "core2",
-      "last_close": 26.5,
-      "last_pct_change": 9.9585,
+      "last_close": 24.15,
+      "last_pct_change": -8.8679,
       "market": "上市"
     },
     "2317": {
       "name": "鴻海",
       "history": {
-        "2026-10-06": 1.0999,
         "2026-10-07": 1.1296,
         "2026-10-16": 1.6196,
         "2026-10-22": 2.8379,
@@ -354,7 +339,6 @@
         "2026-11-25": 7.2439
       },
       "trade_value_history": {
-        "2026-10-06": 13397868878.0,
         "2026-10-07": 25047906699.0,
         "2026-10-16": 12294478893.0,
         "2026-10-22": 13534908870.0,
@@ -370,8 +354,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 226.5,
-      "last_pct_change": 9.9515,
+      "last_close": 206.5,
+      "last_pct_change": -8.83,
       "market": "上市"
     },
     "6488": {
@@ -392,14 +376,13 @@
       },
       "last_seen": "2026-11-11",
       "last_classification": "core2",
-      "last_close": 506.0,
-      "last_pct_change": 9.8806,
+      "last_close": 477.0,
+      "last_pct_change": -5.7312,
       "market": "上櫃"
     },
     "2330": {
       "name": "台積電",
       "history": {
-        "2026-10-06": 3.4516,
         "2026-10-07": 1.5106,
         "2026-10-08": 1.022,
         "2026-10-15": 1.7626,
@@ -416,7 +399,6 @@
         "2026-11-25": 8.7566
       },
       "trade_value_history": {
-        "2026-10-06": 68799148330.0,
         "2026-10-07": 53639152613.0,
         "2026-10-08": 43643595922.0,
         "2026-10-15": 70485890790.0,
@@ -434,14 +416,13 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 2230.0,
-      "last_pct_change": 9.8522,
+      "last_close": 2150.0,
+      "last_pct_change": -3.5874,
       "market": "上市"
     },
     "2308": {
       "name": "台達電",
       "history": {
-        "2026-10-06": 5.1502,
         "2026-10-07": 2.2803,
         "2026-10-15": 0.8304,
         "2026-10-16": 0.566,
@@ -457,7 +438,6 @@
         "2026-11-24": 7.6927
       },
       "trade_value_history": {
-        "2026-10-06": 35323157340.0,
         "2026-10-07": 30712124567.0,
         "2026-10-15": 17437656415.0,
         "2026-10-16": 14191408340.0,
@@ -474,14 +454,13 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core1",
-      "last_close": 1085.0,
-      "last_pct_change": 9.596,
+      "last_close": 1055.0,
+      "last_pct_change": -2.765,
       "market": "上市"
     },
     "1303": {
       "name": "南亞",
       "history": {
-        "2026-10-06": 7.4969,
         "2026-10-07": 2.4805,
         "2026-10-08": 5.8964,
         "2026-10-14": 4.4846,
@@ -497,7 +476,6 @@
         "2026-11-24": 7.6087
       },
       "trade_value_history": {
-        "2026-10-06": 25292249616.0,
         "2026-10-07": 33221857336.0,
         "2026-10-08": 37554036242.0,
         "2026-10-14": 37992423554.0,
@@ -513,22 +491,20 @@
         "2026-11-24": 27300850167.0
       },
       "last_seen": "2026-11-24",
-      "last_classification": "core2",
-      "last_close": 249.0,
-      "last_pct_change": 9.9338,
+      "last_classification": "core1",
+      "last_close": 226.5,
+      "last_pct_change": -9.0361,
       "market": "上市"
     },
     "2313": {
       "name": "華通",
       "history": {
-        "2026-10-06": 7.215,
         "2026-10-07": 1.5539,
         "2026-10-13": 1.4728,
         "2026-10-16": 6.4482,
         "2026-11-13": 3.6501
       },
       "trade_value_history": {
-        "2026-10-06": 12518539148.0,
         "2026-10-07": 24593610290.0,
         "2026-10-13": 12724526194.0,
         "2026-10-16": 12434507119.0,
@@ -536,8 +512,8 @@
       },
       "last_seen": "2026-11-13",
       "last_classification": "core1",
-      "last_close": 169.5,
-      "last_pct_change": 9.7087,
+      "last_close": 153.0,
+      "last_pct_change": -9.7345,
       "market": "上市"
     },
     "0050": {
@@ -564,8 +540,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 95.7,
-      "last_pct_change": 10.0,
+      "last_close": 90.3,
+      "last_pct_change": -5.6426,
       "market": "上市"
     },
     "6770": {
@@ -580,14 +556,13 @@
       },
       "last_seen": "2026-10-29",
       "last_classification": "core2",
-      "last_close": 53.3,
-      "last_pct_change": 9.8969,
+      "last_close": 48.0,
+      "last_pct_change": -9.9437,
       "market": "上市"
     },
     "2454": {
       "name": "聯發科",
       "history": {
-        "2026-10-06": 3.7988,
         "2026-10-16": 2.351,
         "2026-10-29": 5.9138,
         "2026-11-03": 2.5478,
@@ -602,7 +577,6 @@
         "2026-11-25": 7.2868
       },
       "trade_value_history": {
-        "2026-10-06": 38606572956.0,
         "2026-10-16": 37261292080.0,
         "2026-10-29": 31945707085.0,
         "2026-11-03": 49627667560.0,
@@ -618,8 +592,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 4050.0,
-      "last_pct_change": 9.905,
+      "last_close": 3645.0,
+      "last_pct_change": -10.0,
       "market": "上市"
     },
     "2303": {
@@ -652,8 +626,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 97.1,
-      "last_pct_change": 9.966,
+      "last_close": 87.4,
+      "last_pct_change": -9.9897,
       "market": "上市"
     },
     "3661": {
@@ -681,15 +655,14 @@
         "2026-11-24": 14206852500.0
       },
       "last_seen": "2026-11-24",
-      "last_classification": "core1",
-      "last_close": 3915.0,
-      "last_pct_change": 9.9719,
+      "last_classification": "core2",
+      "last_close": 3605.0,
+      "last_pct_change": -7.9183,
       "market": "上市"
     },
     "6274": {
       "name": "台燿",
       "history": {
-        "2026-10-06": 7.332,
         "2026-10-09": 1.1583,
         "2026-10-15": 3.799,
         "2026-10-20": 1.0957,
@@ -703,7 +676,6 @@
         "2026-11-24": 7.2397
       },
       "trade_value_history": {
-        "2026-10-06": 21297200510.0,
         "2026-10-09": 13503616540.0,
         "2026-10-15": 16607797785.0,
         "2026-10-20": 15968150380.0,
@@ -718,14 +690,13 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core1",
-      "last_close": 753.0,
-      "last_pct_change": 9.927,
+      "last_close": 739.0,
+      "last_pct_change": -1.8592,
       "market": "上櫃"
     },
     "3008": {
       "name": "大立光",
       "history": {
-        "2026-10-06": 5.2431,
         "2026-10-07": 1.6442,
         "2026-10-13": 8.0942,
         "2026-10-22": 2.7466,
@@ -735,10 +706,10 @@
         "2026-11-05": 1.1993,
         "2026-11-11": 2.4956,
         "2026-11-12": 3.8449,
-        "2026-11-13": 3.8261
+        "2026-11-13": 3.8261,
+        "2026-11-26": 1.2332
       },
       "trade_value_history": {
-        "2026-10-06": 17633444790.0,
         "2026-10-07": 14897608295.0,
         "2026-10-13": 40890934945.0,
         "2026-10-22": 16717238370.0,
@@ -748,12 +719,13 @@
         "2026-11-05": 13160298910.0,
         "2026-11-11": 20910553270.0,
         "2026-11-12": 9016949150.0,
-        "2026-11-13": 11476694215.0
+        "2026-11-13": 11476694215.0,
+        "2026-11-26": 20335867585.0
       },
-      "last_seen": "2026-11-13",
-      "last_classification": "core1",
-      "last_close": 3980.0,
-      "last_pct_change": 9.9448,
+      "last_seen": "2026-11-26",
+      "last_classification": "core2",
+      "last_close": 4025.0,
+      "last_pct_change": 1.1307,
       "market": "上市"
     },
     "2449": {
@@ -762,24 +734,25 @@
         "2026-10-09": 1.5619,
         "2026-10-14": 1.424,
         "2026-11-10": 1.4675,
-        "2026-11-11": 6.2674
+        "2026-11-11": 6.2674,
+        "2026-11-26": 0.4561
       },
       "trade_value_history": {
         "2026-10-09": 15426131196.0,
         "2026-10-14": 12405732821.0,
         "2026-11-10": 9324654294.0,
-        "2026-11-11": 10464282155.0
+        "2026-11-11": 10464282155.0,
+        "2026-11-26": 11657479367.0
       },
-      "last_seen": "2026-11-11",
+      "last_seen": "2026-11-26",
       "last_classification": "core2",
-      "last_close": 172.5,
-      "last_pct_change": 9.8726,
+      "last_close": 173.0,
+      "last_pct_change": 0.2899,
       "market": "上市"
     },
     "3017": {
       "name": "奇鋐",
       "history": {
-        "2026-10-06": 3.2719,
         "2026-10-07": 2.2264,
         "2026-10-16": 5.5212,
         "2026-10-21": 0.3804,
@@ -790,7 +763,6 @@
         "2026-11-24": 5.4435
       },
       "trade_value_history": {
-        "2026-10-06": 16355725100.0,
         "2026-10-07": 11856470975.0,
         "2026-10-16": 12214098785.0,
         "2026-10-21": 9220889205.0,
@@ -801,15 +773,14 @@
         "2026-11-24": 15467428020.0
       },
       "last_seen": "2026-11-24",
-      "last_classification": "core1",
-      "last_close": 2600.0,
-      "last_pct_change": 9.9366,
+      "last_classification": "core2",
+      "last_close": 2545.0,
+      "last_pct_change": -2.1154,
       "market": "上市"
     },
     "6213": {
       "name": "聯茂",
       "history": {
-        "2026-10-06": 7.2559,
         "2026-10-07": 3.9439,
         "2026-10-08": 1.0978,
         "2026-10-29": 3.4956,
@@ -819,7 +790,6 @@
         "2026-11-24": 7.2252
       },
       "trade_value_history": {
-        "2026-10-06": 14590023265.0,
         "2026-10-07": 25478769781.0,
         "2026-10-08": 12693898185.0,
         "2026-10-29": 14958543456.0,
@@ -830,8 +800,8 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core1",
-      "last_close": 430.0,
-      "last_pct_change": 9.9744,
+      "last_close": 390.0,
+      "last_pct_change": -9.3023,
       "market": "上市"
     },
     "2383": {
@@ -869,9 +839,9 @@
         "2026-11-24": 24841649975.0
       },
       "last_seen": "2026-11-24",
-      "last_classification": "core2",
-      "last_close": 3395.0,
-      "last_pct_change": 9.8706,
+      "last_classification": "core1",
+      "last_close": 3355.0,
+      "last_pct_change": -1.1782,
       "market": "上市"
     },
     "3653": {
@@ -900,8 +870,8 @@
       },
       "last_seen": "2026-11-19",
       "last_classification": "core2",
-      "last_close": 4050.0,
-      "last_pct_change": 9.905,
+      "last_close": 4170.0,
+      "last_pct_change": 2.963,
       "market": "上市"
     },
     "6669": {
@@ -920,14 +890,13 @@
       },
       "last_seen": "2026-11-10",
       "last_classification": "core2",
-      "last_close": 1510.0,
-      "last_pct_change": 9.8182,
+      "last_close": 1430.0,
+      "last_pct_change": -5.298,
       "market": "上市"
     },
     "3189": {
       "name": "景碩",
       "history": {
-        "2026-10-06": 3.6443,
         "2026-10-08": 2.307,
         "2026-10-15": 1.0775,
         "2026-10-16": 1.8731,
@@ -938,7 +907,6 @@
         "2026-11-19": 5.8458
       },
       "trade_value_history": {
-        "2026-10-06": 32795151665.0,
         "2026-10-08": 14705340410.0,
         "2026-10-15": 16173488025.0,
         "2026-10-16": 15009070956.0,
@@ -950,8 +918,8 @@
       },
       "last_seen": "2026-11-19",
       "last_classification": "core2",
-      "last_close": 514.0,
-      "last_pct_change": 9.9465,
+      "last_close": 495.0,
+      "last_pct_change": -3.6965,
       "market": "上市"
     },
     "3231": {
@@ -968,8 +936,8 @@
       },
       "last_seen": "2026-11-10",
       "last_classification": "core2",
-      "last_close": 163.0,
-      "last_pct_change": 9.7643,
+      "last_close": 152.0,
+      "last_pct_change": -6.7485,
       "market": "上市"
     },
     "3443": {
@@ -998,14 +966,13 @@
       },
       "last_seen": "2026-11-13",
       "last_classification": "core2",
-      "last_close": 5630.0,
-      "last_pct_change": 9.9609,
+      "last_close": 5070.0,
+      "last_pct_change": -9.9467,
       "market": "上市"
     },
     "3105": {
       "name": "穩懋",
       "history": {
-        "2026-10-06": 3.426,
         "2026-10-22": 5.741,
         "2026-10-29": 7.2909,
         "2026-10-30": 8.0128,
@@ -1016,7 +983,6 @@
         "2026-11-24": 5.3546
       },
       "trade_value_history": {
-        "2026-10-06": 29694939981.0,
         "2026-10-22": 10432912230.0,
         "2026-10-29": 9261367420.0,
         "2026-10-30": 34747362079.0,
@@ -1028,21 +994,19 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core2",
-      "last_close": 449.0,
-      "last_pct_change": 9.9143,
+      "last_close": 404.5,
+      "last_pct_change": -9.9109,
       "market": "上櫃"
     },
     "3081": {
       "name": "聯亞",
       "history": {
-        "2026-10-06": 2.213,
         "2026-10-08": 5.6961,
         "2026-10-15": 4.2246,
         "2026-11-03": 1.5869,
         "2026-11-13": 0.6074
       },
       "trade_value_history": {
-        "2026-10-06": 21282318945.0,
         "2026-10-08": 18029048935.0,
         "2026-10-15": 9714290515.0,
         "2026-11-03": 8179171170.0,
@@ -1050,14 +1014,13 @@
       },
       "last_seen": "2026-11-13",
       "last_classification": "core2",
-      "last_close": 1525.0,
-      "last_pct_change": 9.7122,
+      "last_close": 1420.0,
+      "last_pct_change": -6.8852,
       "market": "上櫃"
     },
     "2345": {
       "name": "智邦",
       "history": {
-        "2026-10-06": 4.1779,
         "2026-10-13": 2.2896,
         "2026-10-15": 0.5805,
         "2026-10-20": 1.1457,
@@ -1065,7 +1028,6 @@
         "2026-11-24": 7.0484
       },
       "trade_value_history": {
-        "2026-10-06": 13202826075.0,
         "2026-10-13": 9646967155.0,
         "2026-10-15": 9491315874.0,
         "2026-10-20": 9385629645.0,
@@ -1074,8 +1036,8 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core1",
-      "last_close": 1485.0,
-      "last_pct_change": 10.0,
+      "last_close": 1475.0,
+      "last_pct_change": -0.6734,
       "market": "上市"
     },
     "2368": {
@@ -1094,7 +1056,8 @@
         "2026-11-12": 5.179,
         "2026-11-13": 4.3088,
         "2026-11-19": 3.816,
-        "2026-11-24": 7.2509
+        "2026-11-24": 7.2509,
+        "2026-11-26": 4.1913
       },
       "trade_value_history": {
         "2026-10-07": 27429656060.0,
@@ -1110,18 +1073,18 @@
         "2026-11-12": 14616927605.0,
         "2026-11-13": 14011489415.0,
         "2026-11-19": 12656164886.0,
-        "2026-11-24": 11077967024.0
+        "2026-11-24": 11077967024.0,
+        "2026-11-26": 24330584185.0
       },
-      "last_seen": "2026-11-24",
+      "last_seen": "2026-11-26",
       "last_classification": "core1",
-      "last_close": 860.0,
-      "last_pct_change": 9.9744,
+      "last_close": 905.0,
+      "last_pct_change": 5.2326,
       "market": "上市"
     },
     "2492": {
       "name": "華新科",
       "history": {
-        "2026-10-06": 2.0676,
         "2026-10-07": 4.4822,
         "2026-10-08": 7.4474,
         "2026-10-21": 1.3662,
@@ -1132,7 +1095,6 @@
         "2026-11-11": 1.3803
       },
       "trade_value_history": {
-        "2026-10-06": 36247880780.0,
         "2026-10-07": 21351259314.0,
         "2026-10-08": 22559356257.0,
         "2026-10-21": 13566684329.0,
@@ -1144,26 +1106,24 @@
       },
       "last_seen": "2026-11-11",
       "last_classification": "core2",
-      "last_close": 212.0,
-      "last_pct_change": 9.8446,
+      "last_close": 191.0,
+      "last_pct_change": -9.9057,
       "market": "上市"
     },
     "8358": {
       "name": "金居",
       "history": {
-        "2026-10-06": 7.3451,
         "2026-10-20": 2.0691,
         "2026-11-12": 4.5409
       },
       "trade_value_history": {
-        "2026-10-06": 23746115235.0,
         "2026-10-20": 10374553727.0,
         "2026-11-12": 8515131111.0
       },
       "last_seen": "2026-11-12",
       "last_classification": "core2",
-      "last_close": 267.5,
-      "last_pct_change": 9.8563,
+      "last_close": 244.5,
+      "last_pct_change": -8.5981,
       "market": "上櫃"
     },
     "1815": {
@@ -1200,8 +1160,8 @@
       },
       "last_seen": "2026-11-19",
       "last_classification": "core1",
-      "last_close": 112.5,
-      "last_pct_change": 9.7561,
+      "last_close": 101.5,
+      "last_pct_change": -9.7778,
       "market": "上櫃"
     },
     "2360": {
@@ -1216,8 +1176,8 @@
       },
       "last_seen": "2026-10-29",
       "last_classification": "core2",
-      "last_close": 1015.0,
-      "last_pct_change": 9.493,
+      "last_close": 1010.0,
+      "last_pct_change": -0.4926,
       "market": "上市"
     },
     "8996": {
@@ -1232,8 +1192,8 @@
       },
       "last_seen": "2026-10-22",
       "last_classification": "core2",
-      "last_close": 943.0,
-      "last_pct_change": 9.9068,
+      "last_close": 870.0,
+      "last_pct_change": -7.7413,
       "market": "上市"
     },
     "3406": {
@@ -1254,8 +1214,8 @@
       },
       "last_seen": "2026-11-10",
       "last_classification": "core2",
-      "last_close": 734.0,
-      "last_pct_change": 9.8802,
+      "last_close": 716.0,
+      "last_pct_change": -2.4523,
       "market": "上市"
     },
     "1802": {
@@ -1282,8 +1242,8 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core2",
-      "last_close": 63.9,
-      "last_pct_change": 9.9828,
+      "last_close": 59.9,
+      "last_pct_change": -6.2598,
       "market": "上市"
     },
     "3374": {
@@ -1304,8 +1264,8 @@
       },
       "last_seen": "2026-11-13",
       "last_classification": "core2",
-      "last_close": 373.0,
-      "last_pct_change": 9.8675,
+      "last_close": 336.0,
+      "last_pct_change": -9.9196,
       "market": "上櫃"
     },
     "2337": {
@@ -1318,8 +1278,8 @@
       },
       "last_seen": "2026-10-29",
       "last_classification": null,
-      "last_close": 68.0,
-      "last_pct_change": 9.8546,
+      "last_close": 61.2,
+      "last_pct_change": -10.0,
       "market": "上市"
     },
     "3006": {
@@ -1332,8 +1292,8 @@
       },
       "last_seen": "2026-10-30",
       "last_classification": null,
-      "last_close": 183.5,
-      "last_pct_change": -4.1775,
+      "last_close": 171.5,
+      "last_pct_change": -6.5395,
       "market": "上市"
     },
     "3035": {
@@ -1346,8 +1306,8 @@
       },
       "last_seen": "2026-10-30",
       "last_classification": "core1",
-      "last_close": 178.0,
-      "last_pct_change": 6.9069,
+      "last_close": 161.0,
+      "last_pct_change": -9.5506,
       "market": "上市"
     },
     "00406A": {
@@ -1362,8 +1322,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core2",
-      "last_close": 6.67,
-      "last_pct_change": 8.2792,
+      "last_close": 6.26,
+      "last_pct_change": -6.1469,
       "market": "上市"
     },
     "00631L": {
@@ -1384,8 +1344,8 @@
       },
       "last_seen": "2026-11-24",
       "last_classification": "core2",
-      "last_close": 27.0,
-      "last_pct_change": 20.0,
+      "last_close": 23.78,
+      "last_pct_change": -11.9259,
       "market": "上市"
     },
     "5274": {
@@ -1400,8 +1360,8 @@
       },
       "last_seen": "2026-11-11",
       "last_classification": "core2",
-      "last_close": 9140.0,
-      "last_pct_change": 9.988,
+      "last_close": 8795.0,
+      "last_pct_change": -3.7746,
       "market": "上櫃"
     },
     "00981A": {
@@ -1418,8 +1378,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 22.04,
-      "last_pct_change": 9.98,
+      "last_close": 20.53,
+      "last_pct_change": -6.8512,
       "market": "上市"
     },
     "3324": {
@@ -1432,8 +1392,8 @@
       },
       "last_seen": "2026-11-10",
       "last_classification": null,
-      "last_close": 854.0,
-      "last_pct_change": 9.9099,
+      "last_close": 798.0,
+      "last_pct_change": -6.5574,
       "market": "上櫃"
     },
     "6446": {
@@ -1448,8 +1408,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 1150.0,
-      "last_pct_change": 2.6786,
+      "last_close": 1075.0,
+      "last_pct_change": -6.5217,
       "market": "上市"
     },
     "8299": {
@@ -1462,8 +1422,8 @@
       },
       "last_seen": "2026-11-11",
       "last_classification": null,
-      "last_close": 1595.0,
-      "last_pct_change": 10.0,
+      "last_close": 1485.0,
+      "last_pct_change": -6.8966,
       "market": "上櫃"
     },
     "6223": {
@@ -1476,8 +1436,8 @@
       },
       "last_seen": "2026-11-13",
       "last_classification": null,
-      "last_close": 4185.0,
-      "last_pct_change": 9.9869,
+      "last_close": 3770.0,
+      "last_pct_change": -9.9164,
       "market": "上櫃"
     },
     "00632R": {
@@ -1490,8 +1450,8 @@
       },
       "last_seen": "2026-11-23",
       "last_classification": "core1",
-      "last_close": 10.95,
-      "last_pct_change": -9.9507,
+      "last_close": 11.71,
+      "last_pct_change": 6.9406,
       "market": "上市"
     },
     "2468": {
@@ -1504,8 +1464,8 @@
       },
       "last_seen": "2026-11-23",
       "last_classification": "core1",
-      "last_close": 66.4,
-      "last_pct_change": 2.3112,
+      "last_close": 62.8,
+      "last_pct_change": -5.4217,
       "market": "上市"
     },
     "00991A": {
@@ -1518,8 +1478,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 12.36,
-      "last_pct_change": 9.9644,
+      "last_close": 11.67,
+      "last_pct_change": -5.5825,
       "market": "上市"
     },
     "2603": {
@@ -1531,9 +1491,9 @@
         "2026-11-25": 11020616792.0
       },
       "last_seen": "2026-11-25",
-      "last_classification": null,
-      "last_close": 257.0,
-      "last_pct_change": 9.5949,
+      "last_classification": "core1",
+      "last_close": 252.5,
+      "last_pct_change": -1.751,
       "market": "上市"
     },
     "2412": {
@@ -1546,8 +1506,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 164.5,
-      "last_pct_change": 0.0,
+      "last_close": 163.5,
+      "last_pct_change": -0.6079,
       "market": "上市"
     },
     "00403A": {
@@ -1560,8 +1520,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": "core1",
-      "last_close": 8.04,
-      "last_pct_change": 9.9863,
+      "last_close": 7.48,
+      "last_pct_change": -6.9652,
       "market": "上市"
     },
     "3529": {
@@ -1574,8 +1534,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 2025.0,
-      "last_pct_change": 6.8602,
+      "last_close": 1840.0,
+      "last_pct_change": -9.1358,
       "market": "上櫃"
     },
     "2382": {
@@ -1587,9 +1547,9 @@
         "2026-11-25": 7027372214.0
       },
       "last_seen": "2026-11-25",
-      "last_classification": null,
-      "last_close": 282.5,
-      "last_pct_change": 9.9222,
+      "last_classification": "core1",
+      "last_close": 261.0,
+      "last_pct_change": -7.6106,
       "market": "上市"
     },
     "2379": {
@@ -1602,8 +1562,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 694.0,
-      "last_pct_change": 4.2042,
+      "last_close": 699.0,
+      "last_pct_change": 0.7205,
       "market": "上市"
     },
     "00919": {
@@ -1616,8 +1576,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 29.5,
-      "last_pct_change": 8.7758,
+      "last_close": 27.87,
+      "last_pct_change": -5.5254,
       "market": "上市"
     },
     "2357": {
@@ -1630,8 +1590,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 821.0,
-      "last_pct_change": 8.3113,
+      "last_close": 769.0,
+      "last_pct_change": -6.3337,
       "market": "上市"
     },
     "3034": {
@@ -1644,8 +1604,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 435.5,
-      "last_pct_change": 1.0441,
+      "last_close": 427.5,
+      "last_pct_change": -1.837,
       "market": "上市"
     },
     "8069": {
@@ -1658,8 +1618,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 129.0,
-      "last_pct_change": 6.6116,
+      "last_close": 120.5,
+      "last_pct_change": -6.5891,
       "market": "上櫃"
     },
     "2882": {
@@ -1671,9 +1631,9 @@
         "2026-11-25": 4911469092.0
       },
       "last_seen": "2026-11-25",
-      "last_classification": null,
-      "last_close": 104.5,
-      "last_pct_change": 10.0,
+      "last_classification": "core1",
+      "last_close": 100.5,
+      "last_pct_change": -3.8278,
       "market": "上市"
     },
     "2891": {
@@ -1686,8 +1646,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 69.9,
-      "last_pct_change": 9.5611,
+      "last_close": 65.9,
+      "last_pct_change": -5.7225,
       "market": "上市"
     },
     "2618": {
@@ -1700,8 +1660,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 48.6,
-      "last_pct_change": 9.9548,
+      "last_close": 45.7,
+      "last_pct_change": -5.9671,
       "market": "上市"
     },
     "2881": {
@@ -1714,8 +1674,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 143.5,
-      "last_pct_change": 9.9617,
+      "last_close": 132.5,
+      "last_pct_change": -7.6655,
       "market": "上市"
     },
     "0056": {
@@ -1728,8 +1688,8 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 49.94,
-      "last_pct_change": 10.0,
+      "last_close": 45.66,
+      "last_pct_change": -8.5703,
       "market": "上市"
     },
     "2892": {
@@ -1742,13 +1702,40 @@
       },
       "last_seen": "2026-11-25",
       "last_classification": null,
-      "last_close": 39.8,
-      "last_pct_change": 5.7105,
+      "last_close": 36.95,
+      "last_pct_change": -7.1608,
+      "market": "上市"
+    },
+    "3665": {
+      "name": "貿聯-KY",
+      "history": {
+        "2026-11-26": 3.0756
+      },
+      "trade_value_history": {
+        "2026-11-26": 18433617330.0
+      },
+      "last_seen": "2026-11-26",
+      "last_classification": null,
+      "last_close": 1630.0,
+      "last_pct_change": 3.8217,
+      "market": "上市"
+    },
+    "2059": {
+      "name": "川湖",
+      "history": {
+        "2026-11-26": 3.6641
+      },
+      "trade_value_history": {
+        "2026-11-26": 10155469270.0
+      },
+      "last_seen": "2026-11-26",
+      "last_classification": null,
+      "last_close": 6505.0,
+      "last_pct_change": 4.9194,
       "market": "上市"
     }
   },
   "market_total_trade_value_history": {
-    "2026-10-06": 1527082285887.0,
     "2026-10-07": 1299051152458.0,
     "2026-10-08": 1281167862828.0,
     "2026-10-09": 1176608899460.0,
@@ -1777,10 +1764,10 @@
     "2026-11-20": 1074124558972.0,
     "2026-11-23": 1020147964060.0,
     "2026-11-24": 1274371206290.0,
-    "2026-11-25": 475235183623.0
+    "2026-11-25": 475235183623.0,
+    "2026-11-26": 1381145893641.0
   },
   "market_breadth": {
-    "2026-10-06": 37,
     "2026-10-07": 25,
     "2026-10-08": 25,
     "2026-10-09": 19,
@@ -1809,10 +1796,10 @@
     "2026-11-20": 1,
     "2026-11-23": 2,
     "2026-11-24": 42,
-    "2026-11-25": 46
+    "2026-11-25": 46,
+    "2026-11-26": 7
   },
   "market_index_pct_change": {
-    "2026-10-06": 2.55,
     "2026-10-07": 0.22,
     "2026-10-08": -0.03,
     "2026-10-09": -0.99,
@@ -1841,7 +1828,8 @@
     "2026-11-20": -4.4,
     "2026-11-23": -6.23,
     "2026-11-24": 2.16,
-    "2026-11-25": 8.99
+    "2026-11-25": 8.99,
+    "2026-11-26": -4.8
   },
   "red_up_tracker": [
     {
@@ -2257,18 +2245,18 @@
       "frozen_pct": -20.2
     },
     {
-      "code": "1303",
-      "name": "南亞",
+      "code": "00981A",
+      "name": "主動統一台股增長",
       "market": "上市",
-      "mark_date": "2026-11-24",
+      "mark_date": "2026-11-25",
       "status": "pending",
       "checks_remaining": 1
     },
     {
-      "code": "6213",
-      "name": "聯茂",
+      "code": "0050",
+      "name": "元大台灣50",
       "market": "上市",
-      "mark_date": "2026-11-24",
+      "mark_date": "2026-11-25",
       "status": "pending",
       "checks_remaining": 1
     },
@@ -2276,55 +2264,15 @@
       "code": "2383",
       "name": "台光電",
       "market": "上市",
-      "mark_date": "2026-11-24",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
-      "code": "2303",
-      "name": "聯電",
-      "market": "上市",
-      "mark_date": "2026-11-24",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
-      "code": "6274",
-      "name": "台燿",
-      "market": "上櫃",
-      "mark_date": "2026-11-24",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
-      "code": "1802",
-      "name": "台玻",
-      "market": "上市",
-      "mark_date": "2026-11-24",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
-      "code": "2308",
-      "name": "台達電",
-      "market": "上市",
-      "mark_date": "2026-11-24",
-      "status": "pending",
-      "checks_remaining": 1
-    },
-    {
-      "code": "00981A",
-      "name": "主動統一台股增長",
-      "market": "上市",
-      "mark_date": "2026-11-25",
+      "mark_date": "2026-11-26",
       "status": "pending",
       "checks_remaining": 2
     },
     {
-      "code": "0050",
-      "name": "元大台灣50",
+      "code": "1303",
+      "name": "南亞",
       "market": "上市",
-      "mark_date": "2026-11-25",
+      "mark_date": "2026-11-26",
       "status": "pending",
       "checks_remaining": 2
     }
